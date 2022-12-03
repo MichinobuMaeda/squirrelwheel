@@ -97,24 +97,31 @@ Category --o Template
 
 ### 3.2. `Category` の編集
 
-- `categoryId` 必須、一意、整数値
-- `name` 必須、一意
+- `categoryId`
+    - 制約: 必須、一意、整数値
+    - デフォルト値: `0` -- 手動投稿
+- `name`
+    - 制約: 必須、一意
 - `updateOnly`
 - `updated`
-
-手動投稿は `categoryId = 0`
+    - 制約: 必須
+    - デフォルト値: 10日前
 
 ### 3.3. `Template` の編集
 
-- `name` 必須、一意
-- `categoryId` 必須、存在する `Category` から選択
-- `body` 必須
+- `name`
+    - 制約: 必須、一意
+- `categoryId`
+    - 制約: 必須、存在する `Category` から選択
+- `body`
+    - 制約: 必須
 
 `Message` の `url`, `content` の埋め込み場所は
 `Template` の `body` に `%%url%%`, `%%content%%` と記載する。
 
 ### 3.4. 手動投稿の編集
 
-- `templateId` 必須、 `categoryId = 0` の `Category`　から選択
+- `templateId`
+    - 制約: 必須、 `categoryId = 0` の `Category` から選択
 - `content`
 - `scheduledFor`
