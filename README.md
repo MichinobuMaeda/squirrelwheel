@@ -61,7 +61,7 @@ Category --o Template
 
 ### 3.1. 定時のジョブ
 
-- 全てのカテゴリの Atom feed を `?cat=[categoryId]&feed=atom` から取得する。
+- 全ての　`Category` の Atom feed を `?cat=[categoryId]&feed=atom` から取得する。
 - `Category` の更新時刻: `/feed/updated` を取得する。
 - 記録された `Category` の更新時刻より取得した `Category` の `updated` が後の場合、
     - `Category` が `updateOnly = true` の場合、
@@ -93,7 +93,7 @@ Category --o Template
         - `publishedAt`　に現在の日時を保存する。
         - 1件処理したら以降の `Message` はスキップ。
 
-`Category` に対応するテンプレートが複数ある場合はランダムに選択する。
+`Category` に対応する `Template` が複数ある場合はランダムに選択する。
 
 ### 3.2. `Category` の編集
 
