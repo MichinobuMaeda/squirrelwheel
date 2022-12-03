@@ -62,38 +62,33 @@ Category --o Template
 ### 3.1. 定時のジョブ
 
 - 全ての　`Category` の Atom feed を `?cat=[categoryId]&feed=atom` から取得する。
-- `Category` の更新時刻: `/feed/updated` を取得する。
-- 記録された `Category` の更新時刻より取得した `Category` の `updated` が後の場合、
-    - `Category` が `updateOnly = true` の場合、
-        - `Category` に対応する `Template` を選択する。
+- `Category::updated` より `/feed/updated` が後の場合、
+    - `Category::updateOnly = true` の場合、
+        - `Category::templateId` の `Template` を選択する。[1]
         - `Message` を作成する。
             - `templateId` は選択した `Template`
             - `scheduledAfter` は指定無し
             - `url` は指定無し
             - `content` は指定無し
-    - `Category` が `updateOnly = true` ではない場合、
+    - `Category::updateOnly = true` ではない場合、
         - すべての項目 `/feed/entry` について、
-            - 項目の更新時刻: 　`/feed/entry/updated` を取得する。　
-            - 記録された　`Category` の更新時刻より項目の更新時刻が後の場合、
-                - `Category` に対応する `Template` を選択する。
+            - `Category::updated` より `/feed/entry/updated` が後の場合、
+                - `Category::templateId` の `Template` を選択する。[1]
                 - `Message` を作成する。
                     - `templateId` は選択した `Template`
                     - `scheduledAfter` は指定無し
                     - `url` は `/feed/entry/id`
                     - `content` は `/feed/entry/title`
-    - `Category` の更新時刻を `updated` に保存する。
-- 現在の日付の `publishedAt` の `Message` が無い場合、
-    - `scheduledAfter` が 現在の日時以降で `publishedAt` が未記入の　`Message` について、
-        - 投稿する。
-        - `sentAt`　に現在の日時を保存する。
-        - 1件処理したら以降の `Message` はスキップ。
-- 現在の日付の `publishedAt` の `Message` が無い場合、
-    - `publishedAt` が未記入の　`Message` について、
-        - 投稿する。
+    - `/feed/updated`　を `Category::updated` に保存する。
+- 現在の日付の `sentAt` の `Message` が無い場合、
+    - `sentAt` が未記入 で `scheduledAfter` が 現在の日時以降ではない　`Message`について、
+        - 投稿する。[2]
         - `sentAt`　に現在の日時を保存する。
         - 1件処理したら以降の `Message` はスキップ。
 
-`Category` に対応する `Template` が複数ある場合はランダムに選択する。
+[1] `Category` に対応する `Template` が複数ある場合はランダムに選択する。
+
+[2] `scheduledAfter` が 現在の日時以前の `Message` を優先する。
 
 ### 3.2. `Category` の編集
 
@@ -122,6 +117,6 @@ Category --o Template
 ### 3.4. 手動投稿の編集
 
 - `templateId`
-    - 制約: 必須、 `categoryId = 0` の `Category` から選択
+    - 制約: 必須、 `categoryId = 0` の `Template` から選択
 - `content`
 - `scheduledAfter`
