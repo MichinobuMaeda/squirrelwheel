@@ -61,7 +61,7 @@ Category --o Template
 
 ### 3.1. 定時のジョブ
 
-- 全ての　`Category` の Atom feed を `?cat=[categoryId]&feed=atom` から取得する。
+- 全ての `Category` の Atom feed を `?cat=[categoryId]&feed=atom` から取得する。
 - `Category::updated` より `/feed/updated` が後の場合、
     - `Category::updateOnly = true` の場合、
         - `Category::templateId` の `Template` を選択する。[1]
@@ -79,11 +79,11 @@ Category --o Template
                     - `scheduledAfter` は指定無し
                     - `url` は `/feed/entry/id`
                     - `content` は `/feed/entry/title`
-    - `/feed/updated`　を `Category::updated` に保存する。
+    - `/feed/updated` を `Category::updated` に保存する。
 - 現在の日付の `sentAt` の `Message` が無い場合、
-    - `sentAt` が未記入 で `scheduledAfter` が 現在の日時以降ではない　`Message`について、
+    - `sentAt` が未記入 で `scheduledAfter` が 現在の日時以降ではない `Message`について、
         - 投稿する。[2]
-        - `sentAt`　に現在の日時を保存する。
+        - `sentAt` に現在の日時を保存する。
         - 1件処理したら以降の `Message` はスキップ。
 
 [1] `Category` に対応する `Template` が複数ある場合はランダムに選択する。
