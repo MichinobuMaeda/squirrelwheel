@@ -39,7 +39,14 @@ class Category {
     bigInteger categoryId
     text name
     boolean updateOnly
+    int priority
     timestamp updated
+}
+class Template {
+    bigIncrements id
+    bigInteger categoryId
+    text name
+    text body
 }
 class Message {
     bigIncrements id
@@ -48,12 +55,7 @@ class Message {
     timestamp sentAt
     text url
     text content
-}
-class Template {
-    bigIncrements id
-    bigInteger categoryId
-    text name
-    text body
+    int delay
 }
 Message o-- Template
 Category --o Template
@@ -70,6 +72,7 @@ Category --o Template
             - `scheduledAfter` は指定無し
             - `url` は指定無し
             - `content` は指定無し
+            - `delay` は 0 以上 `Category::priority` 以下の整数からランダムに選択した値
     - `Category::updateOnly = true` ではない場合、
         - すべての項目 `/feed/entry` について、
             - `Category::updated` より `/feed/entry/updated` が後の場合、
@@ -79,16 +82,18 @@ Category --o Template
                     - `scheduledAfter` は指定無し
                     - `url` は `/feed/entry/id`
                     - `content` は `/feed/entry/title`
+                    - `delay` は 0 以上 `Category::priority` 以下の整数からランダムに選択した値
     - `/feed/updated` を `Category::updated` に保存する。
 - 現在の日付の `sentAt` の `Message` が無い場合、
-    - `sentAt` が未記入 で `scheduledAfter` が 現在の日時以降ではない `Message`について、
-        - 投稿する。[2]
-        - `sentAt` に現在の日時を保存する。
-        - 1件処理したら以降の `Message` はスキップ。
+    - `sentAt` が未記入 で `scheduledAfter` が 現在の日時以降ではない `priority` 順の `Message` について、
+        - `delay` > 0 の場合、
+            - `delay`　をデクリメントする。
+        - `delay` <= 0 の場合、
+            - 投稿する。
+            - `sentAt` に現在の日時を保存する。
+            - 1件処理したら以降の `Message` はスキップ。
 
 [1] `Category` に対応する `Template` が複数ある場合はランダムに選択する。
-
-[2] `scheduledAfter` が 現在の日時以前の `Message` を優先する。
 
 ### 3.2. `Category` の編集
 
@@ -98,6 +103,9 @@ Category --o Template
 - `name`
     - 制約: 必須、一意
 - `updateOnly`
+- `priority`
+    - 制約: 必須
+    - デフォルト値: `0` -- 最高：手動投稿
 - `updated`
     - 制約: 必須
     - デフォルト値: 10日前
