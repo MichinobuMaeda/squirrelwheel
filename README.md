@@ -44,8 +44,8 @@ class Category {
 class Message {
     bigIncrements id
     bigInteger templateId
-    timestamp scheduledFor
-    timestamp publishedAt
+    timestamp scheduledAfter
+    timestamp sentAt
     text url
     text content
 }
@@ -68,7 +68,7 @@ Category --o Template
         - `Category` に対応する `Template` を選択する。
         - `Message` を作成する。
             - `templateId` は選択した `Template`
-            - `scheduledFor` は指定無し
+            - `scheduledAfter` は指定無し
             - `url` は指定無し
             - `content` は指定無し
     - `Category` が `updateOnly = true` ではない場合、
@@ -78,19 +78,19 @@ Category --o Template
                 - `Category` に対応する `Template` を選択する。
                 - `Message` を作成する。
                     - `templateId` は選択した `Template`
-                    - `scheduledFor` は指定無し
+                    - `scheduledAfter` は指定無し
                     - `url` は `/feed/entry/id`
                     - `content` は `/feed/entry/title`
     - `Category` の更新時刻を `updated` に保存する。
 - 現在の日付の `publishedAt` の `Message` が無い場合、
-    - `scheduledFor` が 現在の日時以降で `publishedAt` が未記入の　`Message` について、
+    - `scheduledAfter` が 現在の日時以降で `publishedAt` が未記入の　`Message` について、
         - 投稿する。
-        - `publishedAt`　に現在の日時を保存する。
+        - `sentAt`　に現在の日時を保存する。
         - 1件処理したら以降の `Message` はスキップ。
 - 現在の日付の `publishedAt` の `Message` が無い場合、
     - `publishedAt` が未記入の　`Message` について、
         - 投稿する。
-        - `publishedAt`　に現在の日時を保存する。
+        - `sentAt`　に現在の日時を保存する。
         - 1件処理したら以降の `Message` はスキップ。
 
 `Category` に対応する `Template` が複数ある場合はランダムに選択する。
@@ -124,4 +124,4 @@ Category --o Template
 - `templateId`
     - 制約: 必須、 `categoryId = 0` の `Category` から選択
 - `content`
-- `scheduledFor`
+- `scheduledAfter`
