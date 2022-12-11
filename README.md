@@ -25,9 +25,9 @@ v16.18.1
 
 $ git clone git@github.com:MichinobuMaeda/squirrelwheel.git
 $ cd squirrelwheel
-$ touch database/database.sqlite
 $ cp .env.local .env
 $ composer install
+$ php artisan migrate
 $ php artisan serve
 ```
 
