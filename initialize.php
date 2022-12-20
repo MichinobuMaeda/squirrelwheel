@@ -38,7 +38,7 @@ END
 CREATE TABLE IF NOT EXISTS message (
        message_id  INTEGER NOT NULL PRIMARY KEY
      , template_id INTEGER NOT NULL
-     , content     TEXT
+     , content     TEXT    NOT NULL
      , link        TEXT
      , scheduled_after TEXT NOT NULL DEFAULT '2000-01-01T00:00:00.000Z'
      , sent_at     TEXT

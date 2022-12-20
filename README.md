@@ -72,7 +72,7 @@ Category --o Template
 |-------------|------------|------------------|--------------|
 | message_id  | integer    | PK               | autoincremnt |
 | template_id | integer    | FK               |              |
-| content     | text       |                  |              |
+| content     | text       | not null         |              |
 | link        | text       |                  |              |
 | scheduled_after | timestamp  | not null     | '2000-01-01T00:00:00.000Z'              |
 | sent_at     | timestamp  |                  |              |
@@ -109,8 +109,7 @@ Category --o Template
 
 #### 3.4.1. ジョブのトリガー
 
-- CRONを利用する。
-- 投稿したい時刻に実行する。
+- CRONを利用して、投稿したい曜日・時刻に実行する。
 
 #### 3.4.2. 投稿の条件
 
