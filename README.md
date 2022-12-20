@@ -8,6 +8,8 @@ WordPress の feed を取得して、更新情報を Twitter に投稿する。
 
 手動の投稿も可能。その場合は、投稿日時の指定が可能。
 
+管理機能は外部の認証を利用する。
+
 ## 2. 開発環境
 
 ```bash
@@ -19,102 +21,102 @@ PHP 7.4.33 ... ...
 
 $ git clone git@github.com:MichinobuMaeda/squirrelwheel.git
 $ cd squirrelwheel
+$ cp conf-sample.php conf.php
+$ php initialize.php
+$ php -S localhost:8000 -t public
 ```
 
 ## 3. 仕様
 
+### 3.1. ER
+
 ```mermaid
 classDiagram
-class Category {
-    bigInteger categoryId
-    text name
-    boolean updateOnly
-    int priority
-    timestamp updated
-}
-class Template {
-    bigIncrements id
-    bigInteger categoryId
-    text name
-    text body
-}
-class Message {
-    bigIncrements id
-    bigInteger templateId
-    timestamp scheduledAfter
-    timestamp sentAt
-    text url
-    text content
-    int delay
-}
+class Category
+class Template
+class Message
 Message o-- Template
 Category --o Template
 ```
 
-### 3.1. 定時のジョブ
+### 3.2. テーブルの定義
 
-- 全ての `Category` の Atom feed を `?cat=[categoryId]&feed=atom` から取得する。
-- `Category::updated` より `/feed/updated` が後の場合、
-    - `Category::updateOnly = true` の場合、
-        - `Category::templateId` の `Template` を選択する。[1]
-        - `Message` を作成する。
-            - `templateId` は選択した `Template`
-            - `scheduledAfter` は指定無し
-            - `url` は指定無し
-            - `content` は指定無し
-            - `delay` は 0 以上 `Category::priority` 以下の整数からランダムに選択した値
-    - `Category::updateOnly = true` ではない場合、
-        - すべての項目 `/feed/entry` について、
-            - `Category::updated` より `/feed/entry/updated` が後の場合、
-                - `Category::templateId` の `Template` を選択する。[1]
-                - `Message` を作成する。
-                    - `templateId` は選択した `Template`
-                    - `scheduledAfter` は指定無し
-                    - `url` は `/feed/entry/id`
-                    - `content` は `/feed/entry/title`
-                    - `delay` は 0 以上 `Category::priority` 以下の整数からランダムに選択した値
-    - `/feed/updated` を `Category::updated` に保存する。
-- 現在の日付の `sentAt` の `Message` が無い場合、
-    - `sentAt` が未記入 で `scheduledAfter` が 現在の日時以降ではない `priority` 順の `Message` について、
-        - `delay` > 0 の場合、
-            - `delay`　をデクリメントする。
-        - `delay` <= 0 の場合、
-            - 投稿する。
-            - `sentAt` に現在の日時を保存する。
-            - 1件処理したら以降の `Message` はスキップ。
+#### 3.2.1. Talbe: category
 
-[1] `Category` に対応する `Template` が複数ある場合はランダムに選択する。
+| Name        | Type       | Constraints      | Deafult      |
+|-------------|------------|------------------|--------------|
+| category_id | integer    | PK               |              |
+| name        | text       | unique, not null |              |
+| update_only | boolean    | not null         | false        |
+| priority    | integer    | not null         | 1            |
+| checked_at  | timestamp  |                  |              |
+| created_at  | timestamp  |                  |              |
+| updated_at  | timestamp  |                  |              |
+| deleted_at  | timestamp  |                  |              |
 
-### 3.2. `Category` の編集
+#### 3.2.2. Talbe: template
 
-- `categoryId`
-    - 制約: 必須、一意、整数値
-    - デフォルト値: `0` -- 手動投稿
-- `name`
-    - 制約: 必須、一意
-- `updateOnly`
-- `priority`
-    - 制約: 必須
-    - デフォルト値: `0` -- 最高：手動投稿
-- `updated`
-    - 制約: 必須
-    - デフォルト値: 10日前
+| Name        | Type       | Constraints      | Deafult      |
+|-------------|------------|------------------|--------------|
+| template_id | integer    | PK               | autoincremnt |
+| category_id | integer    | FK               |              |
+| name        | text       | unique, not null |              |
+| body        | text       | not null         |              |
+| created_at  | timestamp  |                  |              |
+| updated_at  | timestamp  |                  |              |
+| deleted_at  | timestamp  |                  |              |
 
-### 3.3. `Template` の編集
+#### 3.2.3. Talbe: message
 
-- `name`
-    - 制約: 必須、一意
-- `categoryId`
-    - 制約: 必須、存在する `Category` から選択
-- `body`
-    - 制約: 必須
+| Name        | Type       | Constraints      | Deafult      |
+|-------------|------------|------------------|--------------|
+| message_id  | integer    | PK               | autoincremnt |
+| template_id | integer    | FK               |              |
+| content     | text       |                  |              |
+| link        | text       |                  |              |
+| scheduled_after | timestamp  | not null     | '2000-01-01T00:00:00.000Z'              |
+| sent_at     | timestamp  |                  |              |
+| created_at  | timestamp  |                  |              |
+| updated_at  | timestamp  |                  |              |
+| deleted_at  | timestamp  |                  |              |
 
-`Message` の `url`, `content` の埋め込み場所は
-`Template` の `body` に `%%url%%`, `%%content%%` と記載する。
+### 3.3. データについての補足説明
 
-### 3.4. 手動投稿の編集
+#### 3.3.1. 利用するRDBMSに存在しない型の扱い
 
-- `templateId`
-    - 制約: 必須、 `categoryId = 0` の `Template` から選択
-- `content`
-- `scheduledAfter`
+- boolean: 0: false / 1: true で integer 値を格納
+- timestamp: ISO-8601 フォーマットで text 値を格納
+
+#### 3.3.2. 初期データ
+
+- 手動投稿用に ``category:category_id = 0, category:update_only = 0, category:priority = 0`` の行を初期データとして追加する。
+
+#### 3.3.3. テンプレートの仕様
+
+- `message::content` と `message::link` の埋め込み場所は
+`template::body` に `%%content%%`, `%%link%%` と記載する。
+- `category_id` に対応する `template_id` が複数ある場合はランダムに選択する。
+
+#### 3.3.4. feed の処理
+
+- ``category:category_id > 0`` のカテゴリーを対象とする。
+- 対象となるカテゴリーの Atom feed を `?cat=[categoryId]&feed=atom` から取得する。
+- 処理済みの Atom feed の ``/feed/updated`` を ``category:checked_at`` に格納する。
+- ``category:update_only = 0`` の場合、各記事を処理対象とする。
+- ``category:update_only = 1`` の場合、前回の処理以降のアップデートが有る場合に処理する。
+
+### 3.4. ジョブ
+
+#### 3.4.1. ジョブのトリガー
+
+- CRONを利用する。
+- 投稿したい時刻に実行する。
+
+#### 3.4.2. 投稿の条件
+
+- ジョブの実行毎に1個だけ投稿する。
+- `message::scheduled_after` が現在時刻より後の場合は処理対象としない。
+- 優先順位
+    1. ``category:priority`` 昇順
+    2. ``message::scheduled_after`` 昇順
+- ``category:update_only = 1`` の場合、未処理の投稿が残っている場合は投稿を追加しない。
