@@ -21,4 +21,4 @@ date_default_timezone_set('Asia/Tokyo');
 
 // ログの設定: https://www.php.net/manual/ja/function.error-log.php
 $error_log_type = 3;
-$error_log_dest = __DIR__ . '/log';
+$error_log_dir = __DIR__ . '/log';
