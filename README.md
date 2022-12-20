@@ -89,7 +89,14 @@ Category --o Template
 
 #### 3.3.2. 初期データ
 
-- 手動投稿用に ``category:category_id = 0, category:update_only = 0, category:priority = 0`` の行を初期データとして追加する。
+- 手動投稿用のデータ
+    - ``category``
+        - ``category_id = 0``
+        - ``update_only = 0``
+        - ``category:priority = 0``
+    - ``template``
+        - ``template_id = 0``
+        - ``category_id = 0``
 
 #### 3.3.3. テンプレートの仕様
 
@@ -100,7 +107,7 @@ Category --o Template
 #### 3.3.4. feed の処理
 
 - ``category:category_id > 0`` のカテゴリーを対象とする。
-- 対象となるカテゴリーの Atom feed を `?cat=[categoryId]&feed=atom` から取得する。
+- 対象となるカテゴリーの Atom feed を `?cat=[category_id]&feed=atom` から取得する。
 - 処理済みの Atom feed の ``/feed/updated`` を ``category:checked_at`` に格納する。
 - ``category:update_only = 0`` の場合、各記事を処理対象とする。
 - ``category:update_only = 1`` の場合、前回の処理以降のアップデートが有る場合に処理する。
