@@ -1,6 +1,6 @@
 <?php
 // 認証されていない場合のリダイレクト先
-$url_unauthorized = 'https://example.com';
+$url_unauthorized = 'https://example.com/admin';
 
 // 権限のあるユーザIDの取得
 function get_authorized_user_id() {
@@ -18,3 +18,7 @@ $default_link = 'https://example.com';
 
 // タイムゾーン
 date_default_timezone_set('Asia/Tokyo');
+
+// ログの設定: https://www.php.net/manual/ja/function.error-log.php
+$error_log_type = 3;
+$error_log_dest = __DIR__ . '/log';

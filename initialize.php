@@ -1,11 +1,17 @@
 <?php
 require_once('conf.php');
 
+$error_log_dest = $error_log_dir . '/initialize.log';
+
+logging('start');
+
 try {
+    logging('connect db');
     touch($db_path);
     $pdo = new PDO('sqlite:' . $db_path);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+    logging('create table category');
     $pdo->exec(<<<END
 CREATE TABLE IF NOT EXISTS category (
        category_id INTEGER NOT NULL PRIMARY KEY
@@ -20,6 +26,7 @@ CREATE TABLE IF NOT EXISTS category (
 END
     );
 
+    logging('create table template');
     $pdo->exec(<<<END
 CREATE TABLE IF NOT EXISTS template (
       template_id INTEGER NOT NULL PRIMARY KEY
@@ -34,13 +41,14 @@ CREATE TABLE IF NOT EXISTS template (
 END
     );
 
+    logging('create table message');
     $pdo->exec(<<<END
 CREATE TABLE IF NOT EXISTS message (
        message_id  INTEGER NOT NULL PRIMARY KEY
      , template_id INTEGER NOT NULL
      , content     TEXT    NOT NULL
      , link        TEXT
-     , scheduled_after TEXT NOT NULL DEFAULT '2000-01-01T00:00:00.000Z'
+     , scheduled_after TEXT NOT NULL
      , sent_at     TEXT
      , created_at  TEXT
      , updated_at  TEXT
@@ -50,6 +58,7 @@ CREATE TABLE IF NOT EXISTS message (
 END
     );
 
+    logging('insert table category');
     $stmt = $pdo->query("SELECT category_id FROM category where category_id = 0");
     $row = $stmt->fetch();
 
@@ -77,6 +86,7 @@ END
         );
     }
 
+    logging('insert table template');
     $stmt = $pdo->query("SELECT template_id FROM template where template_id = 0");
     $row = $stmt->fetch();
 
@@ -102,6 +112,16 @@ INSERT INTO template (
 END
         );
     }
+
+    logging('end');
+
 } catch (Exception $e) {
     echo $e->getMessage();
+    logging($e->getMessage());
+}
+
+function logging($message) {
+    global $error_log_type, $error_log_dest;
+    $ts = date('c');
+    error_log($ts . ' ' . $message . "\n", $error_log_type, $error_log_dest);
 }

@@ -1,6 +1,8 @@
 <?php
 require_once('conf.php');
 
+$error_log_dest = $error_log_dir . '/admin.log';
+
 $user_id = get_authorized_user_id();
 
 if (!$user_id) {
@@ -356,11 +358,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 </html>
 <?php
 } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    logging('start');
+
     try {
         $pdo = new PDO('sqlite:' . $db_path);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         $ts = date('c');
+
+        logging(json_encode($_POST, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
 
         if ($_POST['table'] == 'category') {
 
@@ -421,6 +427,7 @@ END
                     'deleted_at' => $deleted_at,
                 ]);
             }
+
         } else if ($_POST['table'] == 'template') {
 
             $new = $_POST['new'];
@@ -474,6 +481,7 @@ END
                     'deleted_at' => $deleted_at,
                 ]);
             }
+
         } else if ($_POST['table'] == 'message') {
 
             $new = $_POST['new'];
@@ -531,9 +539,11 @@ END
             }
         }
 
+        logging('end');
         header('Location: ' . $_SERVER['REQUEST_URI']);
 
     } catch (Exception $e) {
+        logging($e->getMessage());
         header('Location: ' . $_SERVER['REQUEST_URI'] . '?error=' . $e->getMessage());
     }
 } else {
@@ -542,4 +552,10 @@ END
 
 function toLocalDate($iso) {
     return $iso ? date('Y-m-d H:i', strtotime($iso)) : '';
+}
+
+function logging($message) {
+    global $error_log_type, $error_log_dest, $user_id;
+    $ts = date('c');
+    error_log($ts . ' ' . $user_id . ' ' . $message . "\n", $error_log_type, $error_log_dest);
 }

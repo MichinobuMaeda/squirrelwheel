@@ -74,7 +74,7 @@ Category --o Template
 | template_id | integer    | FK               |              |
 | content     | text       | not null         |              |
 | link        | text       |                  |              |
-| scheduled_after | timestamp  | not null     | '2000-01-01T00:00:00.000Z'              |
+| scheduled_after | timestamp  | not null     |              |
 | sent_at     | timestamp  |                  |              |
 | created_at  | timestamp  |                  |              |
 | updated_at  | timestamp  |                  |              |
