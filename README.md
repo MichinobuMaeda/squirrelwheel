@@ -15,24 +15,10 @@ $ git --version
 git version 2.38.1
 
 $ php --version
-PHP 8.1.4 ... ...
-
-$ composer --version
-Composer version 2.4.4 ... ...
-
-$ node --version
-v16.18.1
+PHP 7.4.33 ... ...
 
 $ git clone git@github.com:MichinobuMaeda/squirrelwheel.git
 $ cd squirrelwheel
-$ cp .env.local .env
-$ npm install
-$ composer install
-$ php artisan migrate
-
-Would you like to create it? yes
-
-$ php artisan serve
 ```
 
 ## 3. 仕様
