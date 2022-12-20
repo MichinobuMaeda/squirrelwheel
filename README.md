@@ -26,8 +26,12 @@ v16.18.1
 $ git clone git@github.com:MichinobuMaeda/squirrelwheel.git
 $ cd squirrelwheel
 $ cp .env.local .env
+$ npm install
 $ composer install
 $ php artisan migrate
+
+Would you like to create it? yes
+
 $ php artisan serve
 ```
 
