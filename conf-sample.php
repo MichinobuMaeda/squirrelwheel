@@ -16,6 +16,9 @@ $title = 'squirrelwheel';
 // デフォルトのリンクURL
 $default_link = 'https://example.com';
 
+// カテゴリーのURL
+$url_category = 'https://example.com/?cat=';
+
 // タイムゾーン
 date_default_timezone_set('Asia/Tokyo');
 
