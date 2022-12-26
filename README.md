@@ -17,18 +17,22 @@ $ git --version
 git version 2.38.1
 
 $ php --version
-PHP 7.4.33 ... ...
+PHP 8.0.26 ... ...
 
 $ git clone git@github.com:MichinobuMaeda/squirrelwheel.git
 $ cd squirrelwheel
-$ cp conf-sample.php conf.php
-$ php initialize.php
-$ php -S localhost:8000 -t public
 ```
 
-## 3. 仕様
+## 3. デプロイ
 
-### 3.1. ER
+```bash
+$ git clone git@github.com:MichinobuMaeda/squirrelwheel.git
+$ cd squirrelwheel
+```
+
+## 4. 仕様
+
+### 4.1. ER
 
 ```mermaid
 classDiagram
@@ -39,9 +43,9 @@ Message o-- Template
 Category --o Template
 ```
 
-### 3.2. テーブルの定義
+### 4.2. テーブルの定義
 
-#### 3.2.1. Talbe: category
+#### 4.2.1. Talbe: category
 
 | Name        | Type       | Constraints      | Deafult      |
 |-------------|------------|------------------|--------------|
@@ -54,7 +58,7 @@ Category --o Template
 | updated_at  | timestamp  |                  |              |
 | deleted_at  | timestamp  |                  |              |
 
-#### 3.2.2. Talbe: template
+#### 4.2.2. Talbe: template
 
 | Name        | Type       | Constraints      | Deafult      |
 |-------------|------------|------------------|--------------|
@@ -66,7 +70,7 @@ Category --o Template
 | updated_at  | timestamp  |                  |              |
 | deleted_at  | timestamp  |                  |              |
 
-#### 3.2.3. Talbe: message
+#### 4.2.3. Talbe: message
 
 | Name        | Type       | Constraints      | Deafult      |
 |-------------|------------|------------------|--------------|
@@ -80,14 +84,14 @@ Category --o Template
 | updated_at  | timestamp  |                  |              |
 | deleted_at  | timestamp  |                  |              |
 
-### 3.3. データについての補足説明
+### 4.3. データについての補足説明
 
-#### 3.3.1. 利用するRDBMSに存在しない型の扱い
+#### 4.3.1. 利用するRDBMSに存在しない型の扱い
 
 - boolean: 0: false / 1: true で integer 値を格納
 - timestamp: ISO-8601 フォーマットで text 値を格納
 
-#### 3.3.2. 初期データ
+#### 4.3.2. 初期データ
 
 - 手動投稿用のデータ
     - ``category``
@@ -98,13 +102,13 @@ Category --o Template
         - ``template_id = 0``
         - ``category_id = 0``
 
-#### 3.3.3. テンプレートの仕様
+#### 4.3.3. テンプレートの仕様
 
 - `message::content` と `message::link` の埋め込み場所は
 `template::body` に `%%content%%`, `%%link%%` と記載する。
 - `category_id` に対応する `template_id` が複数ある場合はランダムに選択する。
 
-#### 3.3.4. feed の処理
+#### 4.3.4. feed の処理
 
 - ``category:category_id > 0`` のカテゴリーを対象とする。
 - 対象となるカテゴリーの Atom feed を `?cat=[category_id]&feed=atom` から取得する。
@@ -112,13 +116,13 @@ Category --o Template
 - ``category:update_only = 0`` の場合、各記事を処理対象とする。
 - ``category:update_only = 1`` の場合、前回の処理以降のアップデートが有る場合に処理する。
 
-### 3.4. ジョブ
+### 4.4. ジョブ
 
-#### 3.4.1. ジョブのトリガー
+#### 4.4.1. ジョブのトリガー
 
 - CRONを利用して、投稿したい曜日・時刻に実行する。
 
-#### 3.4.2. 投稿の条件
+#### 4.4.2. 投稿の条件
 
 - ジョブの実行毎に1個だけ投稿する。
 - `message::scheduled_after` が現在時刻より後の場合は処理対象としない。
@@ -126,3 +130,19 @@ Category --o Template
     1. ``category:priority`` 昇順
     2. ``message::scheduled_after`` 昇順
 - ``category:update_only = 1`` の場合、未処理の投稿が残っている場合は投稿を追加しない。
+
+### Appendix A このプロジェクトの初期構築手順
+
+```bash
+$ php --version
+PHP 8.0.26 ... ...
+
+$ composer --version
+Composer version 2.4.4 ... ...
+
+$ node --version
+v16.14.2
+
+$ composer create-project laravel/laravel squirrelwheel
+
+```
