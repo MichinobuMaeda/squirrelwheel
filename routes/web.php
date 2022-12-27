@@ -16,10 +16,12 @@ use App\Http\Controllers\ArticleController;
 |
 */
 
-Route::redirect('/', '/articles');
+Route::group(['middleware' => 'doku'], function() {
+    Route::redirect('/', '/articles');
 
-Route::resources([
-    'categories' => CategoryController::class,
-    'templates' => TemplateController::class,
-    'articles' => ArticleController::class,
-]);
+    Route::resources([
+        'categories' => CategoryController::class,
+        'templates' => TemplateController::class,
+        'articles' => ArticleController::class,
+    ]);
+});

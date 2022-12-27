@@ -39,18 +39,26 @@ cp .env.production .env
 php artisan key:generate
 ```
 
-edit `.env.example`
+`.env.example` を編集する。
 
 ```env
 APP_ENV=production 
 APP_DEBUG=false
 LOG_CHANNEL=daily
 LOG_LEVEL=info
+DOKU_BASE_PATH=/wiki/
+DOKU_LOGIN_URL=https://example.com/wiki/?do=login
+DOKU_GROUPS=admin,user
+FEED_URL=https://example.com/?cat=[category]&feed=atom
 ```
 
 ```bash
 php artisan migrate
+php artisan command:initialize
 ```
+
+`public` フォルダーをリネームして公開された場所に置き、
+`index.php` 内の3箇所の `__DIR__.'/../ ... ...` を書き換える。
 
 ## 4. 仕様
 
@@ -69,21 +77,16 @@ Category --o Template
 
 ### 4.2. データについての補足説明
 
-#### 4.2.1. 利用するRDBMSに存在しない型の扱い
-
-- boolean: 0: false / 1: true で integer 値を格納
-- timestamp: ISO-8601 フォーマットで text 値を格納
-
 #### 4.2.2. 初期データ
 
 - 手動投稿用のデータ
-    - ``category``
-        - ``category_id = 0``
-        - ``update_only = 0``
-        - ``category:priority = 0``
-    - ``template``
-        - ``template_id = 0``
-        - ``category_id = 0``
+    - `category`
+        - `category_id = ''`
+        - `update_only = false`
+        - `category:priority = 0`
+    - `template`
+        - `template_id = 1`
+        - `category_id = ''`
 
 #### 4.2.3. テンプレートの仕様
 
@@ -93,11 +96,11 @@ Category --o Template
 
 #### 4.2.4. feed の処理
 
-- ``category:category_id > 0`` のカテゴリーを対象とする。
-- 対象となるカテゴリーの Atom feed を `?cat=[category_id]&feed=atom` から取得する。
-- 処理済みの Atom feed の ``/feed/updated`` を ``category:checked_at`` に格納する。
-- ``category:update_only = 0`` の場合、各記事を処理対象とする。
-- ``category:update_only = 1`` の場合、前回の処理以降のアップデートが有る場合に処理する。
+- `category:category_id != ''` のカテゴリーを対象とする。
+- 対象となるカテゴリーの Atom feed を `FEED_URL` から取得する。
+- 処理済みの Atom feed の `/feed/updated` を `category:checked_at` に格納する。
+- `category:update_only == false` の場合、各記事を処理対象とする。
+- `category:update_only == true` の場合、前回の処理以降のアップデートが有る場合に処理する。
 
 ### 4.3. ジョブ
 
@@ -110,9 +113,9 @@ Category --o Template
 - ジョブの実行毎に1個だけ投稿する。
 - `message::scheduled_after` が現在時刻より後の場合は処理対象としない。
 - 優先順位
-    1. ``category:priority`` 昇順
-    2. ``message::scheduled_after`` 昇順
-- ``category:update_only = 1`` の場合、未処理の投稿が残っている場合は投稿を追加しない。
+    1. `category:priority` 昇順
+    2. `message::scheduled_after` 昇順
+- `category:update_only = 1` の場合、未処理の投稿が残っている場合は投稿を追加しない。
 
 ### Appendix A このプロジェクトの初期構築手順
 
@@ -155,4 +158,8 @@ php artisan make:job PostArticle
 php artisan make:controller CategoryController --model=Category --resource --requests
 php artisan make:controller TemplateController --model=Template --resource --requests
 php artisan make:controller ArticleController --model=Article --resource --requests
+php artisan make:middleware DokuAuthenticate
+rm resources/views/welcome.blade.php
 ```
+
+`config/doku.php` を追加
