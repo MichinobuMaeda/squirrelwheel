@@ -18,16 +18,38 @@ git version 2.38.1
 
 $ php --version
 PHP 8.0.26 ... ...
+```
 
-$ git clone git@github.com:MichinobuMaeda/squirrelwheel.git
-$ cd squirrelwheel
+```bash
+git clone git@github.com:MichinobuMaeda/squirrelwheel.git
+cd squirrelwheel
+cp .env.example .env
+php artisan key:generate
+php artisan migrate
+php artisan command:initialize
+php artisan serve
 ```
 
 ## 3. デプロイ
 
 ```bash
-$ git clone git@github.com:MichinobuMaeda/squirrelwheel.git
-$ cd squirrelwheel
+git clone git@github.com:MichinobuMaeda/squirrelwheel.git
+cd squirrelwheel
+cp .env.production .env
+php artisan key:generate
+```
+
+edit `.env.example`
+
+```env
+APP_ENV=production 
+APP_DEBUG=false
+LOG_CHANNEL=daily
+LOG_LEVEL=info
+```
+
+```bash
+php artisan migrate
 ```
 
 ## 4. 仕様
@@ -39,59 +61,20 @@ classDiagram
 class Category
 class Template
 class Message
+class Job
+class FaileJob
 Message o-- Template
 Category --o Template
 ```
 
-### 4.2. テーブルの定義
+### 4.2. データについての補足説明
 
-#### 4.2.1. Talbe: category
-
-| Name        | Type       | Constraints      | Deafult      |
-|-------------|------------|------------------|--------------|
-| category_id | integer    | PK               |              |
-| name        | text       | unique, not null |              |
-| update_only | boolean    | not null         | false        |
-| priority    | integer    | not null         | 1            |
-| checked_at  | timestamp  |                  |              |
-| created_at  | timestamp  |                  |              |
-| updated_at  | timestamp  |                  |              |
-| deleted_at  | timestamp  |                  |              |
-
-#### 4.2.2. Talbe: template
-
-| Name        | Type       | Constraints      | Deafult      |
-|-------------|------------|------------------|--------------|
-| template_id | integer    | PK               | autoincremnt |
-| category_id | integer    | FK               |              |
-| name        | text       | unique, not null |              |
-| body        | text       | not null         |              |
-| created_at  | timestamp  |                  |              |
-| updated_at  | timestamp  |                  |              |
-| deleted_at  | timestamp  |                  |              |
-
-#### 4.2.3. Talbe: message
-
-| Name        | Type       | Constraints      | Deafult      |
-|-------------|------------|------------------|--------------|
-| message_id  | integer    | PK               | autoincremnt |
-| template_id | integer    | FK               |              |
-| content     | text       | not null         |              |
-| link        | text       |                  |              |
-| scheduled_after | timestamp  | not null     |              |
-| sent_at     | timestamp  |                  |              |
-| created_at  | timestamp  |                  |              |
-| updated_at  | timestamp  |                  |              |
-| deleted_at  | timestamp  |                  |              |
-
-### 4.3. データについての補足説明
-
-#### 4.3.1. 利用するRDBMSに存在しない型の扱い
+#### 4.2.1. 利用するRDBMSに存在しない型の扱い
 
 - boolean: 0: false / 1: true で integer 値を格納
 - timestamp: ISO-8601 フォーマットで text 値を格納
 
-#### 4.3.2. 初期データ
+#### 4.2.2. 初期データ
 
 - 手動投稿用のデータ
     - ``category``
@@ -102,13 +85,13 @@ Category --o Template
         - ``template_id = 0``
         - ``category_id = 0``
 
-#### 4.3.3. テンプレートの仕様
+#### 4.2.3. テンプレートの仕様
 
 - `message::content` と `message::link` の埋め込み場所は
 `template::body` に `%%content%%`, `%%link%%` と記載する。
 - `category_id` に対応する `template_id` が複数ある場合はランダムに選択する。
 
-#### 4.3.4. feed の処理
+#### 4.2.4. feed の処理
 
 - ``category:category_id > 0`` のカテゴリーを対象とする。
 - 対象となるカテゴリーの Atom feed を `?cat=[category_id]&feed=atom` から取得する。
@@ -116,13 +99,13 @@ Category --o Template
 - ``category:update_only = 0`` の場合、各記事を処理対象とする。
 - ``category:update_only = 1`` の場合、前回の処理以降のアップデートが有る場合に処理する。
 
-### 4.4. ジョブ
+### 4.3. ジョブ
 
-#### 4.4.1. ジョブのトリガー
+#### 4.3.1. ジョブのトリガー
 
 - CRONを利用して、投稿したい曜日・時刻に実行する。
 
-#### 4.4.2. 投稿の条件
+#### 4.3.2. 投稿の条件
 
 - ジョブの実行毎に1個だけ投稿する。
 - `message::scheduled_after` が現在時刻より後の場合は処理対象としない。
@@ -142,7 +125,34 @@ Composer version 2.4.4 ... ...
 
 $ node --version
 v16.14.2
+```
 
-$ composer create-project laravel/laravel squirrelwheel
+```bash
+composer create-project laravel/laravel squirrelwheel
+composer remove laravel/sanctum
+rm database/migrations/2019_12_14_000001_create_personal_access_tokens_table.php
+rm config/sanctum.php
+rm database/migrations/2014_10_12_000000_create_users_table.php
+rm database/migrations/2014_10_12_100000_create_password_resets_table.php
+rm app/Models/User.phps
+php artisan queue:table
+```
 
+edit `.env.example`
+
+```bash
+cp .env.example .env
+php artisan key:generate
+php artisan make:migration  create_categories_table
+php artisan make:migration  create_templates_table
+php artisan make:migration  create_articles_table
+php artisan make:model Category
+php artisan make:model Template
+php artisan make:model Article
+php artisan make:command Initialize
+php artisan make:command ReadFeed
+php artisan make:job PostArticle
+php artisan make:controller CategoryController --model=Category --resource --requests
+php artisan make:controller TemplateController --model=Template --resource --requests
+php artisan make:controller ArticleController --model=Article --resource --requests
 ```
