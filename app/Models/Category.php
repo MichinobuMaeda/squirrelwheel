@@ -27,9 +27,32 @@ class Category extends Model
     protected $keyType = 'string';
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'id',
+        'name',
+        'update_only',
+        'priority',
+        'checked_at',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'update_only' => 'boolean',
+        'checked_at' => 'datetime',
+    ];
+
+    /**
      * Get the templatea for the category.
      */
-    public function templatea()
+    public function templates()
     {
         return $this->hasMany(Template::class);
     }

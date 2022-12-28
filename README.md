@@ -18,6 +18,8 @@ git version 2.38.1
 
 $ php --version
 PHP 8.0.26 ... ...
+
+$ pecl install xdebug
 ```
 
 ```bash
@@ -25,18 +27,26 @@ git clone git@github.com:MichinobuMaeda/squirrelwheel.git
 cd squirrelwheel
 cp .env.example .env
 php artisan key:generate
+
+touch database/database.sqlite
+php artisan migrate
+php artisan test
+rm database/database.sqlite
+
+touch database/database.sqlite
 php artisan migrate
 php artisan command:initialize
 php artisan serve
 ```
 
-## 3. デプロイ
+## 3. 本番環境
 
 ```bash
 git clone git@github.com:MichinobuMaeda/squirrelwheel.git
 cd squirrelwheel
 cp .env.production .env
 php artisan key:generate
+touch database/database.sqlite
 ```
 
 `.env.example` を編集する。

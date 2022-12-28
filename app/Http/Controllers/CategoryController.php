@@ -25,7 +25,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return view('categories.create');
+        return view('categories.edit');
     }
 
     /**
@@ -38,18 +38,6 @@ class CategoryController extends Controller
     {
         //
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Category  $category
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Category $category)
-    {
-        return view('categories.show');
-    }
-
     /**
      * Show the form for editing the specified resource.
      *

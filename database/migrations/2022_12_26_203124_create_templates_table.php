@@ -15,8 +15,10 @@ return new class extends Migration
     {
         Schema::create('templates', function (Blueprint $table) {
             $table->id();
-            $table->text('category_id')->constrained()
-                ->cascadeOnUpdate()->restrictOnDelete();
+            $table->foreignId('category_id')
+                ->constrained('categories')
+                ->cascadeOnUpdate()
+                ->restrictOnDelete();
             $table->text('name')->unique();
             $table->text('body');
             $table->timestamps();

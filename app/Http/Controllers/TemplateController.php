@@ -25,7 +25,7 @@ class TemplateController extends Controller
      */
     public function create()
     {
-        return view('templates.create');
+        return view('templates.edit');
     }
 
     /**
@@ -37,17 +37,6 @@ class TemplateController extends Controller
     public function store(StoreTemplateRequest $request)
     {
         //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Template  $template
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Template $template)
-    {
-        return view('templates.show');
     }
 
     /**

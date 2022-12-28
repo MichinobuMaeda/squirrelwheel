@@ -25,7 +25,7 @@ class ArticleController extends Controller
      */
     public function create()
     {
-        return view('articles.create');
+        return view('articles.edit');
     }
 
     /**
@@ -37,17 +37,6 @@ class ArticleController extends Controller
     public function store(StoreArticleRequest $request)
     {
         //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Article  $article
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Article $article)
-    {
-        return view('articles.show');
     }
 
     /**
