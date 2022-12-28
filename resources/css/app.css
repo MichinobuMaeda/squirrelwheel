@@ -1,0 +1,118 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body,
+input[type='text'],
+input[type='password'],
+input[type='email'],
+input[type='number'],
+input[type='url'],
+input[type='date'],
+input[type='datetime-local'],
+input[type='month'],
+input[type='week'],
+input[type='time'],
+input[type='search'],
+input[type='tel'],
+input[type='checkbox'],
+input[type='radio'],
+select,
+select[multiple],
+textarea {
+  @apply bg-white dark:bg-slate-800
+}
+.content {
+  @apply container mx-auto px-2 sm:px-4 md:px-6 max-w-5xl
+}
+h1, h2, h3, h4, h5, h6, p, li, dt, dd,
+.card,
+input[type='text'],
+input[type='password'],
+input[type='email'],
+input[type='number'],
+input[type='url'],
+input[type='date'],
+input[type='datetime-local'],
+input[type='month'],
+input[type='week'],
+input[type='time'],
+input[type='search'],
+input[type='tel'],
+input[type='checkbox'],
+input[type='radio'],
+select,
+select[multiple],
+textarea {
+  @apply text-slate-900 dark:text-white
+}
+h1 {
+  @apply text-5xl mt-12 mb-5 font-medium
+}
+h2 {
+  @apply text-4xl mt-10 mb-4 font-medium
+}
+h3 {
+  @apply text-3xl mt-8 mb-3.5 font-medium
+}
+h4 {
+  @apply text-2xl mt-6 mb-3 font-medium
+}
+h5 {
+  @apply text-xl mt-5 mb-2.5 font-bold
+}
+h6, dt {
+  @apply text-lg mt-4 mb-2 font-bold
+}
+p, li, dd {
+  @apply text-base font-medium
+}
+dd {
+  @apply pl-6
+}
+p {
+  @apply my-3 leading-relaxed
+}
+ol, ul {
+  @apply my-3 ml-6 list-outside
+}
+ol {
+  @apply list-decimal
+}
+ul {
+  @apply list-disc
+}
+li {
+  @apply pl-1 leading-relaxed
+}
+.card {
+  @apply border border-solid border-gray-400 dark:border-gray-500 rounded-md mx-1 my-4 px-3 py-4 leading-relaxed
+}
+.card .title {
+  @apply text-2xl mb-3 font-medium
+}
+label {
+  @apply block my-3
+}
+label span {
+  @apply text-gray-700 dark:text-gray-100
+}
+input[type='text'],
+input[type='password'],
+input[type='email'],
+input[type='number'],
+input[type='url'],
+input[type='date'],
+input[type='datetime-local'],
+input[type='month'],
+input[type='week'],
+input[type='time'],
+input[type='search'],
+input[type='tel'],
+input[type='checkbox'],
+input[type='radio'],
+select,
+select[multiple],
+textarea {
+  @apply mt-1 block w-full rounded-md border-gray-300 dark:border-gray-500 shadow-sm focus:border-indigo-300 dark:focus:border-indigo-700 focus:ring focus:ring-indigo-200 dark:focus:ring-indigo-800 focus:ring-opacity-50
+}

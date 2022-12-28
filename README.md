@@ -19,12 +19,20 @@ git version 2.38.1
 $ php --version
 PHP 8.0.26 ... ...
 
-$ pecl install xdebug
+$ composer --version
+Composer version 2.4.4 ... ...
+
+$ node --version
+v16.14.2
+
 ```
 
 ```bash
 git clone git@github.com:MichinobuMaeda/squirrelwheel.git
 cd squirrelwheel
+composer install
+npm install
+npm run build
 cp .env.example .env
 php artisan key:generate
 
@@ -60,6 +68,14 @@ DOKU_BASE_PATH=/wiki/
 DOKU_LOGIN_URL=https://example.com/wiki/?do=login
 DOKU_GROUPS=admin,user
 FEED_URL=https://example.com/?cat=[category]&feed=atom
+MAIL_MAILER=smtp
+MAIL_HOST=mailhog
+MAIL_PORT=1025
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_ENCRYPTION=null
+MAIL_FROM_ADDRESS="hello@example.com"
+MAIL_FROM_NAME="${APP_NAME}"
 ```
 
 ```bash
@@ -67,8 +83,9 @@ php artisan migrate
 php artisan command:initialize
 ```
 
-`public` フォルダーをリネームして公開された場所に置き、
-`index.php` 内の3箇所の `__DIR__.'/../ ... ...` を書き換える。
+- `public/build` に開発環境の `npm run build` で生成したファイルを置く。
+- `public/index.php` 内の3箇所の `__DIR__.'/../ ... ...` を書き換える。
+- `public` フォルダーをリネームして公開された場所に置く。
 
 ## 4. 仕様
 
@@ -151,7 +168,7 @@ rm app/Models/User.phps
 php artisan queue:table
 ```
 
-edit `.env.example`
+`.env.example` を編集する。
 
 ```bash
 cp .env.example .env
@@ -169,7 +186,27 @@ php artisan make:controller CategoryController --model=Category --resource --req
 php artisan make:controller TemplateController --model=Template --resource --requests
 php artisan make:controller ArticleController --model=Article --resource --requests
 php artisan make:middleware DokuAuthenticate
-rm resources/views/welcome.blade.php
 ```
 
-`config/doku.php` を追加
+`config/doku.php` を追加する。
+
+```bash
+rm resources/views/welcome.blade.php
+php artisan make:component layout
+php artisan  make:test Models\CategoryTest
+php artisan  make:test Models\TemplateTest
+php artisan  make:test Models\ArticleTest
+rm resources/js/bootstrap.js 
+> resources/js/app.js 
+npm uninstall axios
+npm install -D tailwindcss postcss autoprefixer
+npx tailwindcss init -p
+```
+
+`tailwind.config.js` と `app.css` を編集 <https://tailwindcss.com/docs/guides/laravel>
+
+`layout.blade.php` の `<head>` に `@vite('resources/css/app.css')` を追加する。
+
+`resources/images/logo.svg` と `resources/images/logo.png` を作成する。
+
+[Favicon Generator for perfect icons on all browsers](https://realfavicongenerator.net/) に `resources/images/logo.png` を入力して作成したアイコンイメージとHTMLソースを `public` の下に反映する。
