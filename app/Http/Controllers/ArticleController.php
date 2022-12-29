@@ -15,7 +15,12 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        return view('articles.index');
+        $articles = Article::whereNull('posted_at')
+            ->orderBy('priority')->orderBy('reserved_at')->orderBy('id')->get();
+
+        return view('articles.index', [
+            'articles' => $articles,
+        ]);
     }
 
     /**

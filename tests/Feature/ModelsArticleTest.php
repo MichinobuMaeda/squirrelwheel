@@ -19,7 +19,7 @@ class ModelsArticleTest extends TestCase
      */
     public function test_create()
     {
-        $reserved_at = new DateTime('2020-01-01T12:34:56.000Z');
+        $reserved_at = new DateTime('2020-01-01T12:34:56.000+0900');
 
         $articles = Article::orderBy('id')->get();
         $this->assertCount(0, $articles);
@@ -27,6 +27,7 @@ class ModelsArticleTest extends TestCase
         Article::create([
             'priority' => 0,
             'content' => 'Content 1',
+            'reserved_at' => $reserved_at,
         ])->save();
 
         Article::create([
@@ -42,7 +43,7 @@ class ModelsArticleTest extends TestCase
         $this->assertEquals(1, $article->id);
         $this->assertEquals(0, $article->priority);
         $this->assertEquals('Content 1', $article->content);
-        $this->assertNull($article->reserved_at);
+        $this->assertEquals($reserved_at, $article->reserved_at);
         $this->assertNull($article->posted_at);
 
         $article = $articles[1];
@@ -60,18 +61,18 @@ class ModelsArticleTest extends TestCase
      */
     public function test_update()
     {
-        $reserved_at = new DateTime('2020-01-01T12:34:56.000Z');
-        $posted_at = new DateTime('2020-12-31T12:34:56.000Z');
+        $reserved_at = new DateTime('2020-01-01T12:34:56.000+0900');
+        $posted_at = new DateTime('2020-12-31T12:34:56.000+0900');
 
         Article::create([
             'priority' => 0,
             'content' => 'Content 1',
+            'reserved_at' => $reserved_at,
         ])->save();
         $article = Article::find(1);
         $article->fill([
             'priority' => 1,
             'content' => 'Content 2',
-            'reserved_at' => $reserved_at,
         ]);
         $article->save();
 
@@ -102,12 +103,15 @@ class ModelsArticleTest extends TestCase
      */
     public function test_delete()
     {
+        $ts = new DateTime('2020-01-01T12:34:56.000+0900');
+
         $articles = Article::orderBy('id')->get();
         $this->assertCount(0, $articles);
 
         Article::create([
             'priority' => 0,
             'content' => 'Content 1',
+            'reserved_at' => $ts,
         ])->save();
 
         $articles = Article::orderBy('id')->get();

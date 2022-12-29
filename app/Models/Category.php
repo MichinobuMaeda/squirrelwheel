@@ -50,6 +50,15 @@ class Category extends Model
     ];
 
     /**
+     * The model's default values for attributes.
+     *
+     * @var array
+     */
+    protected $attributes = [
+        'update_only' => false,
+    ];
+
+    /**
      * Get the templatea for the category.
      */
     public function templates()

@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use DateTime;
 use App\Models\Category;
 use App\Models\Template;
 
@@ -29,31 +30,47 @@ class Initialize extends Command
      */
     public function handle()
     {
-        $id_manual = '';
+        Category::findOr('@immediate', function () {
+            Category::create([
+                'id' => '@immediate',
+                'name' => 'Immediate',
+                'update_only' => false,
+                'priority' => 0,
+                'checked_at' => new DateTime(),
+            ])->save();
+        });
 
-        if (!Category::findOr($id_manual, function () { return false; }))
-        {
-            $category = new Category;
-            $category->id = $id_manual;
-            $category->name = 'Manual';
-            $category->update_only = false;
-            $category->priority = 0;
-            $category->save();
-        }
+        Category::findOr('@later', function () {
+            Category::create([
+                'id' => '@later',
+                'name' => 'Later',
+                'update_only' => false,
+                'priority' => 1,
+                'checked_at' => new DateTime(),
+            ])->save();
+        });
 
-        if (!Template::where('category_id', $id_manual)
-            ->firstOr(function () { return false; }))
-        {
-            $template = new Template;
-            $template->category_id = '';
-            $template->name = 'Manual';
-            $template->body = <<<END
+        Template::where('category_id', '@immediate')->firstOr(function () {
+            Template::create([
+                'category_id' => '@immediate',
+                'name' => 'Immediate',
+                'body' => <<<END
 %%content%%
-
 %%link%%
-END;
-            $template->save();
-        }
+END,
+            ])->save();
+        });
+
+        Template::where('category_id', '@later')->firstOr(function () {
+            Template::create([
+                'category_id' => '@later',
+                'name' => 'Later',
+                'body' => <<<END
+%%content%%
+%%link%%
+END,
+            ])->save();
+        });
 
         return Command::SUCCESS;
     }

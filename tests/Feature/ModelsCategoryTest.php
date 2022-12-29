@@ -63,7 +63,7 @@ class ModelsCategoryTest extends TestCase
      */
     public function test_update()
     {
-        $ts = new DateTime('2020-01-01T12:34:56.000Z');
+        $ts = new DateTime('2020-01-01T12:34:56.000+0900');
 
         Category::create([
             'id' => '1',

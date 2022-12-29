@@ -32,19 +32,16 @@ git clone git@github.com:MichinobuMaeda/squirrelwheel.git
 cd squirrelwheel
 composer install
 npm install
-npm run build
 cp .env.example .env
 php artisan key:generate
 
 touch database/database.sqlite
 php artisan migrate
 php artisan test
-rm database/database.sqlite
 
-touch database/database.sqlite
-php artisan migrate
+php artisan migrate:fresh
 php artisan command:initialize
-php artisan serve
+npm run build && php artisan serve
 ```
 
 ## 3. 本番環境
@@ -54,7 +51,6 @@ git clone git@github.com:MichinobuMaeda/squirrelwheel.git
 cd squirrelwheel
 cp .env.production .env
 php artisan key:generate
-touch database/database.sqlite
 ```
 
 `.env.example` を編集する。
@@ -69,23 +65,24 @@ DOKU_LOGIN_URL=https://example.com/wiki/?do=login
 DOKU_GROUPS=admin,user
 FEED_URL=https://example.com/?cat=[category]&feed=atom
 MAIL_MAILER=smtp
-MAIL_HOST=mailhog
-MAIL_PORT=1025
-MAIL_USERNAME=null
-MAIL_PASSWORD=null
-MAIL_ENCRYPTION=null
+MAIL_HOST=
+MAIL_PORT=
+MAIL_USERNAME=
+MAIL_PASSWORD=
+MAIL_ENCRYPTION=
 MAIL_FROM_ADDRESS="hello@example.com"
 MAIL_FROM_NAME="${APP_NAME}"
 ```
 
 ```bash
+touch database/database.sqlite
 php artisan migrate
 php artisan command:initialize
 ```
 
 - `public/build` に開発環境の `npm run build` で生成したファイルを置く。
 - `public/index.php` 内の3箇所の `__DIR__.'/../ ... ...` を書き換える。
-- `public` フォルダーをリネームして公開された場所に置く。
+- `public` フォルダを公開する場所に置く。
 
 ## 4. 仕様
 
@@ -104,26 +101,15 @@ Category --o Template
 
 ### 4.2. データについての補足説明
 
-#### 4.2.2. 初期データ
-
-- 手動投稿用のデータ
-    - `category`
-        - `category_id = ''`
-        - `update_only = false`
-        - `category:priority = 0`
-    - `template`
-        - `template_id = 1`
-        - `category_id = ''`
-
-#### 4.2.3. テンプレートの仕様
+#### 4.2.1. テンプレートの仕様
 
 - `message::content` と `message::link` の埋め込み場所は
 `template::body` に `%%content%%`, `%%link%%` と記載する。
 - `category_id` に対応する `template_id` が複数ある場合はランダムに選択する。
 
-#### 4.2.4. feed の処理
+#### 4.2.2. feed の処理
 
-- `category:category_id != ''` のカテゴリーを対象とする。
+- `category:id not like '@%'` のカテゴリーを対象とする。
 - 対象となるカテゴリーの Atom feed を `FEED_URL` から取得する。
 - 処理済みの Atom feed の `/feed/updated` を `category:checked_at` に格納する。
 - `category:update_only == false` の場合、各記事を処理対象とする。
@@ -138,10 +124,11 @@ Category --o Template
 #### 4.3.2. 投稿の条件
 
 - ジョブの実行毎に1個だけ投稿する。
-- `message::scheduled_after` が現在時刻より後の場合は処理対象としない。
+- `message::reserved_at` が現在時刻より後の場合は処理対象としない。
 - 優先順位
-    1. `category:priority` 昇順
-    2. `message::scheduled_after` 昇順
+    1. `message:priority` 昇順
+    2. `message::reserved_at` 昇順
+    3. `message::id` 昇順
 - `category:update_only = 1` の場合、未処理の投稿が残っている場合は投稿を追加しない。
 
 ### Appendix A このプロジェクトの初期構築手順
