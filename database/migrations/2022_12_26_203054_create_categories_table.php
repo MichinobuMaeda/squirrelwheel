@@ -18,7 +18,7 @@ return new class extends Migration
             $table->text('name')->unique();
             $table->boolean('update_only')->default(false);
             $table->integer('priority');
-            $table->timestamp('checked_at')->nullable();
+            $table->timestamp('checked_at')->useCurrent();
             $table->timestamps();
             $table->softDeletes();
             $table->primary('id');

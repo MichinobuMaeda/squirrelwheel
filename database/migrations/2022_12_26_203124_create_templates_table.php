@@ -21,6 +21,7 @@ return new class extends Migration
                 ->restrictOnDelete();
             $table->text('name')->unique();
             $table->text('body');
+            $table->timestamp('used_at')->useCurrent();
             $table->timestamps();
             $table->softDeletes();
         });

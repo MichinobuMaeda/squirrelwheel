@@ -21,6 +21,16 @@ class Template extends Model
         'category_id',
         'name',
         'body',
+        'used_at',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'used_at' => 'datetime',
     ];
 
     /**

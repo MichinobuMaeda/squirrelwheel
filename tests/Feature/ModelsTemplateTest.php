@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+use DateTime;
 use App\Models\Category;
 use App\Models\Template;
 
@@ -19,6 +20,8 @@ class ModelsTemplateTest extends TestCase
      */
     public function test_create()
     {
+        $ts = new DateTime('2020-01-01T12:34:56.000+0900');
+
         $templates = Template::orderBy('id')->get();
         $this->assertCount(0, $templates);
 
@@ -38,6 +41,7 @@ class ModelsTemplateTest extends TestCase
             'category_id' => '1',
             'name' => 'Name 2',
             'body' => 'Body 2',
+            'used_at' => $ts,
         ])->save();
 
         $templates = Template::orderBy('id')->get();
@@ -48,12 +52,14 @@ class ModelsTemplateTest extends TestCase
         $this->assertEquals('1', $template->category_id);
         $this->assertEquals('Name 1', $template->name);
         $this->assertEquals('Body 1', $template->body);
+        $this->assertIsObject($template->used_at);
 
         $template = $templates[1];
         $this->assertEquals(2, $template->id);
         $this->assertEquals('1', $template->category_id);
         $this->assertEquals('Name 2', $template->name);
         $this->assertEquals('Body 2', $template->body);
+        $this->assertEquals($ts, $template->used_at);
     }
 
     /**
@@ -63,6 +69,8 @@ class ModelsTemplateTest extends TestCase
      */
     public function test_update()
     {
+        $ts = new DateTime('2020-01-01T12:34:56.000+0900');
+
         Category::create([
             'id' => '1',
             'name' => 'Name 1',
@@ -86,6 +94,7 @@ class ModelsTemplateTest extends TestCase
             'category_id' => '2',
             'name' => 'Name 2',
             'body' => 'Body 2',
+            'used_at' => $ts,
         ]);
         $template->save();
 
@@ -94,6 +103,7 @@ class ModelsTemplateTest extends TestCase
         $this->assertEquals('2', $template->category_id);
         $this->assertEquals('Name 2', $template->name);
         $this->assertEquals('Body 2', $template->body);
+        $this->assertEquals($ts, $template->used_at);
     }
 
     /**

@@ -86,26 +86,79 @@ php artisan command:initialize
 
 ## 4. 仕様
 
-### 4.1. ER
+### 4.1. 静的構造
 
 ```mermaid
 classDiagram
-class Category
-class Template
-class Message
-class Job
-class FaileJob
-Message o-- Template
+class Category {
+    text id
+    text name
+    int priority
+    boolean updateOnly
+}
+class Template {
+    text id
+    text name
+    text body
+    timestamp used_at
+}
+class Article {
+    int priority
+    text content
+}
+Model <|-- Category
+Model <|-- Template
+Model <|-- Article
+Model <|-- Job
+Model <|-- FaileJob
+Controller <|-- CategoryController
+Controller <|-- TemplateController
+Controller <|-- ArticleController
+Middleware <|.. DokuAuthenticate
+View <|-- Layout
+View <|-- CategoryIndex
+View <|-- CategoryEdit
+View <|-- TemplateIndex
+View <|-- TemplateEdit
+View <|-- ArticleIndex
+View <|-- ArticleEdit
+Layout <-- CategoryIndex
+Layout <-- CategoryEdit
+Layout <-- TemplateIndex
+Layout <-- TemplateEdit
+Layout <-- ArticleIndex
+Layout <-- ArticleEdit
+CategoryController --> CategoryIndex
+CategoryController --> CategoryEdit
+TemplateController --> TemplateIndex
+TemplateController --> TemplateEdit
+ArticleController  --> ArticleIndex
+ArticleController  --> ArticleEdit
+Command <|-- Initialize
+Command <|-- ReadFeed
+XML <|-- Atom
+ReadFeed --> Atom
+ReadFeed --> Category
+ReadFeed --> Template
+ReadFeed --> Article
+ShouldQueue <|.. PostArticle
+PostArticle --> Article
 Category --o Template
+Initialize --> Template
+Initialize --> Article
+CategoryController --> Category
+TemplateController --> Category
+TemplateController --> Template
+ArticleController --> Template
+ArticleController --> Article
 ```
 
 ### 4.2. データについての補足説明
 
 #### 4.2.1. テンプレートの仕様
 
-- `message::content` と `message::link` の埋め込み場所は
-`template::body` に `%%content%%`, `%%link%%` と記載する。
-- `category_id` に対応する `template_id` が複数ある場合はランダムに選択する。
+- `article::content` と `article::link` の埋め込み場所は `template::body` に `%%content%%`, `%%link%%` と記載する。
+- `category_id` に対応する `template_id` が複数ある場合は利用歴の古いものを選択する。
 
 #### 4.2.2. feed の処理
 

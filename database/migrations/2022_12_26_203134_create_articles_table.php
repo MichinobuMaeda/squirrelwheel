@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->integer('priority');
             $table->text('content');
-            $table->timestamp('reserved_at');
+            $table->timestamp('reserved_at')->useCurrent();
             $table->timestamp('posted_at')->nullable();
             $table->timestamps();
             $table->softDeletes();

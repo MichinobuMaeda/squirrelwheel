@@ -44,7 +44,7 @@ class ModelsCategoryTest extends TestCase
         $this->assertEquals('Name 1', $category->name);
         $this->assertTrue($category->update_only);
         $this->assertEquals(1, $category->priority);
-        $this->assertNull($category->checked_at);
+        $this->assertIsObject($category->checked_at);
         $this->assertCount(0, $category->templates);
 
         $category = $categories[1];
@@ -52,7 +52,7 @@ class ModelsCategoryTest extends TestCase
         $this->assertEquals('Name 2', $category->name);
         $this->assertFalse($category->update_only);
         $this->assertEquals(2, $category->priority);
-        $this->assertNull($category->checked_at);
+        $this->assertIsObject($category->checked_at);
         $this->assertCount(0, $category->templates);
     }
 
@@ -101,7 +101,6 @@ class ModelsCategoryTest extends TestCase
             'name' => 'Name 1',
             'update_only' => true,
             'priority' => 1,
-            'checked_at' => null,
         ]);
 
         $category->save();
@@ -110,7 +109,7 @@ class ModelsCategoryTest extends TestCase
         $this->assertEquals('Name 1', $category->name);
         $this->assertTrue($category->update_only);
         $this->assertEquals(1, $category->priority);
-        $this->assertNull($category->checked_at);
+        $this->assertEquals($ts, $category->checked_at);
         $this->assertCount(1, $category->templates);
     }
 
