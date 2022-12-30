@@ -35,6 +35,9 @@ form .item label {
     @apply align-middle
 }
 .item .value {
+    @apply sm:inline-block sm:w-auto sm:align-top
+}
+.item .value-maluti-line {
     @apply block w-full sm:inline-block sm:w-auto sm:align-top
 }
 .card {
@@ -47,7 +50,7 @@ form .item label {
     @apply alert shadow-lg my-4 clear-both
 }
 form {
-    @apply py-4
+    @apply py-4 px-2
 }
 input[type=color],
 input[type=date],
@@ -60,14 +63,33 @@ input[type=tel],
 input[type=text],
 input[type=time] ,
 input[type=url] ,
-input[type=week]  {
+input[type=week] {
     @apply input input-bordered rounded-md my-1
 }
 select {
-    @apply select select-bordered rounded-md my-1
+    @apply select select-bordered rounded-md my-1 text-base font-normal
 }
 textarea {
     @apply textarea textarea-bordered rounded-md my-1
+}
+.item input[type=color],
+.item input[type=date],
+.item input[type=datetime-local],
+.item input[type=email],
+.item input[type=month],
+.item input[type=number],
+.item input[type=password],
+.item input[type=tel],
+.item input[type=text],
+.item input[type=time] ,
+.item input[type=url] ,
+.item input[type=week],
+.item select,
+.item textarea {
+    @apply block w-full sm:inline-block sm:w-2/3 sm:align-middle
+}
+.form-actions {
+    @apply py-2 px-4 text-right
 }
 .footer {
     @apply items-center py-2 px-4 bg-stone-600 text-stone-100

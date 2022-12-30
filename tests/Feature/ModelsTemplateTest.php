@@ -35,6 +35,7 @@ class ModelsTemplateTest extends TestCase
             'category_id' => '1',
             'name' => 'Name 1',
             'body' => 'Body 1',
+            'used_at' => new DateTime,
         ])->save();
 
         Template::create([
@@ -87,6 +88,7 @@ class ModelsTemplateTest extends TestCase
             'category_id' => '1',
             'name' => 'Name 1',
             'body' => 'Body 1',
+            'used_at' => new DateTime,
         ])->save();
 
         $template = Template::find(1);
@@ -127,6 +129,7 @@ class ModelsTemplateTest extends TestCase
             'category_id' => '1',
             'name' => 'Name 1',
             'body' => 'Body 1',
+            'used_at' => new DateTime,
         ])->save();
 
         $templates = Template::orderBy('id')->get();

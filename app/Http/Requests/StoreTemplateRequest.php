@@ -28,6 +28,7 @@ class StoreTemplateRequest extends FormRequest
             'category_id' => ['required', 'exists:categories,id'],
             'name' => ['required', Rule::unique('templates')->ignore($this->id)],
             'body' => ['required'],
+            'used_at' => ['required', 'date'],
         ];
     }
 }

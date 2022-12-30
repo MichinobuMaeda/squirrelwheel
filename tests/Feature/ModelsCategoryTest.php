@@ -76,6 +76,7 @@ class ModelsCategoryTest extends TestCase
             'category_id' => '1',
             'name' => 'Name 1',
             'body' => 'Body 1',
+            'used_at' => new DateTime,
         ])->save();
 
         $category = Category::find('1');
@@ -137,6 +138,7 @@ class ModelsCategoryTest extends TestCase
             'category_id' => '1',
             'name' => 'Name 1',
             'body' => 'Body 1',
+            'used_at' => new DateTime,
         ])->save();
 
         $category = Category::find('1');

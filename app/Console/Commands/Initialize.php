@@ -58,6 +58,7 @@ class Initialize extends Command
 %%content%%
 %%link%%
 END,
+                'used_at' => new DateTime('2000/01/01'),
             ])->save();
         });
 
@@ -69,6 +70,7 @@ END,
 %%content%%
 %%link%%
 END,
+                'used_at' => new DateTime('2000/01/01'),
             ])->save();
         });
 
