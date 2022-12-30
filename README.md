@@ -239,7 +239,7 @@ php artisan  make:test Models\ArticleTest
 rm resources/js/bootstrap.js 
 > resources/js/app.js 
 npm uninstall axios
-npm install -D tailwindcss postcss autoprefixer
+npm install -D tailwindcss postcss autoprefixer @tailwindcss/typography daisyui
 npx tailwindcss init -p
 ```
 

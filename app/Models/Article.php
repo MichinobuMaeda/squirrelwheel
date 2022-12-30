@@ -30,6 +30,7 @@ class Article extends Model
      * @var array
      */
     protected $casts = [
+        'priority' => 'integer',
         'reserved_at' => 'datetime',
         'posted_at' => 'datetime',
     ];

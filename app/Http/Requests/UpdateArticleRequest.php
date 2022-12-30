@@ -13,7 +13,7 @@ class UpdateArticleRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,9 @@ class UpdateArticleRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'priority' => ['required', 'integer', 'min:0', 'max:9'],
+            'reserved_at' => ['required', 'date'],
+            'content' => ['required'],
         ];
     }
 }

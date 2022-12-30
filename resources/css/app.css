@@ -2,154 +2,76 @@
 @tailwind components;
 @tailwind utilities;
 
-body,
-input[type='text'],
-input[type='password'],
-input[type='email'],
-input[type='number'],
-input[type='url'],
-input[type='date'],
-input[type='datetime-local'],
-input[type='month'],
-input[type='week'],
-input[type='time'],
-input[type='search'],
-input[type='tel'],
-input[type='checkbox'],
-input[type='radio'],
-select,
-select[multiple],
-textarea {
-    @apply bg-white dark:bg-slate-800
+.main-menu .tabs {
+    @apply mb-4 bg-stone-600 justify-center
+}
+.main-menu .tab {
+    @apply sm:text-lg text-stone-100
 }
 .content {
-    @apply container mx-auto px-2 sm:px-4 md:px-6 max-w-5xl pb-8
-}
-h1, h2, h3, h4, h5, h6, p, li, dt, dd, pre, code
-.card,
-input[type='text'],
-input[type='password'],
-input[type='email'],
-input[type='number'],
-input[type='url'],
-input[type='date'],
-input[type='datetime-local'],
-input[type='month'],
-input[type='week'],
-input[type='time'],
-input[type='search'],
-input[type='tel'],
-input[type='checkbox'],
-input[type='radio'],
-select,
-select[multiple],
-textarea {
-    @apply text-slate-900 dark:text-white
-}
-.logo {
-    @apply inline-block h-8 my-0 align-middle
+    min-height: 256px;
+    @apply container max-w-2xl p-1
 }
 h1 {
-    @apply inline-block text-3xl my-0 font-medium align-middle
+    @apply text-3xl
+}
+h1 img {
+    height: 1em;
+    margin-right: 0.1em;
 }
 h2 {
-    @apply text-4xl mt-5 mb-3 font-medium
+    @apply text-2xl my-2
 }
-h3 {
-    @apply text-3xl mt-4 mb-2.5 font-medium
+.btn {
+    @apply text-lg font-normal mx-4 rounded-full
 }
-h4 {
-    @apply text-2xl mt-3 mb-2 font-medium
+.btn-create {
+    @apply btn btn-primary float-right mb-2
 }
-h5 {
-    @apply text-xl mt-2.5 mb-1.5 font-bold
+.item label {
+    @apply sm:inline-block sm:w-1/5 sm:text-right pr-2 sm:align-top text-secondary-focus
 }
-h6, dt {
-    @apply text-lg mt-2 mb-1 font-bold
+form .item label {
+    @apply align-middle
 }
-p, li, dd {
-    @apply text-base font-medium
+.item .value {
+    @apply block w-full sm:inline-block sm:w-auto sm:align-top
 }
-dd {
-    @apply pl-6
-}
-p {
-    @apply my-3 leading-relaxed
-}
-ol, ul {
-    @apply my-3 ml-6 list-outside
-}
-ol {
-    @apply list-decimal
-}
-ul {
-    @apply list-disc
-}
-li {
-    @apply pl-1 leading-relaxed
-}
-a {
-    @apply text-cyan-600 dark:text-cyan-300 underline
-}
-
 .card {
-    @apply border border-solid border-gray-400 dark:border-gray-500 rounded-md mx-1 my-4 px-3 py-4 leading-relaxed
+    @apply shadow-xl clear-both mb-4 mx-1
 }
-.card .title {
-    @apply text-2xl mb-3 font-medium
+.card-actions {
+    @apply pb-2 px-4 justify-end
 }
-label {
-    @apply block my-3
+.nodata {
+    @apply alert shadow-lg my-4 clear-both
 }
-label span {
-    @apply text-amber-700 dark:text-amber-400
+form {
+    @apply py-4
 }
-input[type='text'],
-input[type='password'],
-input[type='email'],
-input[type='number'],
-input[type='url'],
-input[type='date'],
-input[type='datetime-local'],
-input[type='month'],
-input[type='week'],
-input[type='time'],
-input[type='search'],
-input[type='tel'],
-input[type='checkbox'],
-input[type='radio'],
-select,
-select[multiple],
+input[type=color],
+input[type=date],
+input[type=datetime-local],
+input[type=email],
+input[type=month],
+input[type=number],
+input[type=password],
+input[type=tel],
+input[type=text],
+input[type=time] ,
+input[type=url] ,
+input[type=week]  {
+    @apply input input-bordered rounded-md my-1
+}
+select {
+    @apply select select-bordered rounded-md my-1
+}
 textarea {
-    @apply mt-1 block w-full rounded-md border-gray-300 dark:border-gray-500 shadow-sm focus:border-indigo-300 dark:focus:border-indigo-700 focus:ring focus:ring-indigo-200 dark:focus:ring-indigo-800 focus:ring-opacity-50
+    @apply textarea textarea-bordered rounded-md my-1
 }
-
-.header {
-    @apply block py-2 px-4 border-b-2 text-gray-600 dark:text-gray-200
-}
-.header .title {
-    @apply inline-block w-auto
-}
-.header .menu {
-    @apply inline-block w-auto list-none py-1 px-2
-}
-.header .menu li {
-    @apply inline-block py-1 px-2 mx-0
-}
-
 .footer {
-    @apply block py-2 px-4 border-t-2 text-gray-600 dark:text-gray-200
+    @apply items-center py-2 px-4 bg-stone-600 text-stone-100
 }
-
-.item {
-    @apply block my-1
-}
-.name {
-    @apply inline-block w-1/4 align-top text-right pr-2 text-amber-700 dark:text-amber-400
-}
-.value {
-    @apply inline-block w-auto align-top text-slate-900 dark:text-white
-}
-.multiline-value {
-    @apply inline-block w-full sm:w-auto align-top text-slate-900 dark:text-white
+.copyright {
+    @apply items-center grid-flow-col
 }

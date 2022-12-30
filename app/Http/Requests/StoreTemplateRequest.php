@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreTemplateRequest extends FormRequest
 {
@@ -13,7 +14,7 @@ class StoreTemplateRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +25,9 @@ class StoreTemplateRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'category_id' => ['required', 'exists:categories,id'],
+            'name' => ['required', Rule::unique('templates')->ignore($this->id)],
+            'body' => ['required'],
         ];
     }
 }

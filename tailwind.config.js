@@ -7,6 +7,15 @@ module.exports = {
   ],
   theme: {
     extend: {},
+    container: {
+      center: true,
+    },
   },
-  plugins: [],
+  plugins: [
+    require("@tailwindcss/typography"),
+    require("daisyui"),
+  ],
+  daisyui: {
+    themes: ["cupcake"],
+  },
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests\StoreTemplateRequest;
 use App\Http\Requests\UpdateTemplateRequest;
 use App\Models\Template;
@@ -29,7 +30,9 @@ class TemplateController extends Controller
      */
     public function create()
     {
-        return view('templates.edit');
+        return view('templates.edit', [
+            'template' => new Template,
+        ]);
     }
 
     /**
@@ -40,7 +43,8 @@ class TemplateController extends Controller
      */
     public function store(StoreTemplateRequest $request)
     {
-        //
+        $validated = $request->validated();
+        return Redirect::route('templates.index');
     }
 
     /**
@@ -63,7 +67,8 @@ class TemplateController extends Controller
      */
     public function update(UpdateTemplateRequest $request, Template $template)
     {
-        //
+        $validated = $request->validated();
+        return Redirect::route('templates.index');
     }
 
     /**
@@ -74,6 +79,7 @@ class TemplateController extends Controller
      */
     public function destroy(Template $template)
     {
-        //
+        $template->delete();
+        return Redirect::route('templates.index');
     }
 }

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
+use DateTime;
 use App\Models\Category;
 
 class CategoryController extends Controller
@@ -15,7 +17,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::orderBy('id')->get();
+        $categories = Category::orderBy('priority')->orderBy('name')->get();
 
         return view('categories.index', [
             'categories' => $categories,
@@ -29,7 +31,12 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return view('categories.edit');
+        $category = new Category;
+        $category->checked_at = (new DateTime)->format('Y-m-d H:i:s');
+
+        return view('categories.edit', [
+            'category' => $category ,
+        ]);
     }
 
     /**
@@ -40,7 +47,10 @@ class CategoryController extends Controller
      */
     public function store(StoreCategoryRequest $request)
     {
-        //
+        $validated = $request->validated();
+        Category::create($validated)->save();
+
+        return Redirect::route('categories.index');
     }
     /**
      * Show the form for editing the specified resource.
@@ -50,7 +60,9 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        return view('categories.edit');
+        return view('categories.edit', [
+            'category' => $category,
+        ]);
     }
 
     /**
@@ -62,7 +74,11 @@ class CategoryController extends Controller
      */
     public function update(UpdateCategoryRequest $request, Category $category)
     {
-        //
+        $validated = $request->validated();
+        $category->fill($validated);
+        $category->save();
+
+        return Redirect::route('categories.index');
     }
 
     /**
@@ -73,6 +89,8 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        $category->delete();
+
+        return Redirect::route('categories.index');
     }
 }

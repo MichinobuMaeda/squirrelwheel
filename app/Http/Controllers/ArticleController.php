@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests\StoreArticleRequest;
 use App\Http\Requests\UpdateArticleRequest;
 use App\Models\Article;
@@ -30,7 +31,9 @@ class ArticleController extends Controller
      */
     public function create()
     {
-        return view('articles.edit');
+        return view('articles.edit', [
+            'article' => new Article,
+        ]);
     }
 
     /**
@@ -41,7 +44,8 @@ class ArticleController extends Controller
      */
     public function store(StoreArticleRequest $request)
     {
-        //
+        $validated = $request->validated();
+        return Redirect::route('articles.index');
     }
 
     /**
@@ -52,7 +56,9 @@ class ArticleController extends Controller
      */
     public function edit(Article $article)
     {
-        return view('articles.edit');
+        return view('articles.edit', [
+            'article' => $article,
+        ]);
     }
 
     /**
@@ -64,7 +70,8 @@ class ArticleController extends Controller
      */
     public function update(UpdateArticleRequest $request, Article $article)
     {
-        //
+        $validated = $request->validated();
+        return Redirect::route('articles.index');
     }
 
     /**
@@ -75,6 +82,7 @@ class ArticleController extends Controller
      */
     public function destroy(Article $article)
     {
-        //
+        $article->delete();
+        return Redirect::route('articles.index');
     }
 }

@@ -45,6 +45,7 @@ class Category extends Model
      * @var array
      */
     protected $casts = [
+        'priority' => 'integer',
         'update_only' => 'boolean',
         'checked_at' => 'datetime',
     ];
@@ -56,6 +57,8 @@ class Category extends Model
      */
     protected $attributes = [
         'update_only' => false,
+        'priority' => 2,
+        // 'checked_at' => new DateTime, -- should be constant value
     ];
 
     /**

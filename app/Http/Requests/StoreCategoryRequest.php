@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreCategoryRequest extends FormRequest
 {
@@ -13,7 +14,7 @@ class StoreCategoryRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +25,11 @@ class StoreCategoryRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'id' => ['required', 'unique:categories'],
+            'name' => ['required', Rule::unique('categories')->ignore($this->id)],
+            'priority' => ['required', 'integer', 'min:0', 'max:9'],
+            'checked_at' => ['required', 'date'],
+            'update_only' => ['required', 'boolean'],
         ];
     }
 }
