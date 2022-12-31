@@ -90,6 +90,17 @@ php artisan command:initialize
 
 ```mermaid
 classDiagram
+Model <.. Controller
+Model <.. Command
+View <.. Controller
+Component <.. View
+ShouldQueue <.. Command
+ShouldQueue <.. Controller
+class Middleware
+```
+
+```mermaid
+classDiagram
 class Category {
     text id
     text name
@@ -106,7 +117,6 @@ class Template {
 class Article {
     int priority
     text content
-    text link
     timestamp reservedAt
     timestamp postedAt
 }
@@ -115,6 +125,7 @@ Model <|-- Template
 Model <|-- Article
 Model <|-- Job
 Model <|-- FaileJob
+Category o-- Template
 ```
 
 ```mermaid
@@ -131,19 +142,20 @@ Middleware <|.. DokuAuthenticate
 
 ```mermaid
 classDiagram
-View <|-- Layout
+Component <|-- FormErrors
+Component <|-- Layout
+Component <|-- MultiLine
+Component <|-- SelectPriority
+```
+
+```mermaid
+classDiagram
 View <|-- CategoryIndex
 View <|-- CategoryEdit
 View <|-- TemplateIndex
 View <|-- TemplateEdit
 View <|-- ArticleIndex
 View <|-- ArticleEdit
-Layout <-- CategoryIndex
-Layout <-- CategoryEdit
-Layout <-- TemplateIndex
-Layout <-- TemplateEdit
-Layout <-- ArticleIndex
-Layout <-- ArticleEdit
 ```
 
 ```mermaid
