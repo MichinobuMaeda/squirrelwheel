@@ -115,10 +115,22 @@ Model <|-- Template
 Model <|-- Article
 Model <|-- Job
 Model <|-- FaileJob
+```
+
+```mermaid
+classDiagram
 Controller <|-- CategoryController
 Controller <|-- TemplateController
 Controller <|-- ArticleController
+```
+
+```mermaid
+classDiagram
 Middleware <|.. DokuAuthenticate
+```
+
+```mermaid
+classDiagram
 View <|-- Layout
 View <|-- CategoryIndex
 View <|-- CategoryEdit
@@ -132,29 +144,17 @@ Layout <-- TemplateIndex
 Layout <-- TemplateEdit
 Layout <-- ArticleIndex
 Layout <-- ArticleEdit
-CategoryController --> CategoryIndex
-CategoryController --> CategoryEdit
-TemplateController --> TemplateIndex
-TemplateController --> TemplateEdit
-ArticleController  --> ArticleIndex
-ArticleController  --> ArticleEdit
+```
+
+```mermaid
+classDiagram
 Command <|-- Initialize
 Command <|-- ReadFeed
-XML <|-- Atom
-ReadFeed --> Atom
-ReadFeed --> Category
-ReadFeed --> Template
-ReadFeed --> Article
+```
+
+```mermaid
+classDiagram
 ShouldQueue <|.. PostArticle
-PostArticle --> Article
-Category --o Template
-Initialize --> Template
-Initialize --> Article
-CategoryController --> Category
-TemplateController --> Category
-TemplateController --> Template
-ArticleController --> Template
-ArticleController --> Article
 ```
 
 ### 4.2. データについての補足説明
