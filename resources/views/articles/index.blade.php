@@ -21,9 +21,7 @@
             </div>
             <div class="item">
                 <label>{{ ucfirst(__('content')) }}:</label>
-                <span class="value">
-                    <pre>{{ $article->body }}</pre>
-                </span>
+                <span class="value-multi-line"><x-multi-line :text="$article->content" /></span>
             </div>
         </div>
         <div class="card-actions">

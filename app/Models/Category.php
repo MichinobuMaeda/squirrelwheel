@@ -58,7 +58,6 @@ class Category extends Model
     protected $attributes = [
         'update_only' => false,
         'priority' => 2,
-        // 'checked_at' => new DateTime, -- should be constant value
     ];
 
     /**

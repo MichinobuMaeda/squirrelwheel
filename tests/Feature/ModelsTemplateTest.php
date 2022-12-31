@@ -29,21 +29,21 @@ class ModelsTemplateTest extends TestCase
             'id' => '1',
             'name' => 'Name 1',
             'priority' => 1,
-        ])->save();
+        ]);
 
         Template::create([
             'category_id' => '1',
             'name' => 'Name 1',
             'body' => 'Body 1',
             'used_at' => new DateTime,
-        ])->save();
+        ]);
 
         Template::create([
             'category_id' => '1',
             'name' => 'Name 2',
             'body' => 'Body 2',
             'used_at' => $ts,
-        ])->save();
+        ]);
 
         $templates = Template::orderBy('id')->get();
         $this->assertCount(2, $templates);
@@ -76,20 +76,20 @@ class ModelsTemplateTest extends TestCase
             'id' => '1',
             'name' => 'Name 1',
             'priority' => 1,
-        ])->save();
+        ]);
 
         Category::create([
             'id' => '2',
             'name' => 'Name 2',
             'priority' => 2,
-        ])->save();
+        ]);
 
         Template::create([
             'category_id' => '1',
             'name' => 'Name 1',
             'body' => 'Body 1',
             'used_at' => new DateTime,
-        ])->save();
+        ]);
 
         $template = Template::find(1);
         $template->fill([
@@ -123,14 +123,14 @@ class ModelsTemplateTest extends TestCase
             'name' => 'Name 1',
             'update_only' => true,
             'priority' => 1,
-        ])->save();
+        ]);
 
         Template::create([
             'category_id' => '1',
             'name' => 'Name 1',
             'body' => 'Body 1',
             'used_at' => new DateTime,
-        ])->save();
+        ]);
 
         $templates = Template::orderBy('id')->get();
         $this->assertCount(1, $templates);

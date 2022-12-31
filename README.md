@@ -95,16 +95,20 @@ class Category {
     text name
     int priority
     boolean updateOnly
+    timestamp checkedAt
 }
 class Template {
     text id
     text name
     text body
-    timestamp used_at
+    timestamp usedAt
 }
 class Article {
     int priority
     text content
+    text link
+    timestamp reservedAt
+    timestamp postedAt
 }
 Model <|-- Category
 Model <|-- Template

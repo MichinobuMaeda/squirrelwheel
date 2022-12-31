@@ -31,11 +31,7 @@
         </div>
         <div class="item">
             <label for="priority" >{{ ucfirst(__('priority')) }}:</label>
-            <select id="priority" name="priority" required>
-                @for ($i = 0; $i < 10; $i++)
-                <option value="{{ $i }}" {{ old('priority') === strval($i) || $category->priority === $i ? 'selected' : '' }}>{{ $i }}</option>
-                @endfor
-            </select>
+            <x-select-priority :value="$category->priority" />
         </div>
         <div class="item">
             <label for="checked_at" >{{ ucfirst(__('checked at')) }}:</label>

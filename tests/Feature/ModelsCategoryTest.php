@@ -28,13 +28,13 @@ class ModelsCategoryTest extends TestCase
             'name' => 'Name 1',
             'update_only' => true,
             'priority' => 1,
-        ])->save();
+        ]);
 
         Category::create([
             'id' => '2',
             'name' => 'Name 2',
             'priority' => 2,
-        ])->save();
+        ]);
 
         $categories = Category::orderBy('id')->get();
         $this->assertCount(2, $categories);
@@ -70,14 +70,14 @@ class ModelsCategoryTest extends TestCase
             'name' => 'Name 1',
             'update_only' => true,
             'priority' => 1,
-        ])->save();
+        ]);
 
         Template::create([
             'category_id' => '1',
             'name' => 'Name 1',
             'body' => 'Body 1',
             'used_at' => new DateTime,
-        ])->save();
+        ]);
 
         $category = Category::find('1');
         $category->fill([
@@ -129,7 +129,7 @@ class ModelsCategoryTest extends TestCase
             'name' => 'Name 1',
             'update_only' => true,
             'priority' => 1,
-        ])->save();
+        ]);
 
         $categories = Category::orderBy('id')->get();
         $this->assertCount(1, $categories);
@@ -139,7 +139,7 @@ class ModelsCategoryTest extends TestCase
             'name' => 'Name 1',
             'body' => 'Body 1',
             'used_at' => new DateTime,
-        ])->save();
+        ]);
 
         $category = Category::find('1');
         $this->assertEquals('1', $category->id);

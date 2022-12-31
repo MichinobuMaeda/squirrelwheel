@@ -29,11 +29,10 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        $category = new Category;
-        $category->checked_at = (new DateTime)->format('Y-m-d H:i:s');
-
         return view('categories.edit', [
-            'category' => $category ,
+            'category' => new Category([
+                'checked_at' => (new DateTime)->format('Y-m-d H:i:s'),
+            ]),
         ]);
     }
 
@@ -45,8 +44,7 @@ class CategoryController extends Controller
      */
     public function store(StoreCategoryRequest $request)
     {
-        $validated = $request->validated();
-        Category::create($validated)->save();
+        Category::create($request->validated());
 
         return Redirect::route('categories.index');
     }
@@ -72,8 +70,7 @@ class CategoryController extends Controller
      */
     public function update(UpdateCategoryRequest $request, Category $category)
     {
-        $validated = $request->validated();
-        $category->fill($validated);
+        $category->fill($request->validated());
         $category->save();
 
         return Redirect::route('categories.index');

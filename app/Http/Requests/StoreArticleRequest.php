@@ -24,10 +24,10 @@ class StoreArticleRequest extends FormRequest
     public function rules()
     {
         return [
-            'priority' => ['required', 'integer', 'min:0', 'max:9'],
             'template_id' => ['required', 'exists:templates,id'],
-            'url' => ['url'],
             'reserved_at' => ['required', 'date'],
+            'content' => [],
+            'link' => ['url'],
         ];
     }
 }

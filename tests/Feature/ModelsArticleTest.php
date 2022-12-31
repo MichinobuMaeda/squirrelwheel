@@ -28,13 +28,13 @@ class ModelsArticleTest extends TestCase
             'priority' => 0,
             'content' => 'Content 1',
             'reserved_at' => $reserved_at,
-        ])->save();
+        ]);
 
         Article::create([
             'priority' => 1,
             'content' => 'Content 2',
             'reserved_at' => $reserved_at,
-        ])->save();
+        ]);
 
         $articles = Article::orderBy('id')->get();
         $this->assertCount(2, $articles);
@@ -68,7 +68,7 @@ class ModelsArticleTest extends TestCase
             'priority' => 0,
             'content' => 'Content 1',
             'reserved_at' => $reserved_at,
-        ])->save();
+        ]);
         $article = Article::find(1);
         $article->fill([
             'priority' => 1,
@@ -112,7 +112,7 @@ class ModelsArticleTest extends TestCase
             'priority' => 0,
             'content' => 'Content 1',
             'reserved_at' => $ts,
-        ])->save();
+        ]);
 
         $articles = Article::orderBy('id')->get();
         $this->assertCount(1, $articles);

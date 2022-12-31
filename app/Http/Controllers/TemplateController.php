@@ -30,11 +30,10 @@ class TemplateController extends Controller
      */
     public function create()
     {
-        $template = new Template;
-        $template->used_at = (new DateTime('2000/01/01'))->format('Y-m-d H:i:s');
-
         return view('templates.edit', [
-            'template' => $template,
+            'template' => new Template([
+                'used_at' => (new DateTime('2000/01/01'))->format('Y-m-d H:i:s'),
+            ]),
             'categories' => listCategories(),
         ]);
     }
@@ -47,8 +46,7 @@ class TemplateController extends Controller
      */
     public function store(StoreTemplateRequest $request)
     {
-        $validated = $request->validated();
-        Template::create($validated)->save();
+        Template::create($request->validated());
 
         return Redirect::route('templates.index');
     }
@@ -76,8 +74,7 @@ class TemplateController extends Controller
      */
     public function update(UpdateTemplateRequest $request, Template $template)
     {
-        $validated = $request->validated();
-        $template->fill($validated);
+        $template->fill($request->validated());
         $template->save();
 
         return Redirect::route('templates.index');

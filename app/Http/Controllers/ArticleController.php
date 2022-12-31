@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests\StoreArticleRequest;
 use App\Http\Requests\UpdateArticleRequest;
 use App\Models\Article;
+use App\Models\Category;
 
 class ArticleController extends Controller
 {
@@ -16,11 +17,8 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        $articles = Article::whereNull('posted_at')
-            ->orderBy('priority')->orderBy('reserved_at')->orderBy('id')->get();
-
         return view('articles.index', [
-            'articles' => $articles,
+            'articles' => listArticles(),
         ]);
     }
 
@@ -32,7 +30,7 @@ class ArticleController extends Controller
     public function create()
     {
         return view('articles.edit', [
-            'article' => new Article,
+            'templates' => listTemplates(),
         ]);
     }
 
@@ -44,7 +42,10 @@ class ArticleController extends Controller
      */
     public function store(StoreArticleRequest $request)
     {
-        $validated = $request->validated();
+        Article::create(generateArticle($request->validated()));
+
+        // TODO: post $template=>categori_id === '@immediate'
+
         return Redirect::route('articles.index');
     }
 
@@ -70,7 +71,9 @@ class ArticleController extends Controller
      */
     public function update(UpdateArticleRequest $request, Article $article)
     {
-        $validated = $request->validated();
+        $article->fill($request->validated());
+        $article->save();
+
         return Redirect::route('articles.index');
     }
 
@@ -83,6 +86,7 @@ class ArticleController extends Controller
     public function destroy(Article $article)
     {
         $article->delete();
+
         return Redirect::route('articles.index');
     }
 }

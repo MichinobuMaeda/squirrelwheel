@@ -37,7 +37,7 @@ class Initialize extends Command
                 'update_only' => false,
                 'priority' => 0,
                 'checked_at' => new DateTime(),
-            ])->save();
+            ]);
         });
 
         Category::findOr('@later', function () {
@@ -47,7 +47,7 @@ class Initialize extends Command
                 'update_only' => false,
                 'priority' => 1,
                 'checked_at' => new DateTime(),
-            ])->save();
+            ]);
         });
 
         Template::where('category_id', '@immediate')->firstOr(function () {
@@ -59,7 +59,7 @@ class Initialize extends Command
 %%link%%
 END,
                 'used_at' => new DateTime('2000/01/01'),
-            ])->save();
+            ]);
         });
 
         Template::where('category_id', '@later')->firstOr(function () {
@@ -71,7 +71,7 @@ END,
 %%link%%
 END,
                 'used_at' => new DateTime('2000/01/01'),
-            ])->save();
+            ]);
         });
 
         return Command::SUCCESS;

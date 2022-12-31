@@ -25,8 +25,8 @@ class UpdateArticleRequest extends FormRequest
     {
         return [
             'priority' => ['required', 'integer', 'min:0', 'max:9'],
-            'reserved_at' => ['required', 'date'],
             'content' => ['required'],
+            'reserved_at' => ['required', 'date'],
         ];
     }
 }
