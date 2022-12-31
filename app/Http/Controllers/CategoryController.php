@@ -17,10 +17,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::orderBy('priority')->orderBy('name')->get();
-
         return view('categories.index', [
-            'categories' => $categories,
+            'categories' => listCategories(),
         ]);
     }
 

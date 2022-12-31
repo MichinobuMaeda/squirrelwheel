@@ -29,11 +29,7 @@
             </div>
             <div class="item">
                 <label>{{ ucfirst(__('checked at')) }}:</label>
-                @if ($category->checked_at)
-                <span class="value">{{ $category->checked_at->setTimezone(config('app.timezone')) }}</span>
-                @else
-                <span class="value">-</span>
-                @endif
+                <span class="value">{{ $category->checked_at }}</span>
             </div>
         </div>
         <div class="card-actions">

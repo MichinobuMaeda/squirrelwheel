@@ -1,14 +1,10 @@
 <x-layout>
     <x-slot:title>{{ ucfirst($category->id ? __('edit categories') :  __('create categories')) }}</x-slot>
     <h2>{{ ucfirst($category->id ? __('edit categories') :  __('create categories'))}}</h2>
-    <ul>
-    @foreach ($errors->all() as $error)
-        <li class="error">{{ $error }}</li>
-    @endforeach
-    </ul>
+    <x-form-errors />
     @if ($category->id)
     <form action="{{ route('categories.update', ['category' => $category]) }}" method="POST">
-    @method('PUT')
+        @method('PUT')
     @else
     <form action="{{ route('categories.store') }}" method="POST">
     @endif
@@ -19,12 +15,12 @@
             <span class="value">{{ $category->id }}</span>
             <input type="hidden" id="id" name="id" value="{{ $category->id }}">
             @else
-            <input type="text" id="id" name="id" placeholder="{{ ucfirst(__('ID')) }}" value="{{ old('id') ? old('id') : $category->id }}" required>
+            <input type="text" id="id" name="id" placeholder="{{ ucfirst(__('ID')) }}" value="{{ old('id') ?: $category->id }}" required>
             @endif
         </div>
         <div class="item">
             <label for="name" >{{ ucfirst(__('name')) }}:</label>
-            <input type="text" id="name" name="name" placeholder="{{ ucfirst(__('name')) }}" value="{{ old('name') ? old('name') : $category->name }}" required>
+            <input type="text" id="name" name="name" placeholder="{{ ucfirst(__('name')) }}" value="{{ old('name') ?: $category->name }}" required>
         </div>
         <div class="item">
             <label for="update_only" >{{ ucfirst(__('target')) }}:</label>
@@ -43,7 +39,7 @@
         </div>
         <div class="item">
             <label for="checked_at" >{{ ucfirst(__('checked at')) }}:</label>
-            <input type="datetime-local" id="checked_at" name="checked_at" value="{{ old('checked_at') ? old('checked_at') : ($category->checked_at ? $category->checked_at->format('Y-m-d H:i:s') : '') }}" step="1" required>
+            <input type="datetime-local" id="checked_at" name="checked_at" value="{{ old('checked_at') ?: $category->checked_at }}" step="1" required>
         </div>
         <div class="form-actions">
             <a class="btn btn-secondary" href="{{route('categories.index')}}">

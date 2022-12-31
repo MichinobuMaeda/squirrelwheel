@@ -232,7 +232,7 @@ php artisan make:middleware DokuAuthenticate
 
 ```bash
 rm resources/views/welcome.blade.php
-php artisan make:component layout
+php artisan make:component Layout
 php artisan  make:test Models\CategoryTest
 php artisan  make:test Models\TemplateTest
 php artisan  make:test Models\ArticleTest
@@ -250,3 +250,20 @@ npx tailwindcss init -p
 `resources/images/logo.svg` と `resources/images/logo.png` を作成する。
 
 [Favicon Generator for perfect icons on all browsers](https://realfavicongenerator.net/) に `resources/images/logo.png` を入力して作成したアイコンイメージとHTMLソースを `public` の下に反映する。
+
+```bash
+touch app/helpers.php
+```
+
+`composer.json` の `"autoload"` に `app/helpers.php` を追加する。
+
+```json
+    "autoload": {
+        "files": [
+            "app/helpers.php"
+        ],
+```
+
+```bash
+composer dump-autoload
+```

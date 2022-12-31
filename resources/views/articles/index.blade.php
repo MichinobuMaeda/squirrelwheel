@@ -17,7 +17,7 @@
             </div>
             <div class="item">
                 <label>{{ ucfirst(__('reserved at')) }}:</label>
-                <span class="value">{{ $article->reserved_at->setTimezone(config('app.timezone')) }}</span>
+                <span class="value">{{ $article->reserved_at }}</span>
             </div>
             <div class="item">
                 <label>{{ ucfirst(__('content')) }}:</label>

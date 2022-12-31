@@ -21,19 +21,11 @@
             </div>
             <div class="item">
                 <label>{{ ucfirst(__('body')) }}:</label>
-                <span class="value-maluti-line">
-                    @foreach (explode("\n", $template->body) as $line)
-                    <div>{{ $line }}</div>
-                    @endforeach
-                </span>
+                <span class="value-multi-line"><x-multi-line :text="$template->body" /></span>
             </div>
             <div class="item">
                 <label>{{ ucfirst(__('used at')) }}:</label>
-                @if ($template->used_at)
-                <span class="value">{{ $template->used_at->setTimezone(config('app.timezone')) }}</span>
-                @else
-                <span class="value">-</span>
-                @endif
+                <span class="value">{{ $template->used_at }}</span>
             </div>
         </div>
         <div class="card-actions">

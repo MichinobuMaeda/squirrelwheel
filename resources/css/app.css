@@ -37,7 +37,7 @@ form .item label {
 .item .value {
     @apply sm:inline-block sm:w-auto sm:align-top
 }
-.item .value-maluti-line {
+.item .value-multi-line {
     @apply block w-full sm:inline-block sm:w-auto sm:align-top
 }
 .card {
@@ -90,6 +90,9 @@ textarea {
 }
 .form-actions {
     @apply py-2 px-4 text-right
+}
+.form-error {
+    @apply text-error
 }
 .footer {
     @apply items-center py-2 px-4 bg-stone-600 text-stone-100

@@ -18,12 +18,8 @@ class TemplateController extends Controller
      */
     public function index()
     {
-        $templates = Template::all()->sortBy(function($template, $key) {
-            return $template->category->priority . ' ' .  $template->category->id . ' ' . $template->name;
-        });
-
         return view('templates.index', [
-            'templates' => $templates,
+            'templates' => listTemplates(),
         ]);
     }
 
@@ -36,11 +32,10 @@ class TemplateController extends Controller
     {
         $template = new Template;
         $template->used_at = (new DateTime('2000/01/01'))->format('Y-m-d H:i:s');
-        $categories = Category::orderBy('priority')->orderBy('name')->get();
 
         return view('templates.edit', [
             'template' => $template,
-            'categories' => $categories,
+            'categories' => listCategories(),
         ]);
     }
 
@@ -66,11 +61,9 @@ class TemplateController extends Controller
      */
     public function edit(Template $template)
     {
-        $categories = Category::orderBy('priority')->orderBy('name')->get();
-
         return view('templates.edit', [
             'template' => $template,
-            'categories' => $categories,
+            'categories' => listCategories(),
         ]);
     }
 
