@@ -15,17 +15,12 @@ return new class extends Migration
     {
         Schema::create('templates', function (Blueprint $table) {
             $table->id();
-            $table->text('category_id');
+            $table->foreignId('category_id')->constrained();
             $table->text('name')->unique();
             $table->text('body');
             $table->timestamp('used_at');
             $table->timestamps();
             $table->softDeletes();
-            $table->foreign('category_id')
-                ->references('id')
-                ->on('categories')
-                ->cascadeOnUpdate()
-                ->restrictOnDelete();
         });
     }
 

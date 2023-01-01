@@ -25,11 +25,11 @@ class StoreCategoryRequest extends FormRequest
     public function rules()
     {
         return [
-            'id' => ['required', 'unique:categories'],
             'name' => ['required', Rule::unique('categories')->ignore($this->id)],
+            'feed' => ['nullable', 'url'],
+            'update_only' => ['required', 'boolean'],
             'priority' => ['required', 'integer', 'min:0', 'max:9'],
             'checked_at' => ['required', 'date'],
-            'update_only' => ['required', 'boolean'],
         ];
     }
 }

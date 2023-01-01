@@ -31,7 +31,8 @@ h2 {
 .item label {
     @apply sm:inline-block sm:w-1/5 sm:text-right pr-2 sm:align-top text-secondary-focus
 }
-form .item label {
+form .item label,
+form .item .value {
     @apply align-middle
 }
 .item .value {

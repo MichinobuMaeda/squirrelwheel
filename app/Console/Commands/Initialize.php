@@ -30,9 +30,8 @@ class Initialize extends Command
      */
     public function handle()
     {
-        Category::findOr('@immediate', function () {
-            Category::create([
-                'id' => '@immediate',
+        Category::findOr(1, function () {
+            return Category::create([
                 'name' => 'Immediate',
                 'update_only' => false,
                 'priority' => 0,
@@ -40,19 +39,18 @@ class Initialize extends Command
             ]);
         });
 
-        Category::findOr('@later', function () {
-            Category::create([
-                'id' => '@later',
-                'name' => 'Later',
+        Category::findOr(2, function () {
+            return Category::create([
+                'name' => 'Scheduled',
                 'update_only' => false,
                 'priority' => 1,
                 'checked_at' => new DateTime(),
             ]);
         });
 
-        Template::where('category_id', '@immediate')->firstOr(function () {
+        Template::where('category_id', 1)->firstOr(function () {
             Template::create([
-                'category_id' => '@immediate',
+                'category_id' => 1,
                 'name' => 'Immediate',
                 'body' => <<<END
 %%content%%
@@ -62,10 +60,10 @@ END,
             ]);
         });
 
-        Template::where('category_id', '@later')->firstOr(function () {
+        Template::where('category_id', 2)->firstOr(function () {
             Template::create([
-                'category_id' => '@later',
-                'name' => 'Later',
+                'category_id' => 2,
+                'name' => 'Scheduled',
                 'body' => <<<END
 %%content%%
 %%link%%

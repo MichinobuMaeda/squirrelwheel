@@ -16,6 +16,10 @@
                 <span class="value">{{ $category->name }}</span>
             </div>
             <div class="item">
+                <label>{{ ucfirst(__('feed')) }}:</label>
+                <span class="value">{{ $category->feed }}</span>
+            </div>
+            <div class="item">
                 <label>{{ ucfirst(__('target')) }}:</label>
                 @if ($category->update_only)
                 <span class="value">{{ ucfirst(__('update only')) }}</span>

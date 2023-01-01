@@ -11,16 +11,18 @@
         @csrf
         <div class="item">
             <label for="id" >{{ ucfirst(__('ID')) }}:</label>
+            <span class="value">{{ $category->id ?: ucfirst(__('auto number')) }}</span>
             @if ($category->id)
-            <span class="value">{{ $category->id }}</span>
             <input type="hidden" id="id" name="id" value="{{ $category->id }}">
-            @else
-            <input type="text" id="id" name="id" placeholder="{{ ucfirst(__('ID')) }}" value="{{ old('id') ?: $category->id }}" required>
             @endif
         </div>
         <div class="item">
             <label for="name" >{{ ucfirst(__('name')) }}:</label>
             <input type="text" id="name" name="name" placeholder="{{ ucfirst(__('name')) }}" value="{{ old('name') ?: $category->name }}" required>
+        </div>
+        <div class="item">
+            <label for="feed" >{{ ucfirst(__('feed')) }}:</label>
+            <input type="url" id="feed" name="feed" placeholder="{{ ucfirst(__('feed')) }}" value="{{ old('feed') ?: $category->feed }}">
         </div>
         <div class="item">
             <label for="update_only" >{{ ucfirst(__('target')) }}:</label>

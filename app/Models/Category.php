@@ -13,27 +13,13 @@ class Category extends Model
     use SoftDeletes;
 
     /**
-     * Indicates if the model's ID is auto-incrementing.
-     *
-     * @var bool
-     */
-    public $incrementing = false;
-
-    /**
-     * The data type of the auto-incrementing ID.
-     *
-     * @var string
-     */
-    protected $keyType = 'string';
-
-    /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'id',
         'name',
+        'feed',
         'update_only',
         'priority',
         'checked_at',
@@ -45,8 +31,8 @@ class Category extends Model
      * @var array
      */
     protected $casts = [
-        'priority' => 'integer',
         'update_only' => 'boolean',
+        'priority' => 'integer',
         'checked_at' => 'datetime',
     ];
 

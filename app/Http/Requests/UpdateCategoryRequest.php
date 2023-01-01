@@ -26,9 +26,10 @@ class UpdateCategoryRequest extends FormRequest
     {
         return [
             'name' => ['required', Rule::unique('categories')->ignore($this->id)],
+            'feed' => ['nullable', 'url'],
+            'update_only' => ['required', 'boolean'],
             'priority' => ['required', 'integer', 'min:0', 'max:9'],
             'checked_at' => ['required', 'date'],
-            'update_only' => ['required', 'boolean'],
         ];
     }
 }

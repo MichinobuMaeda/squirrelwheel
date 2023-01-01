@@ -26,20 +26,20 @@ class ModelsTemplateTest extends TestCase
         $this->assertCount(0, $templates);
 
         Category::create([
-            'id' => '1',
+            'id' => 1,
             'name' => 'Name 1',
             'priority' => 1,
         ]);
 
         Template::create([
-            'category_id' => '1',
+            'category_id' => 1,
             'name' => 'Name 1',
             'body' => 'Body 1',
             'used_at' => new DateTime,
         ]);
 
         Template::create([
-            'category_id' => '1',
+            'category_id' => 1,
             'name' => 'Name 2',
             'body' => 'Body 2',
             'used_at' => $ts,
@@ -73,19 +73,17 @@ class ModelsTemplateTest extends TestCase
         $ts = new DateTime('2020-01-01T12:34:56.000+0900');
 
         Category::create([
-            'id' => '1',
             'name' => 'Name 1',
             'priority' => 1,
         ]);
 
         Category::create([
-            'id' => '2',
             'name' => 'Name 2',
             'priority' => 2,
         ]);
 
         Template::create([
-            'category_id' => '1',
+            'category_id' => 1,
             'name' => 'Name 1',
             'body' => 'Body 1',
             'used_at' => new DateTime,
@@ -93,7 +91,7 @@ class ModelsTemplateTest extends TestCase
 
         $template = Template::find(1);
         $template->fill([
-            'category_id' => '2',
+            'category_id' => 2,
             'name' => 'Name 2',
             'body' => 'Body 2',
             'used_at' => $ts,
@@ -119,14 +117,13 @@ class ModelsTemplateTest extends TestCase
         $this->assertCount(0, $templates);
 
         Category::create([
-            'id' => '1',
             'name' => 'Name 1',
             'update_only' => true,
             'priority' => 1,
         ]);
 
         Template::create([
-            'category_id' => '1',
+            'category_id' => 1,
             'name' => 'Name 1',
             'body' => 'Body 1',
             'used_at' => new DateTime,

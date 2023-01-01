@@ -26,8 +26,8 @@ class StoreArticleRequest extends FormRequest
         return [
             'template_id' => ['required', 'exists:templates,id'],
             'reserved_at' => ['required', 'date'],
-            'content' => [],
-            'link' => ['url'],
+            'content' => ['nullable'],
+            'link' => ['nullable', 'url'],
         ];
     }
 }

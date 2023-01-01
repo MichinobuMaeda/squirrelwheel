@@ -11,11 +11,9 @@
         @csrf
         <div class="item">
             <label for="id" >{{ ucfirst(__('ID')) }}:</label>
+            <span class="value">{{ $template->id ?: ucfirst(__('auto number')) }}</span>
             @if ($template->id)
-            <span class="value">{{ $template->id }}</span>
             <input type="hidden" id="id" name="id" value="{{ $template->id }}">
-            @else
-            <span class="value">-</span>
             @endif
         </div>
         <div class="item">

@@ -22,47 +22,44 @@ class HelpersTest extends TestCase
     public function test_listCategories()
     {
         Category::create([
-            'id' => '0',
             'name' => 'Name 0',
             'update_only' => true,
             'priority' => 0,
         ])->save();
 
         Category::create([
-            'id' => '1',
             'name' => 'Name 1',
             'update_only' => false,
             'priority' => 1,
         ])->save();
 
         Category::create([
-            'id' => '2',
             'name' => 'Name 2',
-            'update_only' => false,
+            'feed' => 'https://example.com/feed.xml',
+            'update_only' => true,
             'priority' => 1,
         ])->save();
 
         Category::create([
-            'id' => '3',
             'name' => 'Name 3',
             'update_only' => false,
             'priority' => 1,
         ])->save();
 
-        Category::find('2')->delete();
+        Category::find(3)->delete();
 
         $categories = listCategories();
         $this->assertCount(3, $categories);
-        $this->assertEquals('0', $categories[0]->id);
-        $this->assertEquals('1', $categories[1]->id);
-        $this->assertEquals('3', $categories[2]->id);
+        $this->assertEquals(1, $categories[0]->id);
+        $this->assertEquals(2, $categories[1]->id);
+        $this->assertEquals(4, $categories[2]->id);
 
         $categories = listCategories(true);
         $this->assertCount(4, $categories);
-        $this->assertEquals('0', $categories[0]->id);
-        $this->assertEquals('1', $categories[1]->id);
-        $this->assertEquals('2', $categories[2]->id);
-        $this->assertEquals('3', $categories[3]->id);
+        $this->assertEquals(1, $categories[0]->id);
+        $this->assertEquals(2, $categories[1]->id);
+        $this->assertEquals(3, $categories[2]->id);
+        $this->assertEquals(4, $categories[3]->id);
     }
 
     /**
@@ -73,63 +70,60 @@ class HelpersTest extends TestCase
     public function test_listTemplates()
     {
         Category::create([
-            'id' => '0',
             'name' => 'Name 0',
             'update_only' => true,
             'priority' => 0,
         ])->save();
 
         Category::create([
-            'id' => '1',
             'name' => 'Name 1',
             'update_only' => false,
             'priority' => 1,
         ])->save();
 
         Category::create([
-            'id' => '2',
             'name' => 'Name 2',
             'update_only' => false,
             'priority' => 1,
         ])->save();
 
         Template::create([
-            'category_id' => '0',
+            'category_id' => 1,
             'name' => 'Name 0',
             'body' => 'Body 0',
             'used_at' => new DateTime,
         ])->save();
 
         Template::create([
-            'category_id' => '1',
+            'category_id' => 2,
             'name' => 'Name 1',
             'body' => 'Body 1',
             'used_at' => new DateTime,
         ])->save();
 
         Template::create([
-            'category_id' => '1',
+            'category_id' => 2,
             'name' => 'Name 2',
             'body' => 'Body 2',
             'used_at' => new DateTime,
         ])->save();
 
         Template::create([
-            'category_id' => '1',
+            'category_id' => 2,
             'name' => 'Name 3',
             'body' => 'Body 3',
             'used_at' => new DateTime,
         ])->save();
 
         Template::create([
-            'category_id' => '1',
+            'category_id' => 2,
             'name' => 'Name 4',
             'body' => 'Body 4',
             'used_at' => new DateTime,
         ])->save();
 
         Template::create([
-            'category_id' => '2',
+            'category_id' => 3,
             'name' => 'Name 5',
             'body' => 'Body 5',
             'used_at' => new DateTime,
@@ -221,28 +215,26 @@ class HelpersTest extends TestCase
         $ts = new DateTime('2000-01-01');
 
         Category::create([
-            'id' => '0',
             'name' => 'Name 0',
             'update_only' => true,
             'priority' => 0,
         ])->save();
 
         Category::create([
-            'id' => '1',
             'name' => 'Name 1',
             'update_only' => false,
             'priority' => 1,
         ])->save();
 
         Template::create([
-            'category_id' => '0',
+            'category_id' => 1,
             'name' => 'Name 0',
             'body' => '%%content%% - %%link%%',
             'used_at' => new DateTime(),
         ])->save();
 
         Template::create([
-            'category_id' => '1',
+            'category_id' => 2,
             'name' => 'Name 1',
             'body' => '%%content%%',
             'used_at' => new DateTime,

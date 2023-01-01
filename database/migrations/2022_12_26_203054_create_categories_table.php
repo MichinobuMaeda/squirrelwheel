@@ -14,14 +14,14 @@ return new class extends Migration
     public function up()
     {
         Schema::create('categories', function (Blueprint $table) {
-            $table->text('id')->unique();
+            $table->id();
             $table->text('name')->unique();
+            $table->text('feed')->nullable();
             $table->boolean('update_only')->default(false);
             $table->integer('priority');
             $table->timestamp('checked_at')->useCurrent();
             $table->timestamps();
             $table->softDeletes();
-            $table->primary('id');
         });
     }
 

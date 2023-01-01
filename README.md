@@ -104,6 +104,7 @@ classDiagram
 class Category {
     text id
     text name
+    text feed
     int priority
     boolean updateOnly
     timestamp checkedAt
@@ -168,37 +169,6 @@ Command <|-- ReadFeed
 classDiagram
 ShouldQueue <|.. PostArticle
 ```
-
-### 4.2. データについての補足説明
-
-#### 4.2.1. テンプレートの仕様
-
-- `article::content` と `article::link` の埋め込み場所は `template::body` に `%%content%%`, `%%link%%` と記載する。
-- `category_id` に対応する `template_id` が複数ある場合は利用歴の古いものを選択する。
-
-#### 4.2.2. feed の処理
-
-- `category:id not like '@%'` のカテゴリーを対象とする。
-- 対象となるカテゴリーの Atom feed を `FEED_URL` から取得する。
-- 処理済みの Atom feed の `/feed/updated` を `category:checked_at` に格納する。
-- `category:update_only == false` の場合、各記事を処理対象とする。
-- `category:update_only == true` の場合、前回の処理以降のアップデートが有る場合に処理する。
-
-### 4.3. ジョブ
-
-#### 4.3.1. ジョブのトリガー
-
-- CRONを利用して、投稿したい曜日・時刻に実行する。
-
-#### 4.3.2. 投稿の条件
-
-- ジョブの実行毎に1個だけ投稿する。
-- `message::reserved_at` が現在時刻より後の場合は処理対象としない。
-- 優先順位
-    1. `message:priority` 昇順
-    2. `message::reserved_at` 昇順
-    3. `message::id` 昇順
-- `category:update_only = 1` の場合、未処理の投稿が残っている場合は投稿を追加しない。
 
 ### Appendix A このプロジェクトの初期構築手順
 
