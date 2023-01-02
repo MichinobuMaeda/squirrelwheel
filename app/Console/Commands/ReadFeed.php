@@ -66,8 +66,9 @@ END;
         $feed = simplexml_load_string($response->body(), null, LIBXML_NOCDATA, 'atom', true);
         $feed->registerXPATHNamespace('atom', 'http://www.w3.org/2005/Atom');
         $checkedAt = new DateTime($feed->xpath('/atom:feed/atom:updated/text()')[0]);
+        $checkedAt->setTimezone($category->checked_at->getTimezone());
 
-        if ((int)$checkedAt->format('Uv') <= (int)$category->checked_at->format('Uv')) {
+        if ($checkedAt->format('Y-m-d\TH:i:s.vp') <= $category->checked_at->format('Y-m-d\TH:i:s.vp')) {
             Log::info('checked: ' . $category->checked_at);
             return;
         }
@@ -121,7 +122,6 @@ END;
 
         Log::info('save: ' . $checkedAt->format('Y-m-d\TH:i:s.vp'));
 
-        $checkedAt->setTimezone($category->checked_at->getTimezone());
         $category->checked_at = $checkedAt;
         $category->save();
     }
