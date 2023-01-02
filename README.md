@@ -102,7 +102,7 @@ class Middleware
 ```mermaid
 classDiagram
 class Category {
-    text id
+    int id
     text name
     text feed
     int priority
@@ -110,12 +110,13 @@ class Category {
     timestamp checkedAt
 }
 class Template {
-    text id
+    int id
     text name
     text body
     timestamp usedAt
 }
 class Article {
+    int id
     int priority
     text content
     timestamp reservedAt
@@ -185,6 +186,7 @@ v16.14.2
 
 ```bash
 composer create-project laravel/laravel squirrelwheel
+cd squirrelwheel
 composer remove laravel/sanctum
 rm database/migrations/2019_12_14_000001_create_personal_access_tokens_table.php
 rm config/sanctum.php
