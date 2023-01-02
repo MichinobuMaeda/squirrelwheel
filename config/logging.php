@@ -119,7 +119,7 @@ return [
         ],
 
         'job' =>  [
-            'driver' => env('LOG_CHANNEL_JOB', 'daily'),
+            'driver' => env('LOG_DRIVER_JOB', 'daily'),
             'path' => storage_path('logs/job.log'),
             'level' => env('LOG_LEVEL', 'debug'),
         ],

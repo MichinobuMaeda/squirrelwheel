@@ -16,13 +16,13 @@
 
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ $title }} - {{ config('app.name') }}</title>
+        <title>{{ $title }} - {{ __('app name') }}</title>
     </head>
     <body>
         <div class="navbar">
             <h1>
                 <img src="{{ url('/images/android-chrome-192x192.png') }}" alt="logo">
-                {{ config('app.name') }}
+                {{ __('app name') }}
             </h1>
         </div>
         <div class="main-menu">

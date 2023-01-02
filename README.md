@@ -67,7 +67,7 @@ APP_ENV=production
 APP_DEBUG=false
 
 LOG_CHANNEL=daily
-LOG_CHANNEL_JOB=job
+LOG_DRIVER_JOB=daily
 LOG_LEVEL=info
 
 DOKU_BASE_PATH=/wiki/
