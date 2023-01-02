@@ -49,11 +49,18 @@ npm run build && php artisan serve
 ```bash
 git clone git@github.com:MichinobuMaeda/squirrelwheel.git
 cd squirrelwheel
-cp .env.production .env
-php artisan key:generate
 ```
 
-`.env.example` を編集する。
+<https://getcomposer.org/download/>
+の手順で composer をインストール
+
+```bash
+php8.0 composer.phar install
+cp .env.example .env
+php8.0 artisan key:generate
+```
+
+`.env` を編集する。
 
 ```env
 APP_ENV=production 
@@ -84,8 +91,8 @@ MAIL_FROM_NAME="${APP_NAME}"
 
 ```bash
 touch database/database.sqlite
-php artisan migrate
-php artisan command:initialize
+php8.0 artisan migrate
+php8.0 artisan command:initialize
 ```
 
 - `public/build` に開発環境の `npm run build` で生成したファイルを置く。
