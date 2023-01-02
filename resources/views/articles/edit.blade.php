@@ -13,7 +13,7 @@
             <label for="id" >{{ ucfirst(__('ID')) }}:</label>
             <span class="value">{{ isset($article) ? $article->id : ucfirst(__('auto number')) }}</span>
             @if (isset($article))
-            <input type="hidden" id="id" name="id" value="{{ $template->id }}">
+            <input type="hidden" id="id" name="id" value="{{ $article->id }}">
             @endif
         </div>
         @unless (isset($article))

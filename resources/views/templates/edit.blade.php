@@ -20,7 +20,7 @@
             <label for="category_id" >{{ ucfirst(__('category')) }}:</label>
             <select id="category_id" name="category_id" required>
                 @foreach ($categories as $category)
-                <option value="{{ $category->id }}" {{ old('category_id') === $category->id || $template->category_id === $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                <option value="{{ $category->id }}" {{ old('category_id') === strval($category->id) || $template->category_id === $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
                 @endforeach
             </select>
         </div>

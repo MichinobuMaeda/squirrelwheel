@@ -33,6 +33,7 @@
     "checked at": "処理日時",
     "reserved at": "待機日時",
     "used at": "使用日時",
+    "queued at": "予約日時",
     "posted at": "投稿日時",
     "update only": "更新の有無",
     "body": "本文",

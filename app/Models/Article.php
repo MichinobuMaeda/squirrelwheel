@@ -21,7 +21,6 @@ class Article extends Model
         'priority',
         'content',
         'reserved_at',
-        'posted_at',
     ];
 
     /**
@@ -32,6 +31,7 @@ class Article extends Model
     protected $casts = [
         'priority' => 'integer',
         'reserved_at' => 'datetime',
+        'queued_at' => 'datetime',
         'posted_at' => 'datetime',
     ];
 }

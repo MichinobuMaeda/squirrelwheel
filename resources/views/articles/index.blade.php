@@ -23,6 +23,20 @@
                 <label>{{ ucfirst(__('content')) }}:</label>
                 <span class="value-multi-line"><x-multi-line :text="$article->content" /></span>
             </div>
+<!--
+            <div class="item">
+                <label>{{ ucfirst(__('queued at')) }}:</label>
+                <span class="value">{{ $article->queued_at }}</span>
+            </div>
+            <div class="item">
+                <label>{{ ucfirst(__('posted at')) }}:</label>
+                <span class="value">{{ $article->posted_at }}</span>
+            </div>
+-->
+            <div class="item">
+                <label>{{ ucfirst(__('reserved at')) }}:</label>
+                <span class="value">{{ $article->reserved_at }}</span>
+            </div>
         </div>
         <div class="card-actions">
             <a class="btn btn-primary" href="{{ route('articles.edit', ['article' => $article]) }}">

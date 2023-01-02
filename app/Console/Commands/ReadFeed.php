@@ -37,13 +37,13 @@ END;
     public function handle()
     {
         config(['logging.default' => 'job']);
+        Log::info('start: ReadFeed');
 
-        $categories = Category::whereNotNull('feed')->orderBy('feed')->get();
-
-        foreach ($categories as $category) {
+        foreach (getFeedCategories() as $category) {
             $this->handleCategory($category);
         }
 
+        Log::info('end: ReadFeed');
         return Command::SUCCESS;
     }
 
@@ -52,7 +52,7 @@ END;
      *
      * @return void
      */
-    public function handleCategory($category)
+    protected function handleCategory($category)
     {
         Log::info('get: ' . $category->feed);
 
@@ -68,24 +68,14 @@ END;
         $checkedAt = new DateTime($feed->xpath('/atom:feed/atom:updated/text()')[0]);
         $checkedAt->setTimezone($category->checked_at->getTimezone());
 
-        if ($checkedAt->format('Y-m-d\TH:i:s.vp') <= $category->checked_at->format('Y-m-d\TH:i:s.vp')) {
+        if ((int)$checkedAt->format('Uv') <= (int)$category->checked_at->format('Uv')) {
             Log::info('checked: ' . $category->checked_at);
             return;
         }
 
         if ($category->update_only) {
             Log::channel('job')->info('updated: ' . $category->name);
-
-            $template = Template::where('category_id', $category->id)
-                ->orderBy('used_at')->first();
-
-            $this->queueArticle(
-                $template->category->priority,
-                $template->body
-            );
-
-            $template->used_at = new DateTime();
-            $template->save();
+            $this->saveArticle(selectTemplateOfCategory($category));
         } else {
             $entries = $feed->xpath('/atom:feed/atom:entry');
             $count = count($entries);
@@ -98,25 +88,7 @@ END;
                 $link = $feed->xpath('/atom:feed/atom:entry/atom:link/@href')[$i];
                 $title = $feed->xpath('/atom:feed/atom:entry/atom:title/text()')[$i];
                 Log::info('updated: ' . $title);
-
-                $template = Template::where('category_id', $category->id)
-                    ->orderBy('used_at')->first();
-
-                $this->queueArticle(
-                    $template->category->priority,
-                    str_replace(
-                        '%%link%%',
-                        $link,
-                        str_replace(
-                            '%%content%%',
-                            $title,
-                            $template->body,
-                        )
-                    )
-                );
-
-                $template->used_at = new DateTime();
-                $template->save();
+                $this->saveArticle(selectTemplateOfCategory($category), $title, $link);
             }
         }
 
@@ -127,17 +99,29 @@ END;
     }
 
     /**
-     * Handle one category.
+     * Save the article.
      *
+     * @param App\Models\Template  $template
+     * @param string  $content
+     * @param string  $link
      * @return void
      */
-    public function queueArticle($priority, $content)
+    public function saveArticle($template, $content = '', $link = '')
     {
-        $article = Article::create([
-            'priority' => $priority,
-            'content' => $content,
+        Article::create([
+            'priority' => $template->category->priority,
+            'content' => str_replace(
+                '%%link%%',
+                $link,
+                str_replace(
+                    '%%content%%',
+                    $content,
+                    $template->body,
+                )
+            ),
         ]);
 
-        // TODO:
+        $template->used_at = new DateTime();
+        $template->save();
     }
 }

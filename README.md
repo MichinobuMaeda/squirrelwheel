@@ -58,12 +58,20 @@ php artisan key:generate
 ```env
 APP_ENV=production 
 APP_DEBUG=false
+
 LOG_CHANNEL=daily
+LOG_CHANNEL_JOB=job
 LOG_LEVEL=info
+
 DOKU_BASE_PATH=/wiki/
 DOKU_LOGIN_URL=https://example.com/wiki/?do=login
 DOKU_GROUPS=admin,user
-FEED_URL=https://example.com/?cat=[category]&feed=atom
+
+TWITTER_CONSUMER_KEY=
+TWITTER_CONSUMER_SECRET=
+TWITTER_ACCESS_TOKEN=
+TWITTER_ACCESS_TOKEN_SECRET=
+
 MAIL_MAILER=smtp
 MAIL_HOST=
 MAIL_PORT=
@@ -164,6 +172,7 @@ View <|-- ArticleEdit
 classDiagram
 Command <|-- Initialize
 Command <|-- ReadFeed
+Command <|-- DispatchPost
 ```
 
 ```mermaid
@@ -188,6 +197,8 @@ v16.14.2
 composer create-project laravel/laravel squirrelwheel
 cd squirrelwheel
 composer remove laravel/sanctum
+composer require guzzlehttp/guzzle
+composer require abraham/twitteroauth
 rm database/migrations/2019_12_14_000001_create_personal_access_tokens_table.php
 rm config/sanctum.php
 rm database/migrations/2014_10_12_000000_create_users_table.php
@@ -209,6 +220,7 @@ php artisan make:model Template
 php artisan make:model Article
 php artisan make:command Initialize
 php artisan make:command ReadFeed
+php artisan make:command DispatchPost
 php artisan make:job PostArticle
 php artisan make:controller CategoryController --model=Category --resource --requests
 php artisan make:controller TemplateController --model=Template --resource --requests

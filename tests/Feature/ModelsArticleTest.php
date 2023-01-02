@@ -62,6 +62,7 @@ class ModelsArticleTest extends TestCase
     public function test_update()
     {
         $reserved_at = new DateTime('2020-01-01T12:34:56.000+0900');
+        $queued_at = new DateTime('2020-11-31T12:34:56.000+0900');
         $posted_at = new DateTime('2020-12-31T12:34:56.000+0900');
 
         Article::create([
@@ -81,11 +82,10 @@ class ModelsArticleTest extends TestCase
         $this->assertEquals(1, $article->priority);
         $this->assertEquals('Content 2', $article->content);
         $this->assertEquals($reserved_at, $article->reserved_at);
+        $this->assertNull($article->queued_at);
         $this->assertNull($article->posted_at);
 
-        $article->fill([
-            'posted_at' => $posted_at,
-        ]);
+        $article->queued_at = $queued_at;
         $article->save();
 
         $article = Article::find(1);
@@ -93,6 +93,18 @@ class ModelsArticleTest extends TestCase
         $this->assertEquals(1, $article->priority);
         $this->assertEquals('Content 2', $article->content);
         $this->assertEquals($reserved_at, $article->reserved_at);
+        $this->assertEquals($queued_at, $article->queued_at);
+        $this->assertNull($article->posted_at);
+
+        $article->posted_at = $posted_at;
+        $article->save();
+
+        $article = Article::find(1);
+        $this->assertEquals(1, $article->id);
+        $this->assertEquals(1, $article->priority);
+        $this->assertEquals('Content 2', $article->content);
+        $this->assertEquals($reserved_at, $article->reserved_at);
+        $this->assertEquals($queued_at, $article->queued_at);
         $this->assertEquals($posted_at, $article->posted_at);
     }
 

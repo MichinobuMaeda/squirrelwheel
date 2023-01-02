@@ -36,23 +36,56 @@ function listArticles($withTrashed = false)
             ->get();
 }
 
-function generateArticle($formData)
-{
-    $template = Template::find($formData['template_id']);
+function getFeedCategories() {
+    return Category::whereNotNull('feed')
+        ->orderBy('priority')
+        ->orderBy('feed')
+        ->get();
+}
 
-    return [
+function selectTemplateOfCategory($category)
+{
+    return Template::where('category_id', $category->id)
+        ->orderBy('used_at')
+        ->first();
+}
+
+function getArticlesNotDispatched() {
+    return Article::whereNull('posted_at')
+        ->whereNull('queued_at')
+        ->orderBy('priority')
+        ->orderBy('reserved_at')
+        ->orderBy('id')
+        ->get();
+}
+
+/**
+ * Save the article.
+ *
+ * @param App\Models\Template  $template
+ * @param string  $content
+ * @param string  $link
+ * @param \DateTime  $reservedAt
+ * @return void
+ */
+function generateArticle($template, $content = '', $link = '', $reservedAt = null)
+{
+    $article = Article::create([
         'priority' => $template->category->priority,
-        'content' => str_replace(
-            '%%content%%',
-            isset($formData['content']) ? $formData['content'] : '',
+        'content' =>  trim(
             str_replace(
                 '%%link%%',
-                isset($formData['link']) ? $formData['link'] : '',
-                $template->body
+                $link,
+                str_replace(
+                    '%%content%%',
+                    $content,
+                    $template->body,
+                )
             )
         ),
-        'reserved_at' => isset($formData['reserved_at'])
-            ? new DateTime($formData['reserved_at'])
-            : new DateTime(),
-    ];
+        'reserved_at' => $reservedAt ?: new DateTime(),
+    ]);
+
+    $template->used_at = new DateTime();
+    $template->save();
 }

@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 use DateTime;
 use App\Models\Category;
 use App\Models\Template;
@@ -30,7 +31,11 @@ class Initialize extends Command
      */
     public function handle()
     {
+        config(['logging.default' => 'job']);
+        Log::info('start: Initialize');
+
         Category::findOr(1, function () {
+            Log::info('create category: Immediate');
             return Category::create([
                 'name' => 'Immediate',
                 'update_only' => false,
@@ -40,6 +45,7 @@ class Initialize extends Command
         });
 
         Category::findOr(2, function () {
+            Log::info('create category: Scheduled');
             return Category::create([
                 'name' => 'Scheduled',
                 'update_only' => false,
@@ -49,6 +55,7 @@ class Initialize extends Command
         });
 
         Template::where('category_id', 1)->firstOr(function () {
+            Log::info('create template: Immediate');
             Template::create([
                 'category_id' => 1,
                 'name' => 'Immediate',
@@ -61,6 +68,7 @@ END,
         });
 
         Template::where('category_id', 2)->firstOr(function () {
+            Log::info('create template: Scheduled');
             Template::create([
                 'category_id' => 2,
                 'name' => 'Scheduled',
@@ -72,6 +80,7 @@ END,
             ]);
         });
 
+        Log::info('end: Initialize');
         return Command::SUCCESS;
     }
 }

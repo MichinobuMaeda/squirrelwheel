@@ -30,6 +30,7 @@ class Template extends Model
      * @var array
      */
     protected $casts = [
+        'category_id' => 'integer',
         'used_at' => 'datetime',
     ];
 

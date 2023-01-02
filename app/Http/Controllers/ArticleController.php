@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests\StoreArticleRequest;
 use App\Http\Requests\UpdateArticleRequest;
+use DateTime;
 use App\Models\Article;
 use App\Models\Category;
+use App\Models\Template;
 
 class ArticleController extends Controller
 {
@@ -42,7 +44,16 @@ class ArticleController extends Controller
      */
     public function store(StoreArticleRequest $request)
     {
-        Article::create(generateArticle($request->validated()));
+        $validated = $request->validated();
+
+        generateArticle(
+            Template::find($validated['template_id']),
+            isset($validated['content']) ? $validated['content'] : '',
+            isset($validated['link']) ? $validated['link'] : '',
+            isset($validated['reserved_at'])
+                ? new DateTime($validated['reserved_at'])
+                : new DateTime(),
+        );
 
         // TODO: post $template=>categori_id === '@immediate'
 

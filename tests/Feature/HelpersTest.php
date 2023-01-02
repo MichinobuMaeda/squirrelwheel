@@ -218,79 +218,58 @@ class HelpersTest extends TestCase
             'name' => 'Name 0',
             'update_only' => true,
             'priority' => 0,
-        ])->save();
+        ]);
 
-        Category::create([
-            'name' => 'Name 1',
-            'update_only' => false,
-            'priority' => 1,
-        ])->save();
-
-        Template::create([
+        $template = Template::create([
             'category_id' => 1,
             'name' => 'Name 0',
             'body' => '%%content%% - %%link%%',
             'used_at' => new DateTime(),
-        ])->save();
-
-        Template::create([
-            'category_id' => 2,
-            'name' => 'Name 1',
-            'body' => '%%content%%',
-            'used_at' => new DateTime,
-        ])->save();
-
-        $article = generateArticle([
-            'template_id' => 1,
-            'content' => 'Content 0',
-            'link' => 'https://example.com/0',
-            'reserved_at' => $ts->format('Y-m-d H:i:s'),
         ]);
 
-        $this->assertEquals(0, $article['priority']);
-        $this->assertEquals('Content 0 - https://example.com/0', $article['content']);
-        $this->assertEquals($ts, $article['reserved_at']);
+        generateArticle(
+            $template,
+            'Content 0',
+            'https://example.com/0',
+            $ts
+        );
+        $article = Article::find(1);
 
-        $article = generateArticle([
-            'template_id' => 1,
-            'content' => 'Content 0',
-            'link' => null,
-            'reserved_at' => $ts->format('Y-m-d H:i:s'),
-        ]);
+        $this->assertEquals(0, $article->priority);
+        $this->assertEquals('Content 0 - https://example.com/0', $article->content);
+        $this->assertEquals($ts, $article->reserved_at);
 
-        $this->assertEquals(0, $article['priority']);
-        $this->assertEquals('Content 0 - ', $article['content']);
-        $this->assertEquals($ts, $article['reserved_at']);
+        generateArticle(
+            $template,
+            'Content 0',
+            '',
+            $ts
+        );
+        $article = Article::find(2);
 
-        $article = generateArticle([
-            'template_id' => 1,
-            'content' => null,
-            'link' => 'https://example.com/0',
-            'reserved_at' => $ts->format('Y-m-d H:i:s'),
-        ]);
+        $this->assertEquals(0, $article->priority);
+        $this->assertEquals('Content 0 -', $article->content);
+        $this->assertEquals($ts, $article->reserved_at);
 
-        $this->assertEquals(0, $article['priority']);
-        $this->assertEquals(' - https://example.com/0', $article['content']);
-        $this->assertEquals($ts, $article['reserved_at']);
+        generateArticle(
+            $template,
+            '',
+            'https://example.com/0',
+            $ts
+        );
+        $article = Article::find(3);
 
-        $article = generateArticle([
-            'template_id' => 1,
-            'content' => 'Content 0',
-            'reserved_at' => $ts->format('Y-m-d H:i:s'),
-        ]);
+        $this->assertEquals(0, $article->priority);
+        $this->assertEquals('- https://example.com/0', $article->content);
+        $this->assertEquals($ts, $article->reserved_at);
 
-        $this->assertEquals(0, $article['priority']);
-        $this->assertEquals('Content 0 - ', $article['content']);
-        $this->assertEquals($ts, $article['reserved_at']);
+        generateArticle(
+            $template
+        );
+        $article = Article::find(4);
 
-        $article = generateArticle([
-            'template_id' => 1,
-            'link' => 'https://example.com/0',
-            'reserved_at' => $ts->format('Y-m-d H:i:s'),
-        ]);
-
-        $this->assertEquals(0, $article['priority']);
-        $this->assertEquals(' - https://example.com/0', $article['content']);
-        $this->assertEquals($ts, $article['reserved_at']);
+        $this->assertEquals(0, $article->priority);
+        $this->assertEquals('-', $article->content);
+        $this->assertIsObject($article->reserved_at);
     }
 }
