@@ -21,7 +21,7 @@
     <body>
         <div class="navbar">
             <h1>
-                <img src="/images/android-chrome-192x192.png" alt="logo">
+                <img src="{{ url('/images/android-chrome-192x192.png') }}" alt="logo">
                 {{ config('app.name') }}
             </h1>
         </div>

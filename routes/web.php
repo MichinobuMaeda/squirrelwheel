@@ -17,7 +17,7 @@ use App\Http\Controllers\ArticleController;
 */
 
 Route::group(['middleware' => 'doku'], function() {
-    Route::redirect('/', '/articles');
+    Route::redirect('/', 'articles');
     Route::resource('categories', CategoryController::class)->except(['show']);
     Route::resource('templates', TemplateController::class)->except(['show']);
     Route::resource('articles', ArticleController::class)->except(['show']);

@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 
 class DokuAuthenticate
@@ -28,12 +29,16 @@ class DokuAuthenticate
         }
 
         // DokuWiki のアカウントの取得
+        session_name("DokuWiki");
+        if(!isset($_SESSION)) {
+            session_start();
+        }
         $dokuRel = config('doku.base_path');
         $dokuCookie = 'DW'.md5($dokuRel.((1 /*$conf['securecookie']*/) ? $_SERVER['SERVER_PORT'] : ''));
-        $dokuUser = $request->session()->get($dokuCookie.'auth.user', null);
-        $dokuName = $request->session()->get($dokuCookie.'auth.info.name', null);
-        $dokuEmail = $request->session()->get($dokuCookie.'auth.info.mail', null);
-        $dokuGroups = $request->session()->get($dokuCookie.'auth.info.grps', null);
+        $dokuUser = $_SESSION[$dokuCookie]['auth']['user'];
+        $dokuName = $_SESSION[$dokuCookie]['auth']['info']['name'];
+        $dokuEmail = $_SESSION[$dokuCookie]['auth']['info']['mail'];
+        $dokuGroups = $_SESSION[$dokuCookie]['auth']['info']['grps'];
 
         // DokuWiki のグループの確認
         if ($dokuUser && $dokuName && $dokuEmail && $dokuGroups) {
