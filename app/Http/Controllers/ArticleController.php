@@ -7,7 +7,6 @@ use App\Http\Requests\StoreArticleRequest;
 use App\Http\Requests\UpdateArticleRequest;
 use DateTime;
 use App\Models\Article;
-use App\Models\Category;
 use App\Models\Template;
 
 class ArticleController extends Controller
@@ -46,7 +45,7 @@ class ArticleController extends Controller
     {
         $validated = $request->validated();
 
-        generateArticle(
+        $article = generateArticle(
             Template::find($validated['template_id']),
             isset($validated['content']) ? $validated['content'] : '',
             isset($validated['link']) ? $validated['link'] : '',
@@ -55,7 +54,9 @@ class ArticleController extends Controller
                 : new DateTime(),
         );
 
-        // TODO: post $template=>categori_id === '@immediate'
+        if ($article->priority === 0) {
+            postArticle($article);
+        }
 
         return Redirect::route('articles.index');
     }

@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests\StoreTemplateRequest;
 use App\Http\Requests\UpdateTemplateRequest;
 use DateTime;
-use App\Models\Category;
 use App\Models\Template;
 
 class TemplateController extends Controller

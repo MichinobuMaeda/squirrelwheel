@@ -99,6 +99,24 @@ php8.0 artisan command:initialize
 - `public/index.php` 内の3箇所の `__DIR__.'/../ ... ...` を書き換える。
 - `public` フォルダを公開する場所に置く。
 
+`.env` を変更した場合は `php8.0 artisan cache:clear` を実行すること。
+
+`scheduled_job.sh` の以下の行を必要に応じて書き換える。
+
+```bash
+#!/usr/bin/env bash
+
+PHP_COMMAND=php
+```
+
+`scheduled_job.sh` を CRON に登録する。
+
+例
+
+```cron
+53 11 * * * /bin/bash /home/user/squirrelwheel/scheduled_job.sh > /dev/null 2>&1 
+```
+
 ## 4. 仕様
 
 ### 4.1. 静的構造
@@ -187,7 +205,18 @@ classDiagram
 ShouldQueue <|.. PostArticle
 ```
 
-### Appendix A このプロジェクトの初期構築手順
+### 4.2. 投稿の条件
+
+priority: 優先度
+
+- 0: UIで作成して保存したら、即時に投稿する。
+- 1以上: 定時ジョブでキューに登録する。優先度の値が小さい方が優先。投稿するまでは文面を変更できる。
+
+reservedAt: 待機日時
+
+- 待機日時になるまではキューに登録しない。
+
+## Appendix A このプロジェクトの初期構築手順
 
 ```bash
 $ php --version

@@ -6,10 +6,8 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use DateTime;
-use DateTimeZone;
 use App\Models\Article;
 use App\Models\Category;
-use App\Models\Template;
 
 class ReadFeed extends Command
 {
@@ -39,7 +37,10 @@ END;
         config(['logging.default' => 'job']);
         Log::info('start: ReadFeed');
 
-        foreach (getFeedCategories() as $category) {
+        $categories = Category::whereNotNull('feed')
+        ->orderBy('priority')->orderBy('feed')->get();
+
+        foreach ($categories as $category) {
             $this->handleCategory($category);
         }
 
@@ -75,20 +76,26 @@ END;
 
         if ($category->update_only) {
             Log::channel('job')->info('updated: ' . $category->name);
-            $this->saveArticle(selectTemplateOfCategory($category));
+            $this->saveArticle($category->templates()->orderBy('used_at')->first());
         } else {
             $entries = $feed->xpath('/atom:feed/atom:entry');
             $count = count($entries);
 
             for ($i = 0; $i < $count; ++$i) {
-                $updated = new DateTime($feed->xpath('/atom:feed/atom:entry/atom:updated/text()')[$i]);
+                $updated = new DateTime(
+                    $feed->xpath('/atom:feed/atom:entry/atom:updated/text()')[$i]
+                );
 
                 if ((int)$updated->format('Uv') <= (int)$category->checked_at->format('Uv')) continue;
 
                 $link = $feed->xpath('/atom:feed/atom:entry/atom:link/@href')[$i];
                 $title = $feed->xpath('/atom:feed/atom:entry/atom:title/text()')[$i];
                 Log::info('updated: ' . $title);
-                $this->saveArticle(selectTemplateOfCategory($category), $title, $link);
+                $this->saveArticle(
+                    $category->templates()->orderBy('used_at')->first(),
+                    $title,
+                    $link
+                );
             }
         }
 

@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 use DateTime;
 use App\Models\Article;
 use App\Jobs\PostArticle;
@@ -19,7 +20,7 @@ class DispatchPost extends Command
     /**
      * The console command description.
      *
-     * @var string
+     * @var stringß
      */
     protected $description = <<<END
 Dispatch article to post.
@@ -36,10 +37,17 @@ END;
         Log::info('start: DispatchPost');
 
         $ts = new DateTime();
+        $articles = Article::whereNull('posted_at')
+            ->whereNull('queued_at')
+            ->orderBy('priority')
+            ->orderBy('reserved_at')
+            ->orderBy('id')
+            ->get();
 
-        foreach (getArticlesNotDispatched() as $article) {
+        foreach ($articles as $article) {
             if ($article->reserved_at->format('Y-m-d\TH:i:s.vp') <= $ts->format('Y-m-d\TH:i:s.vp')) {
-                Log::info('dispatch: ' . strval($article-id));
+                Log::info('dispatch: ' . strval($article->id));
+
                 PostArticle::dispatch($article)->onQueue('p' . strval($article->priority));
 
                 $article->queued_at = $ts;

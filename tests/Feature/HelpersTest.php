@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
+// use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use DateTime;
 use App\Models\Article;
@@ -272,4 +272,6 @@ class HelpersTest extends TestCase
         $this->assertEquals('-', $article->content);
         $this->assertIsObject($article->reserved_at);
     }
+
+    // TODO: postArticle()
 }

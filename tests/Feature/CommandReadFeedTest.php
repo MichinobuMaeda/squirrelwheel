@@ -3,14 +3,13 @@
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
+// use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 use DateTime;
 use App\Console\Commands\ReadFeed;
 use App\Models\Article;
 use App\Models\Category;
-use App\Models\Template;
 
 class CommandReadFeedTest extends TestCase
 {
