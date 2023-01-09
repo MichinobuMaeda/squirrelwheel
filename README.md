@@ -70,14 +70,14 @@ LOG_CHANNEL=daily
 LOG_DRIVER_JOB=daily
 LOG_LEVEL=info
 
-DOKU_BASE_PATH=/wiki/
-DOKU_LOGIN_URL=https://example.com/wiki/?do=login
-DOKU_GROUPS=admin,user
+SW_DOKU_BASE_PATH=/wiki/
+SW_DOKU_LOGIN_URL=https://example.com/wiki/?do=login
+SW_DOKU_GROUPS=admin,user
 
-TWITTER_CONSUMER_KEY=
-TWITTER_CONSUMER_SECRET=
-TWITTER_ACCESS_TOKEN=
-TWITTER_ACCESS_TOKEN_SECRET=
+SW_TW_CONSUMER_KEY=
+SW_TW_CONSUMER_SECRET=
+SW_TW_ACCESS_TOKEN=
+SW_TW_ACCESS_TOKEN_SECRET=
 
 MAIL_MAILER=smtp
 MAIL_HOST=
@@ -172,7 +172,7 @@ Controller <|-- ArticleController
 
 ```mermaid
 classDiagram
-Middleware <|.. DokuAuthenticate
+Middleware <|.. SwAuthenticate
 ```
 
 ```mermaid
@@ -261,10 +261,10 @@ php artisan make:job PostArticle
 php artisan make:controller CategoryController --model=Category --resource --requests
 php artisan make:controller TemplateController --model=Template --resource --requests
 php artisan make:controller ArticleController --model=Article --resource --requests
-php artisan make:middleware DokuAuthenticate
+php artisan make:middleware SwAuthenticate
 ```
 
-`config/doku.php` を追加する。
+`config/sw.php` を追加する。
 
 ```bash
 rm resources/views/welcome.blade.php

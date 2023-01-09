@@ -18,7 +18,7 @@ class CategoryController extends Controller
     public function index()
     {
         return view('categories.index', [
-            'categories' => listCategories(),
+            'categories' => listCategories(true),
         ]);
     }
 
@@ -83,6 +83,32 @@ class CategoryController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy(Category $category)
+    {
+        $category->forceDelete();
+
+        return Redirect::route('categories.index');
+    }
+
+    /**
+     * Enable the specified resource.
+     *
+     * @param  \App\Models\Category  $category
+     * @return \Illuminate\Http\Response
+     */
+    public function enable(Category $category)
+    {
+        $category->restore();
+
+        return Redirect::route('categories.index');
+    }
+
+    /**
+     * Disable the specified resource.
+     *
+     * @param  \App\Models\Category  $category
+     * @return \Illuminate\Http\Response
+     */
+    public function disable(Category $category)
     {
         $category->delete();
 

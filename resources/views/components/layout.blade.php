@@ -44,6 +44,9 @@
                     <a class="link" href="https://github.com/MichinobuMaeda/squirrelwheel">GitHub</a>
                 </p>
             </div>
+            <div>
+                {{ Auth::user()->name }}
+            </div>
         </div>
     </body>
 </html>

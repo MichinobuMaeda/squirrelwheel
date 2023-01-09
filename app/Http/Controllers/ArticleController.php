@@ -19,7 +19,7 @@ class ArticleController extends Controller
     public function index()
     {
         return view('articles.index', [
-            'articles' => listArticles(),
+            'articles' => listArticles(true),
         ]);
     }
 
@@ -43,16 +43,7 @@ class ArticleController extends Controller
      */
     public function store(StoreArticleRequest $request)
     {
-        $validated = $request->validated();
-
-        $article = generateArticle(
-            Template::find($validated['template_id']),
-            isset($validated['content']) ? $validated['content'] : '',
-            isset($validated['link']) ? $validated['link'] : '',
-            isset($validated['reserved_at'])
-                ? new DateTime($validated['reserved_at'])
-                : new DateTime(),
-        );
+        $article = generateArticleFromFormData($request->validated());
 
         if ($article->priority === 0) {
             postArticle($article);
@@ -96,6 +87,32 @@ class ArticleController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy(Article $article)
+    {
+        $article->forceDelete();
+
+        return Redirect::route('articles.index');
+    }
+
+    /**
+     * Enable the specified resource.
+     *
+     * @param  \App\Models\Article  $article
+     * @return \Illuminate\Http\Response
+     */
+    public function enable(Article $article)
+    {
+        $article->restore();
+
+        return Redirect::route('articles.index');
+    }
+
+    /**
+     * Disable the specified resource.
+     *
+     * @param  \App\Models\Article  $article
+     * @return \Illuminate\Http\Response
+     */
+    public function disable(Article $article)
     {
         $article->delete();
 

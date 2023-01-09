@@ -18,7 +18,7 @@ class TemplateController extends Controller
     public function index()
     {
         return view('templates.index', [
-            'templates' => listTemplates(),
+            'templates' => listTemplates(true),
         ]);
     }
 
@@ -86,6 +86,32 @@ class TemplateController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy(Template $template)
+    {
+        $template->forceDelete();
+
+        return Redirect::route('templates.index');
+    }
+
+    /**
+     * Enable the specified resource.
+     *
+     * @param  \App\Models\Template  $template
+     * @return \Illuminate\Http\Response
+     */
+    public function enable(Template $template)
+    {
+        $template->restore();
+
+        return Redirect::route('templates.index');
+    }
+
+    /**
+     * Disable the specified resource.
+     *
+     * @param  \App\Models\Template  $template
+     * @return \Illuminate\Http\Response
+     */
+    public function disable(Template $template)
     {
         $template->delete();
 

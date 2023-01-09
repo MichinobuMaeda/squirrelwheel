@@ -5,7 +5,7 @@
     </a>
     <h2>{{ ucfirst(__('list articles')) }}</h2>
     @forelse ($articles as $article)
-    <div class="card">
+    <div class="card {{ $article->deleted_at ? 'card-disabled' : '' }}">
         <div class="card-body">
             <div class="item">
                 <label>{{ ucfirst(__('ID')) }}:</label>
@@ -38,11 +38,7 @@
                 <span class="value">{{ $article->reserved_at }}</span>
             </div>
         </div>
-        <div class="card-actions">
-            <a class="btn btn-primary" href="{{ route('articles.edit', ['article' => $article]) }}">
-                {{ ucfirst(__('edit')) }}
-            </a>
-        </div>
+        <x-item-actions route="articles" item="article" :model="$article" />
     </div>
     @empty
     <div class="nodata">{{ ucfirst(__('no data to list.')) }}</div>

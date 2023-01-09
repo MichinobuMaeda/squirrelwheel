@@ -44,6 +44,9 @@ form .item .value {
 .card {
     @apply shadow-xl clear-both mb-4 mx-1
 }
+.card-disabled {
+    @apply bg-stone-400
+}
 .card-actions {
     @apply pb-2 px-4 justify-end
 }

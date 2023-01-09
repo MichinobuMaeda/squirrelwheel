@@ -16,9 +16,52 @@ use App\Http\Controllers\ArticleController;
 |
 */
 
-Route::group(['middleware' => 'doku'], function() {
-    Route::redirect('/', 'articles');
-    Route::resource('categories', CategoryController::class)->except(['show']);
-    Route::resource('templates', TemplateController::class)->except(['show']);
-    Route::resource('articles', ArticleController::class)->except(['show']);
+Route::get('/login', function () {
+    return redirect(config('doku.login_url'));
+})->name('login');
+
+Route::redirect('/', 'articles');
+
+Route::group(['middleware' => 'auth'], function () {
+    Route::put('/categories/{category}/enable', [CategoryController::class, 'enable'])
+        ->withTrashed()
+        ->name('categories.enable');
+    Route::put('/categories/{category}/disable', [CategoryController::class, 'disable'])
+        ->withTrashed()
+        ->name('categories.disable');
+    Route::delete('/categories/{category}/destroy', [CategoryController::class, 'destroy'])
+        ->withTrashed()
+        ->name('categories.destroy');
+    Route::resource('categories', CategoryController::class)
+        ->withTrashed()
+        ->except(['show', 'destroy'])
+        ->middleware('auth');
+
+    Route::put('/templates/{template}/enable', [TemplateController::class, 'enable'])
+        ->withTrashed()
+        ->name('templates.enable');
+    Route::put('/templates/{template}/disable', [TemplateController::class, 'disable'])
+        ->withTrashed()
+        ->name('templates.disable');
+    Route::delete('/templates/{template}/destroy', [CategoryController::class, 'destroy'])
+        ->withTrashed()
+        ->name('templates.destroy');
+    Route::resource('templates', TemplateController::class)
+        ->withTrashed()
+        ->except(['show', 'destroy'])
+        ->middleware('auth');
+
+    Route::put('/articles/{article}/enable', [ArticleController::class, 'enable'])
+        ->withTrashed()
+        ->name('articles.enable');
+    Route::put('/articles/{article}/disable', [ArticleController::class, 'disable'])
+        ->withTrashed()
+        ->name('articles.disable');
+    Route::delete('/articles/{article}/destroy', [CategoryController::class, 'destroy'])
+        ->withTrashed()
+        ->name('articles.destroy');
+    Route::resource('articles', ArticleController::class)
+        ->withTrashed()
+        ->except(['show', 'destroy'])
+        ->middleware('auth');
 });

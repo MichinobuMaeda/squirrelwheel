@@ -5,7 +5,7 @@
     </a>
     <h2>{{ ucfirst(__('list templates')) }}</h2>
     @forelse ($templates as $template)
-    <div class="card">
+    <div class="card {{ $template->deleted_at ? 'card-disabled' : '' }}">
         <div class="card-body">
             <div class="item">
                 <label>{{ ucfirst(__('ID')) }}:</label>
@@ -28,11 +28,7 @@
                 <span class="value">{{ $template->used_at }}</span>
             </div>
         </div>
-        <div class="card-actions">
-            <a class="btn btn-primary" href="{{ route('templates.edit', ['template' => $template]) }}">
-                {{ ucfirst(__('edit')) }}
-            </a>
-        </div>
+        <x-item-actions route="templates" item="template" :model="$template" />
     </div>
     @empty
     <div class="nodata">{{ ucfirst(__('no data to list.')) }}</div>

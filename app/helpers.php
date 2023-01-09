@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Log;
 use Abraham\TwitterOAuth\TwitterOAuth;
+use DateTime;
 use App\Models\Article;
 use App\Models\Category;
 use App\Models\Template;
@@ -87,6 +88,24 @@ function generateArticle($template, $content = '', $link = '', $reservedAt = nul
     $template->save();
 
     return $article;
+}
+
+/**
+ * Generate and save the article from form data.
+ *
+ * @param array  $formData
+ * @return App\Models\Article
+ */
+function generateArticleFromFormData($formData)
+{
+    return generateArticle(
+        Template::find($formData['template_id']),
+        isset($formData['content']) ? $formData['content'] : '',
+        isset($formData['link']) ? $formData['link'] : '',
+        isset($formData['reserved_at'])
+            ? new DateTime($formData['reserved_at'])
+            : new DateTime(),
+    );;
 }
 
 /**
