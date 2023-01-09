@@ -51,7 +51,7 @@ class SwAuthenticate
             if (!isset($_SESSION)) {
                 session_start();
             }
-            $dokuRel = config('doku.base_path');
+            $dokuRel = config('sw.doku.base_path');
             $dokuCookie = 'DW' . md5($dokuRel . ((1 /*$conf['securecookie']*/) ? $_SERVER['SERVER_PORT'] : ''));
             $clientId = $_SESSION[$dokuCookie]['auth']['user'];
             $name = $_SESSION[$dokuCookie]['auth']['info']['name'];
@@ -59,7 +59,7 @@ class SwAuthenticate
             $dokuGroups = $_SESSION[$dokuCookie]['auth']['info']['grps'];
 
             if ($clientId && $name && $email && $dokuGroups) {
-                foreach (config('doku.groups') as $group) {
+                foreach (config('sw.doku.groups') as $group) {
                     if (in_array($group, $dokuGroups)) {
                         $scopes = $scopes === null ? $group : ($scopes . ',' . $group);
                     }

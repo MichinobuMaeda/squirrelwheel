@@ -17,7 +17,7 @@ use App\Http\Controllers\ArticleController;
 */
 
 Route::get('/login', function () {
-    return redirect(config('doku.login_url'));
+    return redirect(config('sw.doku.login_url'));
 })->name('login');
 
 Route::redirect('/', 'articles');
