@@ -16,10 +16,20 @@ class SocialPostRepository
      */
     public function post(Article $article)
     {
-        Log::info('article ID: ' . strval($article->id) . ' priority: ' . strval($article->priority));
+        $targets = config('sqwh.post_target');
+        Log::info(
+            'targets: ' . join(',', $targets) .
+            ' priority: ' . strval($article->priority) .
+            ' article ID: ' . strval($article->id)
+        );
 
         if (config('app.env') === 'production') {
-            $this->postToTwitter($article);
+            if (in_array('tw', $targets , true)) {
+                $this->postToTwitter($article);
+            }
+            if (in_array('mstdn', $targets , true)) {
+                $this->postToMastodon($article);
+            }
         }
     }
 
@@ -40,5 +50,18 @@ class SocialPostRepository
             config('sqwh.tw.access_token_secret')
         );
         $connection->post("statuses/update", ["status" => $article->content]);
+    }
+
+    /**
+     * Post the article to mastodon.
+     *
+     * @param Article  $article
+     * @return void
+     */
+    protected function postToMastodon(Article $article)
+    {
+        Log::info('post to mastodon');
+
+        // TODO:
     }
 }

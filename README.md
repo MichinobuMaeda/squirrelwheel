@@ -2,7 +2,7 @@
 
 ## 1. 概要
 
-WordPress の feed を取得して、更新情報を Twitter に投稿する。
+WordPress の feed を取得して、更新情報を Twitter と Mastodon に投稿する。
 投稿のタイミングを自動的に分散させる。
 投稿のテンプレートを編集することができる。
 
@@ -81,7 +81,7 @@ SQWH_TW_ACCESS_TOKEN=...
 SQWH_TW_ACCESS_TOKEN_SECRET=...
 
 SQWH_MSTDN_SERVER=https://server.tld
-SQWH_MSTDN_USER=username
+SQWH_MSTDN_USERS=username
 SQWH_MSTDN_CLIENT_KEY=...
 SQWH_MSTDN_CLIENT_SECRET=...
 SQWH_MSTDN_ACCESS_TOKEN=...
