@@ -14,16 +14,31 @@
         <meta name="msapplication-TileColor" content="#da532c">
         <meta name="theme-color" content="#ffffff">
 
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>{{ $title }} - {{ __('app name') }}</title>
     </head>
     <body>
         <div class="navbar">
-            <h1>
+            <div class="flex-none">
                 <img src="{{ url('/images/android-chrome-192x192.png') }}" alt="logo">
-                {{ __('app name') }}
-            </h1>
+            </div>
+            <div class="flex-auto">
+                <h1>{{ __('app name') }}</h1>
+            </div>
+            @if (Auth::user())
+            <div class="flex-none">
+                <div class="dropdown dropdown-end">
+                    <label tabindex="0" class="btn btn-square btn-ghost">
+                        <span class="material-symbols-outlined">account_circle</span>
+                    </label>
+                    <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+                        <li><a href="{{route('me')}}">{{ Auth::user()->name }}</a></li>
+                    </ul>
+                </div>
+            </div>
+            @endif
         </div>
         <div class="main-menu">
             <div class="tabs">
@@ -43,9 +58,6 @@
                     -
                     <a class="link" href="https://github.com/MichinobuMaeda/squirrelwheel">GitHub</a>
                 </p>
-            </div>
-            <div>
-                {{ Auth::user()->name }}
             </div>
         </div>
     </body>

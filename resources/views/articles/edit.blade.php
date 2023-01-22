@@ -1,5 +1,5 @@
 <x-layout>
-    <x-slot:title>{{ ucfirst(isset($article) ? __('edit articles') :  __('create articles')) }}</x-slot>
+    <x-slot:title>{{ ucfirst(isset($article) ? __('edit articles') :  __('create articles')) }}</x-slot:title>
     <h2>{{ ucfirst(isset($article) ? __('edit articles') :  __('create articles'))}}</h2>
     <x-form-errors />
     @if (isset($article))

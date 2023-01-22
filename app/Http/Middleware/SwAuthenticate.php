@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use App\Models\User;
 
 class SwAuthenticate
@@ -18,9 +19,13 @@ class SwAuthenticate
      */
     public function handle(Request $request, Closure $next)
     {
-        $user = $this->getDokuUser();
+        if (config('sw.auth_provider') === 'doku') {
+            $user = $this->getDokuUser();
+        } else if (config('sw.auth_provider') === 'mstdn') {
+            $user = $this->getMstdnUser();
+        }
 
-        if ($user) {
+        if (isset($user) && $user) {
             Auth::login($user);
         }
 
@@ -73,5 +78,34 @@ class SwAuthenticate
             'client_id' => $clientId,
             'scopes' => $scopes,
         ]) : null;
+    }
+
+    /**
+     * Get Mastodon user from session.
+     *
+     * @return \App\Models\User
+     */
+    public function getMstdnUser()
+    {
+        session_name("SWMSTDN");
+        if (!isset($_SESSION)) {
+            session_start();
+        }
+
+        $mstdnCookie = 'MSTDN' . md5(route('login'));
+        $mstdnUser = isset($_SESSION[$mstdnCookie]) ? $_SESSION[$mstdnCookie] : null;
+        if (!$mstdnUser) {
+            return null;
+        }
+
+        $mstdn = json_decode($mstdnUser);
+        Log::info('mastodon id: ' . $mstdn->id);
+
+        return User::make([
+            'name' => $mstdn->username,
+            'email' => 'unknown',
+            'client_id' => $mstdn->id,
+            'scopes' => 'read write',
+        ]);
     }
 }

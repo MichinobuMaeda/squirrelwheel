@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\SwAuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,13 +17,15 @@ use App\Http\Controllers\ArticleController;
 |
 */
 
-Route::get('/login', function () {
-    return redirect(config('sw.doku.login_url'));
-})->name('login');
-
 Route::redirect('/', 'articles');
+Route::get('/login', [SwAuthController::class, 'login'])
+    ->name('login');
+Route::get('/auth/mastodon', [SwAuthController::class, 'mastodon'])
+    ->name('auth.mastodon');
 
 Route::group(['middleware' => 'auth'], function () {
+    Route::view('/me', 'auth.me')->name('me');
+
     Route::put('/categories/{category}/enable', [CategoryController::class, 'enable'])
         ->withTrashed()
         ->name('categories.enable');

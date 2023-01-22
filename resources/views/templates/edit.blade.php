@@ -1,5 +1,5 @@
 <x-layout>
-    <x-slot:title>{{ ucfirst($template->id ? __('edit templates') :  __('create templates')) }}</x-slot>
+    <x-slot:title>{{ ucfirst($template->id ? __('edit templates') :  __('create templates')) }}</x-slot:title>
     <h2>{{ ucfirst($template->id ? __('edit templates') :  __('create templates'))}}</h2>
     <x-form-errors />
     @if ($template->id)

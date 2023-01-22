@@ -1,5 +1,5 @@
 <x-layout>
-    <x-slot:title>{{ ucfirst(__('list templates')) }}</x-slot>
+    <x-slot:title>{{ ucfirst(__('list templates')) }}</x-slot:title>
     <a class="btn-create" href="{{ route('templates.create') }}">
         {{ ucfirst(__('create')) }}
     </a>

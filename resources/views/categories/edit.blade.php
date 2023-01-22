@@ -1,5 +1,5 @@
 <x-layout>
-    <x-slot:title>{{ ucfirst($category->id ? __('edit categories') :  __('create categories')) }}</x-slot>
+    <x-slot:title>{{ ucfirst($category->id ? __('edit categories') :  __('create categories')) }}</x-slot:title>
     <h2>{{ ucfirst($category->id ? __('edit categories') :  __('create categories'))}}</h2>
     <x-form-errors />
     @if ($category->id)

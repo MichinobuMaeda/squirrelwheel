@@ -43,5 +43,14 @@
     "content": "content",
     "link": "link",
     "URL": "URL",
+    "login": "login",
+    "logout": "logout",
+    "account": "account",
+    "auth. provider": "auth. provider",
+    "user ID": "user ID",
+    "user name": "user name",
+    "email address": "email address",
+    "retry": "retry",
+    "authentication failed.": "authentication failed.",
     "error": "error"
 }

@@ -43,5 +43,14 @@
     "content": "内容",
     "link": "リンク",
     "URL": "URL",
+    "login": "ログイン",
+    "logout": "ログアウト",
+    "account": "アカウント",
+    "auth. provider": "認証手段",
+    "user ID": "ユーザID",
+    "user name": "ユーザ名",
+    "email address": "メールアドレス",
+    "retry": "やり直す",
+    "authentication failed.": "認証できませんでした。",
     "error": "エラー"
 }

@@ -262,6 +262,8 @@ php artisan make:controller CategoryController --model=Category --resource --req
 php artisan make:controller TemplateController --model=Template --resource --requests
 php artisan make:controller ArticleController --model=Article --resource --requests
 php artisan make:middleware SwAuthenticate
+php artisan make:controller SwAuthController
+php artisan session:table
 ```
 
 `config/sw.php` を追加する。
