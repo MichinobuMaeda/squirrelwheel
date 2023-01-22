@@ -3,10 +3,10 @@
     <h2>{{ ucfirst(__('account')) }}</h2>
     <div class="item">
         <label>{{ ucfirst(__('auth. provider')) }}:</label>
-        @if (config('sw.auth_provider') === 'doku')
-        <span class="value sm-1/2">{{ preg_replace('/\?.*/', '', config('sw.doku.login_url')) }}</span>
-        @elseif (config('sw.auth_provider') === 'mstdn')
-        <span class="value sm-1/2">{{ config('sw.mstdn.server') }}</span>
+        @if (config('sqwh.auth_provider') === 'doku')
+        <span class="value sm-1/2">{{ preg_replace('/\?.*/', '', config('sqwh.doku.login_url')) }}</span>
+        @elseif (config('sqwh.auth_provider') === 'mstdn')
+        <span class="value sm-1/2">{{ config('sqwh.mstdn.server') }}</span>
         @endif
     </div>
     <div class="item">
@@ -21,7 +21,7 @@
         <label>{{ ucfirst(__('email address')) }}:</label>
         <span class="value sm-1/2">{{ Auth::user()->email }}</span>
     </div>
-    @if (config('sw.auth_provider') === 'mstdn')
+    @if (config('sqwh.auth_provider') === 'mstdn')
     <div class="mt-4">
         <a class="btn btn-secondary" href="{{ route('login') }}">
             {{ ucfirst(__('logout')) }}

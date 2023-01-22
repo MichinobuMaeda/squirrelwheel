@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use App\Models\User;
 
-class SwAuthenticate
+class SqwhAuthenticate
 {
     /**
      * Handle an incoming request.
@@ -19,9 +19,9 @@ class SwAuthenticate
      */
     public function handle(Request $request, Closure $next)
     {
-        if (config('sw.auth_provider') === 'doku') {
+        if (config('sqwh.auth_provider') === 'doku') {
             $user = $this->getDokuUser();
-        } else if (config('sw.auth_provider') === 'mstdn') {
+        } else if (config('sqwh.auth_provider') === 'mstdn') {
             $user = $this->getMstdnUser();
         }
 
@@ -56,7 +56,7 @@ class SwAuthenticate
             if (!isset($_SESSION)) {
                 session_start();
             }
-            $dokuRel = config('sw.doku.base_path');
+            $dokuRel = config('sqwh.doku.base_path');
             $dokuCookie = 'DW' . md5($dokuRel . ((1 /*$conf['securecookie']*/) ? $_SERVER['SERVER_PORT'] : ''));
             $clientId = $_SESSION[$dokuCookie]['auth']['user'];
             $name = $_SESSION[$dokuCookie]['auth']['info']['name'];
@@ -64,7 +64,7 @@ class SwAuthenticate
             $dokuGroups = $_SESSION[$dokuCookie]['auth']['info']['grps'];
 
             if ($clientId && $name && $email && $dokuGroups) {
-                foreach (config('sw.doku.groups') as $group) {
+                foreach (config('sqwh.doku.groups') as $group) {
                     if (in_array($group, $dokuGroups)) {
                         $scopes = $scopes === null ? $group : ($scopes . ',' . $group);
                     }

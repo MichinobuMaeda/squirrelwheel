@@ -70,14 +70,14 @@ LOG_CHANNEL=daily
 LOG_DRIVER_JOB=daily
 LOG_LEVEL=info
 
-SW_DOKU_BASE_PATH=/wiki/
-SW_DOKU_LOGIN_URL=https://example.com/wiki/?do=login
-SW_DOKU_GROUPS=admin,user
+SQWH_DOKU_BASE_PATH=/wiki/
+SQWH_DOKU_LOGIN_URL=https://example.com/wiki/?do=login
+SQWH_DOKU_GROUPS=admin,user
 
-SW_TW_CONSUMER_KEY=
-SW_TW_CONSUMER_SECRET=
-SW_TW_ACCESS_TOKEN=
-SW_TW_ACCESS_TOKEN_SECRET=
+SQWH_TW_CONSUMER_KEY=
+SQWH_TW_CONSUMER_SECRET=
+SQWH_TW_ACCESS_TOKEN=
+SQWH_TW_ACCESS_TOKEN_SECRET=
 
 MAIL_MAILER=smtp
 MAIL_HOST=
@@ -172,7 +172,7 @@ Controller <|-- ArticleController
 
 ```mermaid
 classDiagram
-Middleware <|.. SwAuthenticate
+Middleware <|.. SqwhAuthenticate
 ```
 
 ```mermaid
@@ -261,12 +261,12 @@ php artisan make:job PostArticle
 php artisan make:controller CategoryController --model=Category --resource --requests
 php artisan make:controller TemplateController --model=Template --resource --requests
 php artisan make:controller ArticleController --model=Article --resource --requests
-php artisan make:middleware SwAuthenticate
-php artisan make:controller SwAuthController
+php artisan make:middleware SqwhAuthenticate
+php artisan make:controller SqwhAuthController
 php artisan session:table
 ```
 
-`config/sw.php` を追加する。
+`config/sqwh.php` を追加する。
 
 ```bash
 rm resources/views/welcome.blade.php

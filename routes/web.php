@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\ArticleController;
-use App\Http\Controllers\SwAuthController;
+use App\Http\Controllers\SqwhAuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,9 +18,9 @@ use App\Http\Controllers\SwAuthController;
 */
 
 Route::redirect('/', 'articles');
-Route::get('/login', [SwAuthController::class, 'login'])
+Route::get('/login', [SqwhAuthController::class, 'login'])
     ->name('login');
-Route::get('/auth/mastodon', [SwAuthController::class, 'mastodon'])
+Route::get('/auth/mastodon', [SqwhAuthController::class, 'mastodon'])
     ->name('auth.mastodon');
 
 Route::group(['middleware' => 'auth'], function () {

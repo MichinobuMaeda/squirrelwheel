@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-class SwAuthController extends Controller
+class SqwhAuthController extends Controller
 {
     /**
      * Handle login.
@@ -17,12 +17,12 @@ class SwAuthController extends Controller
      */
     public function login(Request $request)
     {
-        if (config('sw.auth_provider') === 'doku') {
-            return redirect(config('sw.doku.login_url'));
-        } else if (config('sw.auth_provider') === 'mstdn') {
+        if (config('sqwh.auth_provider') === 'doku') {
+            return redirect(config('sqwh.doku.login_url'));
+        } else if (config('sqwh.auth_provider') === 'mstdn') {
             return redirect(
-                config('sw.mstdn.server') . '/oauth/authorize' .
-                    '?response_type=code&client_id=' . config('sw.mstdn.client_key') .
+                config('sqwh.mstdn.server') . '/oauth/authorize' .
+                    '?response_type=code&client_id=' . config('sqwh.mstdn.client_key') .
                     // '&redirect_uri=urn:ietf:wg:oauth:2.0:oob' .
                     '&redirect_uri=' . route('auth.mastodon') .
                     '&scope=read write' .
@@ -49,11 +49,11 @@ class SwAuthController extends Controller
             Log::info('mastodon code: ' . $code);
 
             // obtain a token
-            $response = Http::asForm()->post(config('sw.mstdn.server') . '/oauth/token', [
+            $response = Http::asForm()->post(config('sqwh.mstdn.server') . '/oauth/token', [
                 'grant_type' => 'authorization_code',
                 'code' => $code,
-                'client_id' => config('sw.mstdn.client_key'),
-                'client_secret' => config('sw.mstdn.client_secret'),
+                'client_id' => config('sqwh.mstdn.client_key'),
+                'client_secret' => config('sqwh.mstdn.client_secret'),
                 'redirect_uri' => route('auth.mastodon'),
                 'scope' => 'read write',
             ]);
@@ -73,7 +73,7 @@ class SwAuthController extends Controller
             // verify account credentials
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $token
-            ])->get(config('sw.mstdn.server') . '/api/v1/accounts/verify_credentials');
+            ])->get(config('sqwh.mstdn.server') . '/api/v1/accounts/verify_credentials');
 
             if (!$response->successful()) {
                 Log::error(
@@ -85,7 +85,7 @@ class SwAuthController extends Controller
             }
 
             $user = $response->json('username');
-            if ($user !== config('sw.mstdn.user')) {
+            if ($user !== config('sqwh.mstdn.user')) {
                 Log::error('mastodon user is invalid: ' . $user);
                 $request->session()->forget('mstdn');
                 return view('auth.failed');
