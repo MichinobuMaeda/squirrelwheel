@@ -28,6 +28,8 @@ class SqwhAuthController extends Controller
                     '&force_login=true' .
                     '&lang=' . config('app.locale')
             );
+        } else if (config('sqwh.auth_provider') === 'test') {
+            return redirect('/');
         } else {
             return view('auth.failed');
         }

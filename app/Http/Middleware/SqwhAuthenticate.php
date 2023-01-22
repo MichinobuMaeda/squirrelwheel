@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -23,7 +24,7 @@ class SqwhAuthenticate
             $user = $this->getDokuUser();
         } else if (config('sqwh.auth_provider') === 'mstdn') {
             $user = $this->getMstdnUser();
-        } else {
+        } else if (config('sqwh.auth_provider') === 'test') {
             $user = $this->getTestUser();
         }
 
@@ -41,31 +42,35 @@ class SqwhAuthenticate
      */
     public function getDokuUser()
     {
-        session_name("DokuWiki");
-        if (!isset($_SESSION)) {
-            session_start();
-        }
-        $dokuRel = config('sqwh.doku.base_path');
-        $dokuCookie = 'DW' . md5($dokuRel . ((1 /*$conf['securecookie']*/) ? $_SERVER['SERVER_PORT'] : ''));
-        $clientId = $_SESSION[$dokuCookie]['auth']['user'];
-        $name = $_SESSION[$dokuCookie]['auth']['info']['name'];
-        $email = $_SESSION[$dokuCookie]['auth']['info']['mail'];
-        $dokuGroups = $_SESSION[$dokuCookie]['auth']['info']['grps'];
+        try {
+            session_name("DokuWiki");
+            if (!isset($_SESSION)) {
+                session_start();
+            }
+            $dokuRel = config('sqwh.doku.base_path');
+            $dokuCookie = 'DW' . md5($dokuRel . ((1 /*$conf['securecookie']*/) ? $_SERVER['SERVER_PORT'] : ''));
+            $clientId = $_SESSION[$dokuCookie]['auth']['user'];
+            $name = $_SESSION[$dokuCookie]['auth']['info']['name'];
+            $email = $_SESSION[$dokuCookie]['auth']['info']['mail'];
+            $dokuGroups = $_SESSION[$dokuCookie]['auth']['info']['grps'];
 
-        if ($clientId && $name && $email && $dokuGroups) {
-            foreach (config('sqwh.doku.groups') as $group) {
-                if (in_array($group, $dokuGroups)) {
-                    $scopes = isset($scopes) ? ($scopes . ',' . $group) : $group;
+            if ($clientId && $name && $email && $dokuGroups) {
+                foreach (config('sqwh.doku.groups') as $group) {
+                    if (in_array($group, $dokuGroups)) {
+                        $scopes = isset($scopes) ? ($scopes . ',' . $group) : $group;
+                    }
                 }
             }
-        }
 
-        return $scopes ? User::make([
-            'name' => $name,
-            'email' => $email,
-            'client_id' => $clientId,
-            'scopes' => $scopes,
-        ]) : null;
+            return $scopes ? User::make([
+                'name' => $name,
+                'email' => $email,
+                'client_id' => $clientId,
+                'scopes' => $scopes,
+            ]) : null;
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+        }
     }
 
     /**

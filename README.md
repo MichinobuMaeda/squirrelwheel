@@ -110,8 +110,6 @@ php8.0 artisan command:initialize
 - `public/index.php` 内の3箇所の `__DIR__.'/../ ... ...` を書き換える。
 - `public` フォルダを公開する場所に置く。
 
-`.env` を変更した場合は `php8.0 artisan cache:clear` を実行すること。
-
 `scheduled_job.sh` の以下の行を必要に応じて書き換える。
 
 ```bash
@@ -126,6 +124,21 @@ PHP_COMMAND=php
 
 ```cron
 53 11 * * * /bin/bash /home/user/squirrelwheel/scheduled_job.sh > /dev/null 2>&1 
+```
+
+### アップデート
+
+```bash
+git pull
+```
+
+`.env.example` に変更がある場合は `.env` に反映する。
+
+```bash
+php8.0 artisan cache:clear
+php8.0 artisan config:clear
+php8.0 artisan view:clear
+php8.0 artisan migrate
 ```
 
 ## 4. 仕様
