@@ -8,6 +8,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use App\Models\Article;
+use App\Repositories\SocialPostRepository;
 
 class PostArticle implements ShouldQueue
 {
@@ -26,22 +27,22 @@ class PostArticle implements ShouldQueue
      * @param App\Models\Article  $article
      * @return void
      */
-    public function __construct($article)
-    {
+    public function __construct(Article $article) {
         $this->article = $article;
     }
 
     /**
      * Execute the job.
      *
+     * @param App\Models\SocialPostRepository  $social
      * @return void
      */
-    public function handle()
+    public function handle(SocialPostRepository $social)
     {
         config(['logging.default' => 'job']);
 
         // the article to be refreshed
         $article = Article::find($this->article->id);
-        postArticle($article);
+        $social->post($article);
     }
 }

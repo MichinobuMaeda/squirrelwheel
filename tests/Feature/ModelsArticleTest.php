@@ -2,10 +2,10 @@
 
 namespace Tests\Feature;
 
+use DateTime;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 // use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-use DateTime;
 use App\Models\Article;
 
 class ModelsArticleTest extends TestCase

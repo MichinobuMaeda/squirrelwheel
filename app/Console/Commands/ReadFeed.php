@@ -3,11 +3,10 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use DateTime;
-use App\Models\Article;
-use App\Models\Category;
+use App\Repositories\ArticleRepository;
+use App\Repositories\CategoryRepository;
+use App\Repositories\FeedRepository;
 
 class ReadFeed extends Command
 {
@@ -23,112 +22,56 @@ class ReadFeed extends Command
      *
      * @var string
      */
-    protected $description = <<<END
-Read the site's feed and add article posts to the queue.
-END;
+    protected $description = 'Read the site\'s feed and add article posts to the queue.';
 
     /**
      * Execute the console command.
      *
+     * @param  ArticleRepository  $articles
+     * @param  CategoryRepository  $categories
+     * @param  FeedRepository  $feeds
      * @return int
      */
-    public function handle()
-    {
+    public function handle(
+        ArticleRepository $articles,
+        CategoryRepository $categories,
+        FeedRepository $feeds,
+    ) {
         config(['logging.default' => 'job']);
         Log::info('start: ReadFeed');
 
-        $categories = Category::whereNotNull('feed')
-        ->orderBy('priority')->orderBy('feed')->get();
+        foreach ($categories->listForFeed() as $category) {
+            Log::info('get: ' . $category->feed);
+            $feed = $feeds->atom(
+                $category->feed,
+                $category->checked_at->getTimezone(),
+            );
+            if (!$feed) continue;
 
-        foreach ($categories as $category) {
-            $this->handleCategory($category);
+            $checkedAt = $feed['updated'];
+            if (getMilliDiff($checkedAt, $category->checked_at) <= 0) continue;
+
+            if ($category->update_only) {
+                Log::info('updated: ' . $category->name);
+                $articles->generate($category->templates()->orderBy('used_at')->first());
+            } else {
+                foreach ($feed['entries'] as $entry) {
+                    $updated = $entry['updated'];
+                    if (getMilliDiff($updated, $category->checked_at) <= 0) continue;
+
+                    Log::info('updated: ' . $entry['title']);
+                    $articles->generate(
+                        $category->templates()->orderBy('used_at')->first(),
+                        $entry['title'],
+                        $entry['link'],
+                    );
+                }
+            }
+
+            $category->fill(['checked_at' => $checkedAt])->save();
         }
 
         Log::info('end: ReadFeed');
         return Command::SUCCESS;
-    }
-
-    /**
-     * Handle one category.
-     *
-     * @return void
-     */
-    protected function handleCategory($category)
-    {
-        Log::info('get: ' . $category->feed);
-
-        $response = Http::get($category->feed);
-
-        if ($response->status() != 200) {
-            Log::info('status: ' . $response->status());
-            return;
-        }
-
-        $feed = simplexml_load_string($response->body(), null, LIBXML_NOCDATA, 'atom', true);
-        $feed->registerXPATHNamespace('atom', 'http://www.w3.org/2005/Atom');
-        $checkedAt = new DateTime($feed->xpath('/atom:feed/atom:updated/text()')[0]);
-        $checkedAt->setTimezone($category->checked_at->getTimezone());
-
-        if ((int)$checkedAt->format('Uv') <= (int)$category->checked_at->format('Uv')) {
-            Log::info('checked: ' . $category->checked_at);
-            return;
-        }
-
-        if ($category->update_only) {
-            Log::channel('job')->info('updated: ' . $category->name);
-            $this->saveArticle($category->templates()->orderBy('used_at')->first());
-        } else {
-            $entries = $feed->xpath('/atom:feed/atom:entry');
-            $count = count($entries);
-
-            for ($i = 0; $i < $count; ++$i) {
-                $updated = new DateTime(
-                    $feed->xpath('/atom:feed/atom:entry/atom:updated/text()')[$i]
-                );
-
-                if ((int)$updated->format('Uv') <= (int)$category->checked_at->format('Uv')) continue;
-
-                $link = $feed->xpath('/atom:feed/atom:entry/atom:link/@href')[$i];
-                $title = $feed->xpath('/atom:feed/atom:entry/atom:title/text()')[$i];
-                Log::info('updated: ' . $title);
-                $this->saveArticle(
-                    $category->templates()->orderBy('used_at')->first(),
-                    $title,
-                    $link
-                );
-            }
-        }
-
-        Log::info('save: ' . $checkedAt->format('Y-m-d\TH:i:s.vp'));
-
-        $category->checked_at = $checkedAt;
-        $category->save();
-    }
-
-    /**
-     * Save the article.
-     *
-     * @param App\Models\Template  $template
-     * @param string  $content
-     * @param string  $link
-     * @return void
-     */
-    public function saveArticle($template, $content = '', $link = '')
-    {
-        Article::create([
-            'priority' => $template->category->priority,
-            'content' => str_replace(
-                '%%link%%',
-                $link,
-                str_replace(
-                    '%%content%%',
-                    $content,
-                    $template->body,
-                )
-            ),
-        ]);
-
-        $template->used_at = new DateTime();
-        $template->save();
     }
 }

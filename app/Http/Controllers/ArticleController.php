@@ -2,15 +2,56 @@
 
 namespace App\Http\Controllers;
 
+use DateTime;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests\StoreArticleRequest;
 use App\Http\Requests\UpdateArticleRequest;
-use DateTime;
 use App\Models\Article;
-use App\Models\Template;
+use App\Repositories\ArticleRepository;
+use App\Repositories\TemplateRepository;
+use App\Repositories\SocialPostRepository;
 
 class ArticleController extends Controller
 {
+    /**
+     * The article repository implementation.
+     *
+     * @var ArticleRepository
+     */
+    protected $articles;
+
+    /**
+     * The template repository implementation.
+     *
+     * @var TemplateRepository
+     */
+    protected $templates;
+
+    /**
+     * The template repository implementation.
+     *
+     * @var SocialPostRepository
+     */
+    protected $social;
+
+    /**
+     * Create a new controller instance.
+     *
+     * @param  ArticleRepository  $articles
+     * @param  TemplateRepository  $templates
+     * @param  SocialPostRepository  $social
+     * @return void
+     */
+    public function __construct(
+        ArticleRepository $articles,
+        TemplateRepository $templates,
+        SocialPostRepository $social,
+    ) {
+        $this->articles = $articles;
+        $this->templates = $templates;
+        $this->social = $social;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -19,7 +60,7 @@ class ArticleController extends Controller
     public function index()
     {
         return view('articles.index', [
-            'articles' => listArticles(true),
+            'articles' => $this->articles->list(true),
         ]);
     }
 
@@ -31,7 +72,7 @@ class ArticleController extends Controller
     public function create()
     {
         return view('articles.edit', [
-            'templates' => listTemplates(),
+            'templates' => $this->templates->list(),
         ]);
     }
 
@@ -43,10 +84,11 @@ class ArticleController extends Controller
      */
     public function store(StoreArticleRequest $request)
     {
-        $article = generateArticleFromFormData($request->validated());
+        $article = $this->articles->generateFromFormData($request->validated());
 
         if ($article->priority === 0) {
-            postArticle($article);
+            $this->social->post($article);
+            $article->fill(['posted_at' => new DateTime()])->save();
         }
 
         return Redirect::route('articles.index');
@@ -74,8 +116,7 @@ class ArticleController extends Controller
      */
     public function update(UpdateArticleRequest $request, Article $article)
     {
-        $article->fill($request->validated());
-        $article->save();
+        $article->fill($request->validated())->save();
 
         return Redirect::route('articles.index');
     }

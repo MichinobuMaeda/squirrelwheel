@@ -44,7 +44,7 @@
         @endif
         <div class="item">
             <label for="reserved_at" >{{ ucfirst(__('reserved at')) }}:</label>
-            <input type="datetime-local" id="reserved_at" name="reserved_at" value="{{ old('reserved_at') ?: (isset($article) ? $article->reserved_at : (new DateTime)->format('Y-m-d H:i:s')) }}" step="1" required>
+            <input type="datetime-local" id="reserved_at" name="reserved_at" value="{{ old('reserved_at') ?: (isset($article) ? $article->reserved_at : (new DateTime)->format(DATETIME_LOCAL)) }}" step="1" required>
         </div>
         <div class="form-actions">
             <a class="btn btn-secondary" href="{{route('articles.index')}}">

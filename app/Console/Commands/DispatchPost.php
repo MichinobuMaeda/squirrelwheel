@@ -2,11 +2,11 @@
 
 namespace App\Console\Commands;
 
+use DateTime;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
-use DateTime;
-use App\Models\Article;
 use App\Jobs\PostArticle;
+use App\Repositories\ArticleRepository;
 
 class DispatchPost extends Command
 {
@@ -20,39 +20,27 @@ class DispatchPost extends Command
     /**
      * The console command description.
      *
-     * @var stringß
+     * @var string
      */
-    protected $description = <<<END
-Dispatch article to post.
-END;
+    protected $description = 'Dispatch article to post.';
 
     /**
      * Execute the console command.
      *
      * @return int
      */
-    public function handle()
+    public function handle(ArticleRepository $articles)
     {
         config(['logging.default' => 'job']);
         Log::info('start: DispatchPost');
 
         $ts = new DateTime();
-        $articles = Article::whereNull('posted_at')
-            ->whereNull('queued_at')
-            ->orderBy('priority')
-            ->orderBy('reserved_at')
-            ->orderBy('id')
-            ->get();
 
-        foreach ($articles as $article) {
-            if ($article->reserved_at->format('Y-m-d\TH:i:s.vp') <= $ts->format('Y-m-d\TH:i:s.vp')) {
-                Log::info('dispatch: ' . strval($article->id));
-
-                PostArticle::dispatch($article)->onQueue('p' . strval($article->priority));
-
-                $article->queued_at = $ts;
-                $article->save();
-            }
+        foreach ($articles->listToBeQueued($ts) as $article) {
+            Log::info('dispatch: ' . strval($article->id));
+            PostArticle::dispatch($article)
+                ->onQueue('p' . strval($article->priority));
+            $article->fill(['queued_at' => $ts])->save();
         }
 
         Log::info('end: DispatchPost');

@@ -2,14 +2,33 @@
 
 namespace App\Http\Controllers;
 
+use DateTime;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
-use DateTime;
 use App\Models\Category;
+use App\Repositories\CategoryRepository;
 
 class CategoryController extends Controller
 {
+    /**
+     * The category repository implementation.
+     *
+     * @var CategoryRepository
+     */
+    protected $categories;
+
+    /**
+     * Create a new controller instance.
+     *
+     * @param  CategoryRepository  $categories
+     * @return void
+     */
+    public function __construct(CategoryRepository $categories)
+    {
+        $this->categories = $categories;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -18,7 +37,7 @@ class CategoryController extends Controller
     public function index()
     {
         return view('categories.index', [
-            'categories' => listCategories(true),
+            'categories' => $this->categories->list(true),
         ]);
     }
 
@@ -31,7 +50,7 @@ class CategoryController extends Controller
     {
         return view('categories.edit', [
             'category' => new Category([
-                'checked_at' => (new DateTime)->format('Y-m-d H:i:s'),
+                'checked_at' => (new DateTime)->format(DATETIME_LOCAL),
             ]),
         ]);
     }

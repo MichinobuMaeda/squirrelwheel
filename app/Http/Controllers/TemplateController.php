@@ -2,14 +2,45 @@
 
 namespace App\Http\Controllers;
 
+use DateTime;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests\StoreTemplateRequest;
 use App\Http\Requests\UpdateTemplateRequest;
-use DateTime;
 use App\Models\Template;
+use App\Repositories\CategoryRepository;
+use App\Repositories\TemplateRepository;
 
 class TemplateController extends Controller
 {
+    /**
+     * The category repository implementation.
+     *
+     * @var CategoryRepository
+     */
+    protected $categories;
+
+    /**
+     * The template repository implementation.
+     *
+     * @var TemplateRepository
+     */
+    protected $templates;
+
+    /**
+     * Create a new controller instance.
+     *
+     * @param  CategoryRepository  $categories
+     * @param  TemplateRepository  $templates
+     * @return void
+     */
+    public function __construct(
+        CategoryRepository $categories,
+        TemplateRepository $templates
+    ) {
+        $this->categories = $categories;
+        $this->templates = $templates;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -18,7 +49,7 @@ class TemplateController extends Controller
     public function index()
     {
         return view('templates.index', [
-            'templates' => listTemplates(true),
+            'templates' => $this->templates->list(true),
         ]);
     }
 
@@ -31,9 +62,9 @@ class TemplateController extends Controller
     {
         return view('templates.edit', [
             'template' => new Template([
-                'used_at' => (new DateTime('2000/01/01'))->format('Y-m-d H:i:s'),
+                'used_at' => (new DateTime('2000/01/01'))->format(DATETIME_LOCAL),
             ]),
-            'categories' => listCategories(),
+            'categories' => $this->categories->list(),
         ]);
     }
 
@@ -60,7 +91,7 @@ class TemplateController extends Controller
     {
         return view('templates.edit', [
             'template' => $template,
-            'categories' => listCategories(),
+            'categories' => $this->categories->list(),
         ]);
     }
 

@@ -2,14 +2,17 @@
 
 namespace Tests\Feature;
 
+use DateTime;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 // use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
-use DateTime;
 use App\Console\Commands\ReadFeed;
 use App\Models\Article;
 use App\Models\Category;
+use App\Repositories\ArticleRepository;
+use App\Repositories\CategoryRepository;
+use App\Repositories\FeedRepository;
 
 class CommandReadFeedTest extends TestCase
 {
@@ -54,7 +57,11 @@ END,
             ),
         ]);
 
-        (new ReadFeed())->handle();
+        (new ReadFeed())->handle(
+            new ArticleRepository(),
+            new CategoryRepository(),
+            new FeedRepository(),
+        );
 
         $articles = Article::orderBy('id')->get();
         $this->assertCount(1, $articles);
@@ -63,7 +70,11 @@ END,
         $this->assertEquals(2, $article->priority);
         $this->assertMatchesRegularExpression('/^Description\ 1/', $article->content);
 
-        (new ReadFeed())->handle();
+        (new ReadFeed())->handle(
+            new ArticleRepository(),
+            new CategoryRepository(),
+            new FeedRepository(),
+        );
         $articles = Article::orderBy('id')->get();
         $this->assertCount(1, $articles);
     }
@@ -111,7 +122,11 @@ END,
             ),
         ]);
 
-        (new ReadFeed())->handle();
+        (new ReadFeed())->handle(
+            new ArticleRepository(),
+            new CategoryRepository(),
+            new FeedRepository(),
+        );
 
         $articles = Article::orderBy('id')->get();
         $this->assertCount(5, $articles);
@@ -146,7 +161,11 @@ END,
         $this->assertMatchesRegularExpression('/Title\ 8/', $article->content);
         $this->assertMatchesRegularExpression('/https:\/\/example.com\/\?p=8/', $article->content);
 
-        (new ReadFeed())->handle();
+        (new ReadFeed())->handle(
+            new ArticleRepository(),
+            new CategoryRepository(),
+            new FeedRepository(),
+        );
 
         $articles = Article::orderBy('id')->get();
         $this->assertCount(5, $articles);
