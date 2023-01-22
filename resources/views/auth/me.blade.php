@@ -7,6 +7,8 @@
         <span class="value sm-1/2">{{ preg_replace('/\?.*/', '', config('sqwh.doku.login_url')) }}</span>
         @elseif (config('sqwh.auth_provider') === 'mstdn')
         <span class="value sm-1/2">{{ config('sqwh.mstdn.server') }}</span>
+        @else
+        <span class="value sm-1/2">Test</span>
         @endif
     </div>
     <div class="item">

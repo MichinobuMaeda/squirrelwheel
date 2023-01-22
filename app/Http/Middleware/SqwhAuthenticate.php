@@ -23,6 +23,8 @@ class SqwhAuthenticate
             $user = $this->getDokuUser();
         } else if (config('sqwh.auth_provider') === 'mstdn') {
             $user = $this->getMstdnUser();
+        } else {
+            $user = $this->getTestUser();
         }
 
         if (isset($user) && $user) {
@@ -39,35 +41,21 @@ class SqwhAuthenticate
      */
     public function getDokuUser()
     {
-        $clientId = null;
-        $name = null;
-        $email = null;
-        $scopes = null;
+        session_name("DokuWiki");
+        if (!isset($_SESSION)) {
+            session_start();
+        }
+        $dokuRel = config('sqwh.doku.base_path');
+        $dokuCookie = 'DW' . md5($dokuRel . ((1 /*$conf['securecookie']*/) ? $_SERVER['SERVER_PORT'] : ''));
+        $clientId = $_SESSION[$dokuCookie]['auth']['user'];
+        $name = $_SESSION[$dokuCookie]['auth']['info']['name'];
+        $email = $_SESSION[$dokuCookie]['auth']['info']['mail'];
+        $dokuGroups = $_SESSION[$dokuCookie]['auth']['info']['grps'];
 
-        if (config('app.env') === 'local') {
-
-            $clientId = 'test_user_id';
-            $name = 'User Name';
-            $email = 'user@example.com';
-            $scopes = 'admin,user';
-        } else {
-
-            session_name("DokuWiki");
-            if (!isset($_SESSION)) {
-                session_start();
-            }
-            $dokuRel = config('sqwh.doku.base_path');
-            $dokuCookie = 'DW' . md5($dokuRel . ((1 /*$conf['securecookie']*/) ? $_SERVER['SERVER_PORT'] : ''));
-            $clientId = $_SESSION[$dokuCookie]['auth']['user'];
-            $name = $_SESSION[$dokuCookie]['auth']['info']['name'];
-            $email = $_SESSION[$dokuCookie]['auth']['info']['mail'];
-            $dokuGroups = $_SESSION[$dokuCookie]['auth']['info']['grps'];
-
-            if ($clientId && $name && $email && $dokuGroups) {
-                foreach (config('sqwh.doku.groups') as $group) {
-                    if (in_array($group, $dokuGroups)) {
-                        $scopes = $scopes === null ? $group : ($scopes . ',' . $group);
-                    }
+        if ($clientId && $name && $email && $dokuGroups) {
+            foreach (config('sqwh.doku.groups') as $group) {
+                if (in_array($group, $dokuGroups)) {
+                    $scopes = isset($scopes) ? ($scopes . ',' . $group) : $group;
                 }
             }
         }
@@ -107,5 +95,22 @@ class SqwhAuthenticate
             'client_id' => $mstdn->id,
             'scopes' => 'read write',
         ]);
+    }
+
+    /**
+     * Get test user from session.
+     *
+     * @return \App\Models\User
+     */
+    public function getTestUser()
+    {
+        return (config('app.env') === 'local' || config('app.env') === 'test')
+            ? User::make([
+                'name' => 'User Name',
+                'email' => 'user@example.com',
+                'client_id' => 'test_user_id',
+                'scopes' => 'read write',
+            ])
+            : null;
     }
 }
