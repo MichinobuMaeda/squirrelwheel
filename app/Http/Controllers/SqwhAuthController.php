@@ -22,7 +22,6 @@ class SqwhAuthController extends Controller
             return redirect(
                 config('sqwh.mstdn.server') . '/oauth/authorize' .
                     '?response_type=code&client_id=' . config('sqwh.mstdn.client_key') .
-                    // '&redirect_uri=urn:ietf:wg:oauth:2.0:oob' .
                     '&redirect_uri=' . route('auth.mastodon') .
                     '&scope=read write' .
                     '&force_login=true' .

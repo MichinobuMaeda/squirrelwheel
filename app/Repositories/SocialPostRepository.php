@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use Abraham\TwitterOAuth\TwitterOAuth;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use App\Models\Article;
 
@@ -19,15 +20,15 @@ class SocialPostRepository
         $targets = config('sqwh.post_target');
         Log::info(
             'targets: ' . join(',', $targets) .
-            ' priority: ' . strval($article->priority) .
-            ' article ID: ' . strval($article->id)
+                ' priority: ' . strval($article->priority) .
+                ' article ID: ' . strval($article->id)
         );
 
         if (config('app.env') === 'production') {
-            if (in_array('tw', $targets , true)) {
+            if (in_array('tw', $targets, true)) {
                 $this->postToTwitter($article);
             }
-            if (in_array('mstdn', $targets , true)) {
+            if (in_array('mstdn', $targets, true)) {
                 $this->postToMastodon($article);
             }
         }
@@ -62,6 +63,14 @@ class SocialPostRepository
     {
         Log::info('post to mastodon');
 
-        // TODO:
+        Http::withHeaders([
+            'Authorization' => 'Bearer ' . config('sqwh.mstdn.access_token'),
+            'Idempotency-Key' => hash('sha256', $article->content),
+        ])->asForm()->post(config('sqwh.mstdn.server') . '/api/v1/statuses', [
+            'status' => $article->content,
+            'sensitive' => 'false',
+            'visibility' => 'public',
+            'language' => config('app.locale'),
+        ]);
     }
 }
