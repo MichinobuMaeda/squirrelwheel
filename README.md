@@ -47,6 +47,7 @@ cd squirrelwheel
 composer install
 npm install
 cp .env.example .env
+ cp scheduled_job.sample.sh scheduled_job.sh
 php artisan key:generate
 
 touch database/database.sqlite
@@ -73,6 +74,7 @@ cd squirrelwheel
 ```bash
 php composer.phar install
 cp .env.example .env
+cp scheduled_job.sample.sh scheduled_job.sh
 php artisan key:generate
 ```
 
@@ -112,6 +114,8 @@ touch database/database.sqlite
 php artisan migrate
 php artisan command:initialize
 ```
+
+`scheduled_job.sh` を環境に合わせて編集する。
 
 - `public/build` に開発環境の `npm run build` で生成したファイルを置く。
 - `public/index.php` 内の3箇所の `__DIR__.'/../ ... ...` を書き換える。

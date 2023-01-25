@@ -1,3 +1,5 @@
+/scheduled_job.sh
+
 /composer.phar
 /node_modules
 /public/build
