@@ -47,7 +47,7 @@ cd squirrelwheel
 composer install
 npm install
 cp .env.example .env
- cp scheduled_job.sample.sh scheduled_job.sh
+cp scheduled_job.sample.sh scheduled_job.sh
 php artisan key:generate
 
 touch database/database.sqlite

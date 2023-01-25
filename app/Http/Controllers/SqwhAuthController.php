@@ -85,7 +85,11 @@ class SqwhAuthController extends Controller
             }
 
             $user = $response->json('username');
-            if (!in_array($user, config('sqwh.mstdn.users'))) {
+            $url = $response->json('url');
+            if (
+                !in_array($user, config('sqwh.mstdn.users')) &&
+                $url !== config('sqwh.mstdn.server') . '/@' . $user
+            ) {
                 Log::error('mastodon user is invalid: ' . $user);
                 $request->session()->forget('mstdn');
                 return view('auth.failed');
