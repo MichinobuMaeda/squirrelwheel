@@ -20,6 +20,8 @@ class Article extends Model
         'priority',
         'content',
         'reserved_at',
+        'queued_at',
+        'posted_at',
     ];
 
     /**
