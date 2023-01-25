@@ -29,7 +29,7 @@ PHP 8.0 以降で Composer が利用できる環境にインストール可。 X
 管理機能は以下のとおり。
 
 - カテゴリー ( 手書き即時・定時、 Feed 定時など ) の追加・編集
-- テンプレートの追加編集
+- 各カテゴリー用のテンプレートの追加・編集
 - 手書き投稿の追加と、待機中の投稿の編集
 
 ## 2. 開発環境
@@ -71,9 +71,9 @@ cd squirrelwheel
 <https://getcomposer.org/download/> の手順で composer をインストールする。
 
 ```bash
-php8.0 composer.phar install
+php composer.phar install
 cp .env.example .env
-php8.0 artisan key:generate
+php artisan key:generate
 ```
 
 `.env` を編集する。
@@ -105,21 +105,12 @@ SQWH_MSTDN_ACCESS_TOKEN=...
 LOG_CHANNEL=daily
 LOG_DRIVER_JOB=daily
 LOG_LEVEL=info
-
-MAIL_MAILER=smtp
-MAIL_HOST=
-MAIL_PORT=
-MAIL_USERNAME=
-MAIL_PASSWORD=
-MAIL_ENCRYPTION=
-MAIL_FROM_ADDRESS="hello@example.com"
-MAIL_FROM_NAME="${APP_NAME}"
 ```
 
 ```bash
 touch database/database.sqlite
-php8.0 artisan migrate
-php8.0 artisan command:initialize
+php artisan migrate
+php artisan command:initialize
 ```
 
 - `public/build` に開発環境の `npm run build` で生成したファイルを置く。
@@ -151,10 +142,10 @@ git pull
 `.env.example` に変更がある場合は `.env` に反映する。
 
 ```bash
-php8.0 artisan cache:clear
-php8.0 artisan config:clear
-php8.0 artisan view:clear
-php8.0 artisan migrate
+php artisan cache:clear
+php artisan config:clear
+php artisan view:clear
+php artisan migrate
 ```
 
 ## 4. 仕様
