@@ -25,7 +25,7 @@ class DispatchPost extends Command
     protected $description = 'Dispatch article to post.';
 
     /**
-     * Execute the console command.
+     * Add available articles to the queue.
      *
      * @return int
      */

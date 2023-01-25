@@ -25,7 +25,7 @@ class Initialize extends Command
     protected $description = 'Insert initial data.';
 
     /**
-     * Execute the console command.
+     * Set initial data.
      *
      * @return int
      */

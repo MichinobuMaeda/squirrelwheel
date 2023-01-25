@@ -1,31 +1,45 @@
 # squirrelwheel
 
+このツールは [MIT License](LICENSE) で公開しますが、他の人が利用することは考えずに作っているので、設置は難しいと思います。なお、過剰な連投などによりサーバ設置者などの第三者に迷惑をかける利用はお断りします。
+
 ## 1. 概要
 
-WordPress の feed を取得して、更新情報を Twitter と Mastodon に投稿する。
-投稿のタイミングを自動的に分散させる。
-投稿のテンプレートを編集することができる。
+Twitter と Mastodon に半自動で投稿する。
 
-手動の投稿も可能。その場合は、指定した日時まで投稿を待機させることが可能。
+PHP 8.0 以降で Composer が利用できる環境にインストール可。 XServer やさくらなどの共用レンタルはたぶんだいじょうぶ。
 
-管理機能は外部の認証を利用する。
+投稿のタイミングは即時と定時。定時の投稿のタイミングは所定の定時ジョブ起動時のみ。定時ジョブでは連投せず、各メディアに 1件だけ投稿し、残りは次の定時ジョブまでキューに残す。
+
+投稿内容は、以下の2種類を利用できる。
+
+- 手書き
+- WordPress の feed
+    - atom のみ対応。
+
+定時ジョブは CRON などの外部の仕組みを利用する。共用レンタルサーバで負荷の高い処理を避けるため、 Laravel の Task Scheduling は利用しない。
+
+管理機能の認証は、以下の 2種類を選択できる。
+
+- DokuWiki の認証
+    - 同じサーバ上でセッションを共有できる必要がある。
+- Mastodon の OAuth 認証
+    - アプリを開設したサーバの、指定したアカウントのみ利用可。
+    - アカウントは複数指定可。
+
+管理機能は以下のとおり。
+
+- カテゴリー ( 手書き即時・定時、 Feed 定時など ) の追加・編集
+- テンプレートの追加編集
+- 手書き投稿の追加と、待機中の投稿の編集
 
 ## 2. 開発環境
 
-```bash
-$ git --version
-git version 2.38.1
+必要なもの
 
-$ php --version
-PHP 8.0.26 ... ...
-
-$ composer --version
-Composer version 2.4.4 ... ...
-
-$ node --version
-v16.14.2
-
-```
+- git
+- PHP >= 8.0
+- Composer
+- node >= 16
 
 ```bash
 git clone git@github.com:MichinobuMaeda/squirrelwheel.git
@@ -41,18 +55,20 @@ php artisan test
 
 php artisan migrate:fresh
 php artisan command:initialize
-npm run build && php artisan serve
+npm run build
+php artisan serve
 ```
 
 ## 3. 本番環境
+
+サーバ上の公開されていない場所にツールの本体を置く。
 
 ```bash
 git clone git@github.com:MichinobuMaeda/squirrelwheel.git
 cd squirrelwheel
 ```
 
-<https://getcomposer.org/download/>
-の手順で composer をインストール
+<https://getcomposer.org/download/> の手順で composer をインストールする。
 
 ```bash
 php8.0 composer.phar install
@@ -233,8 +249,8 @@ ShouldQueue <|.. PostArticle
 
 priority: 優先度
 
-- 0: UIで作成して保存したら、即時に投稿する。
-- 1以上: 定時ジョブでキューに登録する。優先度の値が小さい方が優先。投稿するまでは文面を変更できる。
+- 0: 管理機能で作成して保存したら、即時に投稿する。
+- 1 以上: 定時ジョブでキューに登録する。優先度の値が小さい方が優先。投稿するまでは文面を変更できる。
 
 reservedAt: 待機日時
 

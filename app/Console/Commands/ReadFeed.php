@@ -25,7 +25,7 @@ class ReadFeed extends Command
     protected $description = 'Read the site\'s feed and add article posts to the queue.';
 
     /**
-     * Execute the console command.
+     * Get feeds and generate articles.
      *
      * @param  ArticleRepository  $articles
      * @param  CategoryRepository  $categories
