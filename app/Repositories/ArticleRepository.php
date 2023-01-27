@@ -33,7 +33,8 @@ class ArticleRepository
      */
     public function listToBeQueued(DateTime $before)
     {
-        $articles = Article::whereNull('queued_at')
+        $articles = Article::whereNull('posted_at')
+            ->whereNull('queued_at')
             ->orderBy('priority')
             ->orderBy('reserved_at')
             ->orderBy('id')
