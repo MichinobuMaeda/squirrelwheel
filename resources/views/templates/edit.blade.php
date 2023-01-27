@@ -30,7 +30,7 @@
         </div>
         <div class="item">
             <label for="body" >{{ ucfirst(__('body')) }}:</label>
-            <textarea id="body" name="body" placeholder="{{ ucfirst(__('body')) }}" required>{{ old('body') ?: $template->body }}</textarea>
+            <textarea id="body" name="body" placeholder="{{ ucfirst(__('body')) }}" required rows="3">{{ old('body') ?: $template->body }}</textarea>
         </div>
         <div class="item">
             <label for="used_at" >{{ ucfirst(__('used at')) }}:</label>

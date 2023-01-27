@@ -19,7 +19,6 @@ class ArticleRepository
         return ($withTrashed
             ? Article::withTrashed()->whereNull('posted_at')
             : Article::whereNull('posted_at'))
-            ->whereNull('queued_at')
             ->orderBy('priority')
             ->orderBy('reserved_at')
             ->orderBy('id')
@@ -34,9 +33,14 @@ class ArticleRepository
      */
     public function listToBeQueued(DateTime $before)
     {
-        foreach ($this->list() as $item) {
-            if (getMilliDiff($item->reserved_at, $before) <= 0) {
-                yield $item;
+        $articles = Article::whereNull('queued_at')
+            ->orderBy('priority')
+            ->orderBy('reserved_at')
+            ->orderBy('id')
+            ->get();
+        foreach ($articles as $article) {
+            if (getMilliDiff($article->reserved_at, $before) <= 0) {
+                yield $article;
             }
         }
     }

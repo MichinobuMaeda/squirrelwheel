@@ -28,7 +28,7 @@
         @endunless
         <div class="item">
             <label for="content" >{{ ucfirst(__('content')) }}:</label>
-            <textarea id="content" name="content" placeholder="{{ ucfirst(__('content')) }}">{{ old('content') ?: (isset($article) ? $article->content : '') }}</textarea>
+            <textarea id="content" name="content" placeholder="{{ ucfirst(__('content')) }}" required rows="5">{{ old('content') ?: (isset($article) ? $article->content : '') }}</textarea>
         </div>
         @unless (isset($article))
         <div class="item">

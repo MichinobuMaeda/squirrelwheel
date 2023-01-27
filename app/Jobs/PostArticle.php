@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use DateTime;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -41,8 +42,9 @@ class PostArticle implements ShouldQueue
     {
         config(['logging.default' => 'job']);
 
-        // the article to be refreshed
+        // refresh the article
         $article = Article::find($this->article->id);
         $social->post($article);
+        $article->fill(['posted_at' => new DateTime()])->save();
     }
 }

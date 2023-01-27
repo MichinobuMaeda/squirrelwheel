@@ -27,9 +27,11 @@ class SocialPostRepository
         if (config('app.env') === 'production') {
             if (in_array('tw', $targets, true)) {
                 $this->postToTwitter($article);
+                Log::info('posted to twitter');
             }
             if (in_array('mstdn', $targets, true)) {
                 $this->postToMastodon($article);
+                Log::info('posted to mastodon');
             }
         }
     }
@@ -42,8 +44,6 @@ class SocialPostRepository
      */
     protected function postToTwitter(Article $article)
     {
-        Log::info('post to twitter');
-
         $connection = new TwitterOAuth(
             config('sqwh.tw.consumer_key'),
             config('sqwh.tw.consumer_secret'),
@@ -61,8 +61,6 @@ class SocialPostRepository
      */
     protected function postToMastodon(Article $article)
     {
-        Log::info('post to mastodon');
-
         Http::withHeaders([
             'Authorization' => 'Bearer ' . config('sqwh.mstdn.access_token'),
             'Idempotency-Key' => hash('sha256', $article->content),
