@@ -29,7 +29,7 @@ class SqwhAuthController extends Controller
                     '&lang=' . config('app.locale')
             );
         } else if (config('sqwh.auth_provider') === 'tumblr') {
-            $state = config('app.key') . (new DateTime())->format(DateTime::ATOM);
+            $state = hash('sha256', config('app.key') . (new DateTime())->format(DateTime::ATOM));
             $_SESSION['tumblr'] = $state;
             return redirect(
                 'https://www.tumblr.com/oauth2/authorize' .
