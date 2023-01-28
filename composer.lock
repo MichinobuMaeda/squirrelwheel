@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "aea6663d3a619fcdb24e9553d268c344",
+    "content-hash": "83b92f992d38421d338aad670a5799a6",
     "packages": [
         {
             "name": "abraham/twitteroauth",
@@ -614,6 +614,43 @@
                 }
             ],
             "time": "2023-01-02T17:26:14+00:00"
+        },
+        {
+            "name": "eher/oauth",
+            "version": "1.0.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/EHER/OAuth.git",
+                "reference": "935c1f7709d1c1457de9e250d0e5f29cac06e507"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/EHER/OAuth/zipball/935c1f7709d1c1457de9e250d0e5f29cac06e507",
+                "reference": "935c1f7709d1c1457de9e250d0e5f29cac06e507",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "eher/phpunit": "1.6"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Eher\\OAuth": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "OAuth 1 PHP Library",
+            "support": {
+                "issues": "https://github.com/EHER/OAuth/issues",
+                "source": "https://github.com/EHER/OAuth/tree/1.0.7"
+            },
+            "time": "2012-12-13T23:48:10+00:00"
         },
         {
             "name": "fruitcake/php-cors",
@@ -5267,6 +5304,59 @@
                 "source": "https://github.com/tijsverkoyen/CssToInlineStyles/tree/2.2.6"
             },
             "time": "2023-01-03T09:29:04+00:00"
+        },
+        {
+            "name": "tumblr/tumblr",
+            "version": "v0.4.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tumblr/tumblr.php.git",
+                "reference": "64d5deab0837ef1017c41c640152a8e62a8de39f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tumblr/tumblr.php/zipball/64d5deab0837ef1017c41c640152a8e62a8de39f",
+                "reference": "64d5deab0837ef1017c41c640152a8e62a8de39f",
+                "shasum": ""
+            },
+            "require": {
+                "eher/oauth": "^1.0.7 <1.1",
+                "guzzlehttp/guzzle": "^6.5.2 || ^7.0.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": ">=5.7.27 <10"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Tumblr\\API": "lib"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "John Crepezzi",
+                    "email": "john.crepezzi@gmail.com",
+                    "homepage": "https://github.com/seejohnrun",
+                    "role": "developer"
+                }
+            ],
+            "description": "Official Tumblr PHP Client",
+            "homepage": "https://github.com/tumblr/tumblr.php",
+            "keywords": [
+                "api",
+                "gif",
+                "sdk",
+                "tumblr"
+            ],
+            "support": {
+                "issues": "https://github.com/tumblr/tumblr.php/issues",
+                "source": "https://github.com/tumblr/tumblr.php/tree/v0.4.1"
+            },
+            "time": "2021-06-23T13:47:45+00:00"
         },
         {
             "name": "vlucas/phpdotenv",

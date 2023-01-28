@@ -22,6 +22,8 @@ Route::get('/login', [SqwhAuthController::class, 'login'])
     ->name('login');
 Route::get('/auth/mastodon', [SqwhAuthController::class, 'mastodon'])
     ->name('auth.mastodon');
+Route::get('/auth/tumblr', [SqwhAuthController::class, 'tumblr'])
+    ->name('auth.tumblr');
 
 Route::group(['middleware' => 'auth'], function () {
     Route::view('/me', 'auth.me')->name('me');

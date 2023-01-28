@@ -17,9 +17,13 @@ return [
     'mstdn' => [
         'server' => env('SQWH_MSTDN_SERVER', null),
         'users' => explode(',', env('SQWH_MSTDN_USERS', '')),
-        'redirect_uri' => env('SQWH_MSTDN_REDIRECT_URI', null),
         'client_key' => env('SQWH_MSTDN_CLIENT_KEY', null),
         'client_secret' => env('SQWH_MSTDN_CLIENT_SECRET', null),
         'access_token' => env('SQWH_MSTDN_ACCESS_TOKEN', null),
+    ],
+    'tumblr' => [
+        'users' => explode(',', env('SQWH_TUMBLR_USERS', '')),
+        'consumer_key' => explode(',', env('SQWH_TUMBLR_CONSUMER_KEY', '')),
+        'consumer_secret' => explode(',', env('SQWH_TUMBLR_SECRET_KEY', '')),
     ],
 ];

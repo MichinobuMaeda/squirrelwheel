@@ -24,6 +24,8 @@ class SqwhAuthenticate
             $user = $this->getDokuUser();
         } else if (config('sqwh.auth_provider') === 'mstdn') {
             $user = $this->getMstdnUser();
+        } else if (config('sqwh.auth_provider') === 'tumblr') {
+            $user = $this->getTumblr();
         } else if (config('sqwh.auth_provider') === 'test') {
             $user = $this->getTestUser();
         }
@@ -85,8 +87,7 @@ class SqwhAuthenticate
             session_start();
         }
 
-        $mstdnCookie = 'MSTDN' . md5(route('login'));
-        $mstdnUser = isset($_SESSION[$mstdnCookie]) ? $_SESSION[$mstdnCookie] : null;
+        $mstdnUser = isset($_SESSION['mstdn']) ? $_SESSION['mstdn'] : null;
         if (!$mstdnUser) {
             return null;
         }
@@ -98,6 +99,34 @@ class SqwhAuthenticate
             'name' => $mstdn->username,
             'email' => 'unknown',
             'client_id' => $mstdn->id,
+            'scopes' => 'read write',
+        ]);
+    }
+
+    /**
+     * Get Tumblr user from session.
+     *
+     * @return \App\Models\User
+     */
+    public function getTumblr()
+    {
+        session_name("SWTUMBLR");
+        if (!isset($_SESSION)) {
+            session_start();
+        }
+
+        $mstdnUser = isset($_SESSION['tumblr']) ? $_SESSION['tumblr'] : null;
+        if (!$mstdnUser) {
+            return null;
+        }
+
+        $tumblr = json_decode($mstdnUser);
+        Log::info('tumblr name: ' . $tumblr->name);
+
+        return User::make([
+            'name' => $tumblr->name,
+            'email' => 'unknown',
+            'client_id' => 'unknown',
             'scopes' => 'read write',
         ]);
     }
