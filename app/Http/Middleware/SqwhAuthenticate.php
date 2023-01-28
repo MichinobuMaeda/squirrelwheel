@@ -87,18 +87,18 @@ class SqwhAuthenticate
             session_start();
         }
 
-        $mstdnUser = isset($_SESSION['mstdn']) ? $_SESSION['mstdn'] : null;
-        if (!$mstdnUser) {
+        $json = isset($_SESSION['mstdn']) ? $_SESSION['mstdn'] : null;
+        if (!$json) {
             return null;
         }
 
-        $mstdn = json_decode($mstdnUser);
-        Log::info('mastodon id: ' . $mstdn->id);
+        $user = json_decode($json);
+        Log::info('mastodon id: ' . $user->id);
 
         return User::make([
-            'name' => $mstdn->username,
+            'name' => $user->username,
             'email' => 'unknown',
-            'client_id' => $mstdn->id,
+            'client_id' => $user->id,
             'scopes' => 'read write',
         ]);
     }
@@ -115,16 +115,16 @@ class SqwhAuthenticate
             session_start();
         }
 
-        $mstdnUser = isset($_SESSION['tumblr']) ? $_SESSION['tumblr'] : null;
-        if (!$mstdnUser) {
+        $json = isset($_SESSION['tumblr']) ? $_SESSION['tumblr'] : null;
+        if (!$json || is_string($json)) {
             return null;
         }
 
-        $tumblr = json_decode($mstdnUser);
-        Log::info('tumblr name: ' . $tumblr->name);
+        $user = json_decode($json);
+        Log::info('tumblr name: ' . $user->name);
 
         return User::make([
-            'name' => $tumblr->name,
+            'name' => $user->name,
             'email' => 'unknown',
             'client_id' => 'unknown',
             'scopes' => 'read write',
