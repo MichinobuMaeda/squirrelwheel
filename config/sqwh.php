@@ -23,7 +23,9 @@ return [
     ],
     'tumblr' => [
         'users' => explode(',', env('SQWH_TUMBLR_USERS', '')),
-        'consumer_key' => explode(',', env('SQWH_TUMBLR_CONSUMER_KEY', '')),
-        'consumer_secret' => explode(',', env('SQWH_TUMBLR_SECRET_KEY', '')),
+        'consumer_key' => env('SQWH_TUMBLR_CONSUMER_KEY', ''),
+        'consumer_secret' => env('SQWH_TUMBLR_SECRET_KEY', ''),
+        'access_token' => env('SQWH_TUMBLR_ACCESS_TOKEN', null),
+        'access_token_secret' => env('SQWH_TUMBLR_ACCESS_TOKEN_SECRET', null),
     ],
 ];
