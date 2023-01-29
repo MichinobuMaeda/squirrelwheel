@@ -33,9 +33,9 @@ class SqwhAuthController extends Controller
             $_SESSION['tumblr'] = $state;
             return redirect(
                 'https://www.tumblr.com/oauth2/authorize' .
-                    '?response_type=code&client_id=' . config('sqwh.tumblr.client_key') .
+                    '?response_type=code&client_id=' . config('sqwh.tumblr.consumer_key') .
                     '&redirect_uri=' . route('auth.tumblr') .
-                    '&scope=read write' .
+                    '&scope=basic' .
                     '&state=' . $state
             );
         } else if (config('sqwh.auth_provider') === 'test') {
