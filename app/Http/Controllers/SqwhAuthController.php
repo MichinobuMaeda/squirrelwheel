@@ -147,8 +147,9 @@ class SqwhAuthController extends Controller
             $response = Http::asForm()->post('https://api.tumblr.com/v2/oauth2/token', [
                 'grant_type' => 'authorization_code',
                 'code' => $code,
-                'client_id' => config('sqwh.tumblr.client_key'),
-                'client_secret' => config('sqwh.tumblr.client_secret'),
+                'client_id' => config('sqwh.tumblr.consumer_key'),
+                'client_secret' => config('sqwh.tumblr.consumer_secret'),
+                'redirect_uri' => route('auth.tumblr'),
             ]);
 
             if (!$response->successful()) {
