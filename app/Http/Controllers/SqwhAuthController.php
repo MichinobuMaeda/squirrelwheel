@@ -178,7 +178,7 @@ class SqwhAuthController extends Controller
                 return view('auth.failed');
             }
 
-            $user = $response->json('name');
+            $user = $response->json('user')->name;
             if (!in_array($user, config('sqwh.tumblr.users'))) {
                 Log::error('tumblr user is invalid: ' . $user);
                 unset($_SESSION['tumblr']);
