@@ -116,7 +116,7 @@ class SqwhAuthenticate
         }
 
         $json = isset($_SESSION['tumblr']) ? $_SESSION['tumblr'] : null;
-        if (!$json || is_string($json)) {
+        if (!$json || !str_starts_with($json, '{')) {
             return null;
         }
 

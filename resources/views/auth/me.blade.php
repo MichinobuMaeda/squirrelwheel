@@ -7,6 +7,8 @@
         <span class="value sm-1/2">{{ preg_replace('/\?.*/', '', config('sqwh.doku.login_url')) }}</span>
         @elseif (config('sqwh.auth_provider') === 'mstdn')
         <span class="value sm-1/2">{{ config('sqwh.mstdn.server') }}</span>
+        @elseif (config('sqwh.auth_provider') === 'tumblr')
+        <span class="value sm-1/2">Tumblr</span>
         @else
         <span class="value sm-1/2">Test</span>
         @endif
@@ -23,7 +25,7 @@
         <label>{{ ucfirst(__('email address')) }}:</label>
         <span class="value sm-1/2">{{ Auth::user()->email }}</span>
     </div>
-    @if (config('sqwh.auth_provider') === 'mstdn')
+    @if (config('sqwh.auth_provider') === 'mstdn' || config('sqwh.auth_provider') ==='tumblr')
     <div class="mt-4">
         <a class="btn btn-secondary" href="{{ route('login') }}">
             {{ ucfirst(__('logout')) }}
