@@ -89,7 +89,8 @@ textarea {
 .item input[type=url] ,
 .item input[type=week],
 .item select,
-.item textarea {
+.item textarea,
+.item .textLength {
     @apply block w-full sm:inline-block sm:w-2/3 sm:align-middle
 }
 .form-actions {

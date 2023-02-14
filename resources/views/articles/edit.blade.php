@@ -28,7 +28,11 @@
         @endunless
         <div class="item">
             <label for="content" >{{ ucfirst(__('content')) }}:</label>
-            <textarea id="content" name="content" placeholder="{{ ucfirst(__('content')) }}" required rows="5">{{ old('content') ?: (isset($article) ? $article->content : '') }}</textarea>
+            <textarea id="content" name="content" placeholder="{{ ucfirst(__('content')) }}" required rows="5" oninput="updateContentLength()">{{ old('content') ?: (isset($article) ? $article->content : '') }}</textarea>
+        </div>
+        <div class="item">
+            <label for="contentLength" >{{ ucfirst(__('text length')) }}:</label>
+            <div id="contentLength" class="textLength"></div>
         </div>
         @unless (isset($article))
         <div class="item">
@@ -55,4 +59,13 @@
             </button>
         </div>
     </form>
+    <script>
+function updateContentLength() {
+    src = document.getElementById('content')
+    trg = document.getElementById('contentLength')
+    trg.innerHTML = src.value.length
+
+}
+updateContentLength()
+    </script>
 </x-layout>
