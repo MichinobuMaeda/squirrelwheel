@@ -65,15 +65,12 @@ class ArticleRepository
             'priority' => $template->category->priority,
             'content' =>  trim(
                 str_replace(
-                    '%%link%%',
-                    $link,
-                    str_replace(
-                        '%%content%%',
-                        $content,
-                        $template->body,
-                    )
+                    '%%content%%',
+                    $content,
+                    $template->body,
                 )
             ),
+            'link' => $link,
             'reserved_at' => $reservedAt ?: new DateTime(),
         ]);
 

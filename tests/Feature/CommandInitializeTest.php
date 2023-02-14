@@ -40,10 +40,7 @@ class CommandInitializeTest extends TestCase
 
         $template = $category->templates[0];
         $this->assertEquals('Immediate', $template->name);
-        $this->assertEquals(<<<END
-%%content%%
-%%link%%
-END, $template->body);
+        $this->assertEquals('%%content%%', $template->body);
         $this->assertIsObject($template->used_at);
 
         $category = $categories[1];
@@ -58,10 +55,7 @@ END, $template->body);
 
         $template = $category->templates[0];
         $this->assertEquals('Scheduled', $template->name);
-        $this->assertEquals(<<<END
-%%content%%
-%%link%%
-END, $template->body);
+        $this->assertEquals('%%content%%', $template->body);
         $this->assertIsObject($template->used_at);
 
         (new Initialize())->handle();

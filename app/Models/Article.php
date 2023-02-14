@@ -19,6 +19,7 @@ class Article extends Model
     protected $fillable = [
         'priority',
         'content',
+        'link',
         'reserved_at',
         'queued_at',
         'posted_at',

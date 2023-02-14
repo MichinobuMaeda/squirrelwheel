@@ -34,12 +34,10 @@
             <label for="contentLength" >{{ ucfirst(__('text length')) }}:</label>
             <div id="contentLength" class="textLength"></div>
         </div>
-        @unless (isset($article))
         <div class="item">
             <label for="link" >{{ ucfirst(__('link')) }}:</label>
             <input type="url" id="link" name="link" placeholder="{{ ucfirst(__('link')) }}" value="{{ old('link') ?: (isset($article) ? $article->link : '') }}">
         </div>
-        @endunless
         @if (isset($article))
         <div class="item">
             <label for="priority" >{{ ucfirst(__('priority')) }}:</label>

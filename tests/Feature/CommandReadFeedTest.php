@@ -99,7 +99,6 @@ END,
             'body' => <<<END
 Description 1
 %%content%%
-%%link%%
 END,
             'used_at' => new DateTime('2000/01/01'),
         ]);
@@ -109,7 +108,6 @@ END,
             'body' => <<<END
 Description 2
 %%content%%
-%%link%%
 END,
             'used_at' => new DateTime('2000/01/02'),
         ]);
@@ -135,31 +133,31 @@ END,
         $this->assertEquals(3, $article->priority);
         $this->assertMatchesRegularExpression('/^Description\ 1/', $article->content);
         $this->assertMatchesRegularExpression('/Title\ 1/', $article->content);
-        $this->assertMatchesRegularExpression('/https:\/\/example.com\/\?p=1/', $article->content);
+        $this->assertEquals('https://example.com/?p=1', $article->link);
 
         $article = $articles[1];
         $this->assertEquals(3, $article->priority);
         $this->assertMatchesRegularExpression('/^Description\ 2/', $article->content);
         $this->assertMatchesRegularExpression('/Title\ 2/', $article->content);
-        $this->assertMatchesRegularExpression('/https:\/\/example.com\/\?p=2/', $article->content);
+        $this->assertEquals('https://example.com/?p=2', $article->link);
 
         $article = $articles[2];
         $this->assertEquals(3, $article->priority);
         $this->assertMatchesRegularExpression('/^Description\ /', $article->content);
         $this->assertMatchesRegularExpression('/Title\ 3/', $article->content);
-        $this->assertMatchesRegularExpression('/https:\/\/example.com\/\?p=3/', $article->content);
+        $this->assertEquals('https://example.com/?p=3', $article->link);
 
         $article = $articles[3];
         $this->assertEquals(3, $article->priority);
         $this->assertMatchesRegularExpression('/^Description\ /', $article->content);
         $this->assertMatchesRegularExpression('/Title\ 4/', $article->content);
-        $this->assertMatchesRegularExpression('/https:\/\/example.com\/\?p=4/', $article->content);
+        $this->assertEquals('https://example.com/?p=4', $article->link);
 
         $article = $articles[4];
         $this->assertEquals(3, $article->priority);
         $this->assertMatchesRegularExpression('/^Description\ /', $article->content);
         $this->assertMatchesRegularExpression('/Title\ 8/', $article->content);
-        $this->assertMatchesRegularExpression('/https:\/\/example.com\/\?p=8/', $article->content);
+        $this->assertEquals('https://example.com/?p=8', $article->link);
 
         (new ReadFeed())->handle(
             new ArticleRepository(),

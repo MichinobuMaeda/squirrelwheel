@@ -59,10 +59,7 @@ class Initialize extends Command
             Template::create([
                 'category_id' => 1,
                 'name' => 'Immediate',
-                'body' => <<<END
-%%content%%
-%%link%%
-END,
+                'body' => "%%content%%",
                 'used_at' => new DateTime('2000/01/01'),
             ]);
         });
@@ -72,10 +69,7 @@ END,
             Template::create([
                 'category_id' => 2,
                 'name' => 'Scheduled',
-                'body' => <<<END
-%%content%%
-%%link%%
-END,
+                'body' => "%%content%%",
                 'used_at' => new DateTime('2000/01/01'),
             ]);
         });

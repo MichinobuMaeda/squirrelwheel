@@ -89,7 +89,7 @@ class ArticleRepositoryTest extends TestCase
         $template = Template::create([
             'category_id' => 1,
             'name' => 'Name 0',
-            'body' => '%%content%% - %%link%%',
+            'body' => "%%content%%\n",
             'used_at' => new DateTime(),
         ]);
 
@@ -102,7 +102,8 @@ class ArticleRepositoryTest extends TestCase
         $article = Article::find(1);
 
         $this->assertEquals(0, $article->priority);
-        $this->assertEquals('Content 0 - https://example.com/0', $article->content);
+        $this->assertEquals('Content 0', $article->content);
+        $this->assertEquals('https://example.com/0', $article->link);
         $this->assertEquals($ts, $article->reserved_at);
 
         (new ArticleRepository())->generate(
@@ -114,7 +115,8 @@ class ArticleRepositoryTest extends TestCase
         $article = Article::find(2);
 
         $this->assertEquals(0, $article->priority);
-        $this->assertEquals('Content 0 -', $article->content);
+        $this->assertEquals('Content 0', $article->content);
+        $this->assertEquals('', $article->link);
         $this->assertEquals($ts, $article->reserved_at);
 
         (new ArticleRepository())->generate(
@@ -126,7 +128,8 @@ class ArticleRepositoryTest extends TestCase
         $article = Article::find(3);
 
         $this->assertEquals(0, $article->priority);
-        $this->assertEquals('- https://example.com/0', $article->content);
+        $this->assertEquals('', $article->content);
+        $this->assertEquals('https://example.com/0', $article->link);
         $this->assertEquals($ts, $article->reserved_at);
 
         (new ArticleRepository())->generate(
@@ -135,7 +138,9 @@ class ArticleRepositoryTest extends TestCase
         $article = Article::find(4);
 
         $this->assertEquals(0, $article->priority);
-        $this->assertEquals('-', $article->content);
+        $this->assertEquals('', $article->content);
+        $this->assertEquals('', $article->link);
         $this->assertIsObject($article->reserved_at);
     }
+
 }

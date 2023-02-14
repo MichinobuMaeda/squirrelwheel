@@ -50,7 +50,11 @@ class SocialPostRepository
             config('sqwh.tw.access_token'),
             config('sqwh.tw.access_token_secret')
         );
-        $connection->post("statuses/update", ["status" => $article->content]);
+        $status = trim(<<<'EOT'
+{trim($article->content)}
+{trim($article->link)}
+EOT);
+        $connection->post("statuses/update", ["status" => $status]);
     }
 
     /**
@@ -61,11 +65,15 @@ class SocialPostRepository
      */
     protected function postToMastodon(Article $article)
     {
+        $status = trim(<<<'EOT'
+{trim($article->content)}
+{trim($article->link)}
+EOT);
         Http::withHeaders([
             'Authorization' => 'Bearer ' . config('sqwh.mstdn.access_token'),
             'Idempotency-Key' => hash('sha256', $article->content),
         ])->asForm()->post(config('sqwh.mstdn.server') . '/api/v1/statuses', [
-            'status' => $article->content,
+            'status' => $status,
             'sensitive' => 'false',
             'visibility' => 'public',
             'language' => config('app.locale'),
