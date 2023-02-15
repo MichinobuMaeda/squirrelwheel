@@ -143,14 +143,19 @@ class SqwhAuthenticate
             return null;
         }
 
-        $info = json_decode($json);
-        Log::info('tumblr name: ' . $info->user->name);
+        $info = json_decode($json, true);
+        Log::info('tumblr name: ' . $info['user']['name']);
 
         $ts = time();
-        if (($ts - $info->refreshed_at) > config('sqwh.auth_session_refresh_time')) {
+        if (($ts - $info['refreshed_at']) > config('sqwh.auth_session_refresh_time')) {
 
             // Refresh token grant
-            $token = $this->tumblrApi->refreshToken($info->token->refresh_token);
+            if (!isset($info['token']['refresh_token'])) {
+                unset($_SESSION['tumblr']);
+                return null;
+            }
+
+            $token = $this->tumblrApi->refreshToken($info['token']['refresh_token']);
 
             if (!$token) {
                 unset($_SESSION['tumblr']);
@@ -158,7 +163,7 @@ class SqwhAuthenticate
             }
 
             // verify account credentials
-            $user = $this->tumblrApi->getUserInfo($token->access_token);
+            $user = $this->tumblrApi->getUserInfo($token['access_token']);
 
             if (!$user) {
                 unset($_SESSION['tumblr']);
@@ -176,7 +181,7 @@ class SqwhAuthenticate
         }
 
         return User::make([
-            'name' => $info->user->name,
+            'name' => $info['user']['name'],
             'email' => 'unknown',
             'client_id' => 'unknown',
             'scopes' => 'read write',

@@ -3,7 +3,7 @@
 return [
     'auth_provider' => env('SQWH_AUTH_PROVIDER', null),
     'auth_session_life_time' => intval(env('SQWH_AUTH_SESSION_LIFE_TIME', '864000')),
-    'auth_session_refresh_time' => intval(env('SQWH_AUTH_SESSION_REFRESH_TIME', '3600')),
+    'auth_session_refresh_time' => intval(env('SQWH_AUTH_SESSION_REFRESH_TIME', '600')),
     'post_target' => explode(',', env('SQWH_POST_TARGET', '')),
     'doku' => [
         'base_path' => env('SQWH_DOKU_BASE_PATH', null),

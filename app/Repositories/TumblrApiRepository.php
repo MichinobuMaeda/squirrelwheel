@@ -19,7 +19,7 @@ class TumblrApiRepository
             '?response_type=code' .
             '&client_id=' . config('sqwh.tumblr.consumer_key') .
             '&redirect_uri=' . route('auth.tumblr') .
-            '&scope=basic' .
+            '&scope=basic offline_access' .
             '&state=' . $state;
     }
 
@@ -77,7 +77,7 @@ class TumblrApiRepository
 
         if ($response->successful()) {
             $token = $response->json();
-            Log::info('tumblr token: ' . $token->access_token);
+            Log::info('tumblr token: ' . $token['access_token']);
             return $token;
         } else {
             Log::error(
