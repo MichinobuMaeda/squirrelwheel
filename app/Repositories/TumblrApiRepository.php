@@ -45,7 +45,7 @@ class TumblrApiRepository
 
         if ($response->successful()) {
             $token = $response->json();
-            Log::info('tumblr token: ' . $token->access_token);
+            Log::info('tumblr token: ' . $token['access_token']);
             return $token;
         } else {
             Log::error(

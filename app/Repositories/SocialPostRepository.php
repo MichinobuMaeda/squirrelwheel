@@ -50,10 +50,7 @@ class SocialPostRepository
             config('sqwh.tw.access_token'),
             config('sqwh.tw.access_token_secret')
         );
-        $status = trim(<<<'EOT'
-{trim($article->content)}
-{trim($article->link)}
-EOT);
+        $status = trim(trim($article->content)."\n".trim($article->link));
         $connection->post("statuses/update", ["status" => $status]);
     }
 
@@ -65,10 +62,7 @@ EOT);
      */
     protected function postToMastodon(Article $article)
     {
-        $status = trim(<<<'EOT'
-{trim($article->content)}
-{trim($article->link)}
-EOT);
+        $status = trim(trim($article->content)."\n".trim($article->link));
         Http::withHeaders([
             'Authorization' => 'Bearer ' . config('sqwh.mstdn.access_token'),
             'Idempotency-Key' => hash('sha256', $article->content),

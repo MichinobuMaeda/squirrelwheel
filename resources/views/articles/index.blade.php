@@ -23,6 +23,10 @@
                 <label>{{ ucfirst(__('content')) }}:</label>
                 <span class="value-multi-line"><x-multi-line :text="$article->content" /></span>
             </div>
+            <div class="item">
+                <label>{{ ucfirst(__('link')) }}:</label>
+                <span class="value">{{ $article->link }}</span>
+            </div>
 <!--
             <div class="item">
                 <label>{{ ucfirst(__('queued at')) }}:</label>

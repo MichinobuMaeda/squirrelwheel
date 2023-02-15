@@ -173,7 +173,7 @@ class SqwhAuthController extends Controller
             }
 
             // verify account credentials
-            $user = $this->tumblrApi->getUserInfo($token->access_token);
+            $user = $this->tumblrApi->getUserInfo($token['access_token']);
 
             if (!$user) {
                 unset($_SESSION['tumblr']);

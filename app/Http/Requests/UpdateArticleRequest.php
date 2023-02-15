@@ -27,6 +27,7 @@ class UpdateArticleRequest extends FormRequest
             'priority' => ['required', 'integer', 'min:0', 'max:9'],
             'content' => ['required'],
             'reserved_at' => ['required', 'date'],
+            'link' => ['nullable', 'url'],
         ];
     }
 }
