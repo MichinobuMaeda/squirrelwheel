@@ -6,9 +6,28 @@ use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use App\Repositories\TumblrApiRepository;
 
 class SqwhAuthController extends Controller
 {
+    /**
+     * The tunblr API repository implementation.
+     *
+     * @var TumblrApiRepository
+     */
+    protected $tumblrApi;
+
+    /**
+     * Create a new controller instance.
+     *
+     * @param  TumblrApiRepository  $tumblrApi
+     * @return void
+     */
+    public function __construct(TumblrApiRepository $tumblrApi)
+    {
+        $this->tumblrApi = $tumblrApi;
+    }
+
     /**
      * Handle login.
      *
@@ -31,13 +50,7 @@ class SqwhAuthController extends Controller
         } else if (config('sqwh.auth_provider') === 'tumblr') {
             $state = hash('sha256', config('app.key') . (new DateTime())->format(DateTime::ATOM));
             $_SESSION['tumblr'] = $state;
-            return redirect(
-                'https://www.tumblr.com/oauth2/authorize' .
-                    '?response_type=code&client_id=' . config('sqwh.tumblr.consumer_key') .
-                    '&redirect_uri=' . route('auth.tumblr') .
-                    '&scope=basic' .
-                    '&state=' . $state
-            );
+            return redirect($this->tumblrApi->getRedirectUrl($state));
         } else if (config('sqwh.auth_provider') === 'test') {
             return redirect('/');
         } else {
@@ -60,14 +73,17 @@ class SqwhAuthController extends Controller
             Log::info('mastodon code: ' . $code);
 
             // obtain a token
-            $response = Http::asForm()->post(config('sqwh.mstdn.server') . '/oauth/token', [
-                'grant_type' => 'authorization_code',
-                'code' => $code,
-                'client_id' => config('sqwh.mstdn.client_key'),
-                'client_secret' => config('sqwh.mstdn.client_secret'),
-                'redirect_uri' => route('auth.mastodon'),
-                'scope' => 'read write',
-            ]);
+            $response = Http::asForm()->post(
+                config('sqwh.mstdn.server') . '/oauth/token',
+                [
+                    'grant_type' => 'authorization_code',
+                    'code' => $code,
+                    'client_id' => config('sqwh.mstdn.client_key'),
+                    'client_secret' => config('sqwh.mstdn.client_secret'),
+                    'redirect_uri' => route('auth.mastodon'),
+                    'scope' => 'read write',
+                ]
+            );
 
             if (!$response->successful()) {
                 Log::error(
@@ -78,13 +94,15 @@ class SqwhAuthController extends Controller
                 return view('auth.failed');
             }
 
-            $token = $response->json('access_token');
-            Log::info('mastodon token: ' . $token);
+            $token = $response->json();
+            Log::info('mastodon token: ' . $token->access_token);
 
             // verify account credentials
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $token
-            ])->get(config('sqwh.mstdn.server') . '/api/v1/accounts/verify_credentials');
+                'Authorization' => 'Bearer ' . $token->access_token
+            ])->get(
+                config('sqwh.mstdn.server') . '/api/v1/accounts/verify_credentials',
+            );
 
             if (!$response->successful()) {
                 Log::error(
@@ -95,19 +113,22 @@ class SqwhAuthController extends Controller
                 return view('auth.failed');
             }
 
-            $user = $response->json('username');
-            $url = $response->json('url');
+            $user = $response->json();
             if (
-                !in_array($user, config('sqwh.mstdn.users')) &&
-                $url !== config('sqwh.mstdn.server') . '/@' . $user
+                !in_array($user->username, config('sqwh.mstdn.users')) &&
+                $user->url !== config('sqwh.mstdn.server') . '/@' . $user->username
             ) {
-                Log::error('mastodon user is invalid: ' . $user);
+                Log::error('mastodon user is invalid: ' . $user->username);
                 unset($_SESSION['mstdn']);
                 return view('auth.failed');
             }
 
-            Log::info('mastodon user: ' . $user);
-            $_SESSION['mstdn'] = json_encode($response->json());
+            Log::info('mastodon user: ' . $user->username);
+            $_SESSION['mstdn'] = json_encode([
+                'token' => $token,
+                'user' => $user,
+                'refreshed_at' => time(),
+            ]);
 
             return redirect('/');
         } else {
@@ -144,49 +165,27 @@ class SqwhAuthController extends Controller
             Log::info('tumblr code: ' . $code);
 
             // obtain a token
-            $response = Http::asForm()->post('https://api.tumblr.com/v2/oauth2/token', [
-                'grant_type' => 'authorization_code',
-                'code' => $code,
-                'client_id' => config('sqwh.tumblr.consumer_key'),
-                'client_secret' => config('sqwh.tumblr.consumer_secret'),
-                'redirect_uri' => route('auth.tumblr'),
-            ]);
+            $token = $this->tumblrApi->getToken($code);
 
-            if (!$response->successful()) {
-                Log::error(
-                    'tumblr failed to obtain a token: ' .
-                        json_encode($response->json())
-                );
+            if (!$token) {
                 unset($_SESSION['tumblr']);
                 return view('auth.failed');
             }
-
-            $token = $response->json('access_token');
-            Log::info('tumblr token: ' . $token);
 
             // verify account credentials
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $token
-            ])->get('https://api.tumblr.com/v2/user/info');
+            $user = $this->tumblrApi->getUserInfo($token->access_token);
 
-            if (!$response->successful()) {
-                Log::error(
-                    'tumblr failed to verify account credentials: ' .
-                        json_encode($response->json())
-                );
-                unset($_SESSION['tumblr']);
-                return view('auth.failed');
-            }
-
-            $user = $response->json('response')['user'];
-            if (!in_array($user['name'], config('sqwh.tumblr.users'))) {
-                Log::error('tumblr user is invalid: ' . $user['name']);
+            if (!$user) {
                 unset($_SESSION['tumblr']);
                 return view('auth.failed');
             }
 
             Log::info('tumblr user: ' . $user['name']);
-            $_SESSION['tumblr'] = json_encode($user);
+            $_SESSION['tumblr'] = json_encode([
+                'token' => $token,
+                'user' => $user,
+                'refreshed_at' => time(),
+            ]);
 
             return redirect('/');
         } else {
