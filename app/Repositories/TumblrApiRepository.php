@@ -105,6 +105,7 @@ class TumblrApiRepository
             $user = $response->json('response')['user'];
 
             if (in_array($user['name'], config('sqwh.tumblr.users'))) {
+                Log::info('tumblr user: ' . $user['name']);
                 return $user;
             } else {
                 Log::error('tumblr unregistered account: ' . $user['name']);

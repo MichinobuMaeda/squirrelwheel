@@ -6,13 +6,20 @@ use Closure;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use App\Models\User;
+use App\Repositories\MastodonApiRepository;
 use App\Repositories\TumblrApiRepository;
 
 class SqwhAuthenticate
 {
+    /**
+     * The mastodon API repository implementation.
+     *
+     * @var MastodonApiRepository
+     */
+    protected $mstdnApi;
+
     /**
      * The tunblr API repository implementation.
      *
@@ -23,11 +30,16 @@ class SqwhAuthenticate
     /**
      * Create a new controller instance.
      *
+     * @param  MastodonApiRepository  $mstdnApi
      * @param  TumblrApiRepository  $tumblrApi
      * @return void
      */
-    public function __construct(TumblrApiRepository $tumblrApi)
+    public function __construct(
+        MastodonApiRepository  $mstdnApi,
+        TumblrApiRepository $tumblrApi,
+    )
     {
+        $this->mstdnApi = $mstdnApi;
         $this->tumblrApi = $tumblrApi;
     }
 
@@ -114,13 +126,34 @@ class SqwhAuthenticate
             return null;
         }
 
-        $info = json_decode($json);
-        Log::info('mastodon id: ' . $info->user->id);
+        $info = json_decode($json, true);
+        Log::info('mastodon id: ' . $info['user']['username']);
+
+        $ts = time();
+        if (($ts - $info['refreshed_at']) > config('sqwh.auth_session_refresh_time')) {
+
+            // verify account credentials
+            $user = $this->mstdnApi->getUserInfo($info['token']['access_token']);
+
+            if (!$user) {
+                unset($_SESSION['mstdn']);
+                return null;
+            }
+
+            Log::info('mstdn user: ' . $user['username']);
+            $info = [
+                'token' => $info['token'],
+                'user' => $user,
+                'refreshed_at' => time(),
+            ];
+
+            $_SESSION['mstdn'] = json_encode($info);
+        }
 
         return User::make([
-            'name' => $info->user->username,
+            'name' => $info['user']['username'],
             'email' => 'unknown',
-            'client_id' => $info->user->id,
+            'client_id' => $info['user']['id'],
             'scopes' => 'read write',
         ]);
     }
