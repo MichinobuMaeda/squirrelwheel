@@ -95,11 +95,11 @@ class SqwhAuthController extends Controller
             }
 
             $token = $response->json();
-            Log::info('mastodon token: ' . $token->access_token);
+            Log::info('mastodon token: ' . $token['access_token']);
 
             // verify account credentials
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $token->access_token
+                'Authorization' => 'Bearer ' . $token['access_token']
             ])->get(
                 config('sqwh.mstdn.server') . '/api/v1/accounts/verify_credentials',
             );
@@ -115,15 +115,15 @@ class SqwhAuthController extends Controller
 
             $user = $response->json();
             if (
-                !in_array($user->username, config('sqwh.mstdn.users')) &&
+                !in_array($user['username'], config('sqwh.mstdn.users')) &&
                 $user->url !== config('sqwh.mstdn.server') . '/@' . $user->username
             ) {
-                Log::error('mastodon user is invalid: ' . $user->username);
+                Log::error('mastodon user is invalid: ' . $user['username']);
                 unset($_SESSION['mstdn']);
                 return view('auth.failed');
             }
 
-            Log::info('mastodon user: ' . $user->username);
+            Log::info('mastodon user: ' . $user['username']);
             $_SESSION['mstdn'] = json_encode([
                 'token' => $token,
                 'user' => $user,
