@@ -19,8 +19,8 @@ class Article extends Model
     protected function postTargets(): Attribute
     {
         return Attribute::make(
-            get: fn (string $value) => preg_split('/[\s,]+/', $value ?: ''),
-            set: fn (array $value) => implode(' ', $value ?: []),
+            get: fn (string|null $value) => preg_split('/[\s,]+/', $value ?: ''),
+            set: fn (array|null $value) => implode(' ', $value ?: []),
         );
     }
 
