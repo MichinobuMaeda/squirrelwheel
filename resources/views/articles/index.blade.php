@@ -27,6 +27,18 @@
                 <label>{{ ucfirst(__('link')) }}:</label>
                 <span class="value">{{ $article->link }}</span>
             </div>
+            <div class="item">
+                <label>{{ ucfirst(__('text length')) }}:</label>
+                <span class="value">{{ strlen($article->content) + ($article->link ? 24 : 0) }}</span>
+            </div>
+            <div class="item">
+                <label>{{ ucfirst(__('target')) }}:</label>
+                <span class="value">
+                    @foreach (config('sqwh.post_targets') as $target)
+                        {{ in_array($target, $article->post_targets) ? getMediaName($target) : '' }}
+                    @endforeach
+                </span>
+            </div>
 <!--
             <div class="item">
                 <label>{{ ucfirst(__('queued at')) }}:</label>

@@ -88,7 +88,6 @@ class ArticleController extends Controller
 
         if ($article->priority === 0) {
             $this->social->post($article);
-            $article->fill(['posted_at' => new DateTime()])->save();
         }
 
         return Redirect::route('articles.index');

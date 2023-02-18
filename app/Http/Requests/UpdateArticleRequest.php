@@ -26,6 +26,7 @@ class UpdateArticleRequest extends FormRequest
         return [
             'priority' => ['required', 'integer', 'min:0', 'max:9'],
             'content' => ['required'],
+            'post_targets' => ['required'],
             'reserved_at' => ['required', 'date'],
             'link' => ['nullable', 'url'],
         ];

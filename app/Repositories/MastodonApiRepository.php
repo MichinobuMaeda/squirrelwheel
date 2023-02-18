@@ -89,4 +89,23 @@ class MastodonApiRepository
             return null;
         }
     }
+
+    /**
+     * Post the article.
+     *
+     * @param string  $status
+     * @return void
+     */
+    public function post(string $status)
+    {
+        Http::withHeaders([
+            'Authorization' => 'Bearer ' . config('sqwh.mstdn.access_token'),
+            'Idempotency-Key' => hash('sha256', $status),
+        ])->asForm()->post(config('sqwh.mstdn.server') . '/api/v1/statuses', [
+            'status' => $status,
+            'sensitive' => 'false',
+            'visibility' => 'public',
+            'language' => config('app.locale'),
+        ]);
+    }
 }

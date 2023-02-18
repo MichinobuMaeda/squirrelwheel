@@ -31,12 +31,23 @@
             <textarea id="content" name="content" placeholder="{{ ucfirst(__('content')) }}" required rows="5" oninput="updateContentLength()">{{ old('content') ?: (isset($article) ? $article->content : '') }}</textarea>
         </div>
         <div class="item">
+            <label for="link" >{{ ucfirst(__('link')) }}:</label>
+            <input type="url" id="link" name="link" placeholder="{{ ucfirst(__('link')) }}" value="{{ old('link') ?: (isset($article) ? $article->link : '') }}" oninput="updateContentLength()">
+        </div>
+        <div class="item">
             <label for="contentLength" >{{ ucfirst(__('text length')) }}:</label>
             <div id="contentLength" class="textLength"></div>
         </div>
         <div class="item">
-            <label for="link" >{{ ucfirst(__('link')) }}:</label>
-            <input type="url" id="link" name="link" placeholder="{{ ucfirst(__('link')) }}" value="{{ old('link') ?: (isset($article) ? $article->link : '') }}">
+            <label>{{ ucfirst(__('target')) }}:</label>
+            <div id="target" class="options">
+                @foreach (config('sqwh.post_targets') as $target)
+                <label for="post_target_{{ $target }}">
+                    <input type="checkbox" id="post_target_{{ $target }}" name="post_targets[]" value="{{ $target }}" {{ (!isset($article) || in_array($target, old('post_targets') ?: $article->post_targets)) ? 'checked' : '' }}/>
+                    {{ getMediaName($target) }}
+                </label>
+                @endforeach
+            </div>
         </div>
         @if (isset($article))
         <div class="item">
@@ -59,9 +70,10 @@
     </form>
     <script>
 function updateContentLength() {
-    src = document.getElementById('content')
+    content = document.getElementById('content')
+    link = document.getElementById('link')
     trg = document.getElementById('contentLength')
-    trg.innerHTML = src.value.length
+    trg.innerHTML = content.value.length + (link.value ? 24 : 0)
 
 }
 updateContentLength()

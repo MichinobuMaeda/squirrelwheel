@@ -28,7 +28,7 @@ h2 {
 .btn-create {
     @apply btn btn-primary float-right mb-2
 }
-.item label {
+.item > label {
     @apply sm:inline-block sm:w-1/5 sm:text-right pr-2 sm:align-top text-secondary-focus
 }
 form .item label,
@@ -76,22 +76,29 @@ select {
 textarea {
     @apply textarea textarea-bordered rounded-md my-1
 }
-.item input[type=color],
-.item input[type=date],
-.item input[type=datetime-local],
-.item input[type=email],
-.item input[type=month],
-.item input[type=number],
-.item input[type=password],
-.item input[type=tel],
-.item input[type=text],
-.item input[type=time] ,
-.item input[type=url] ,
-.item input[type=week],
-.item select,
-.item textarea,
-.item .textLength {
+.item > input[type=color],
+.item > input[type=date],
+.item > input[type=datetime-local],
+.item > input[type=email],
+.item > input[type=month],
+.item > input[type=number],
+.item > input[type=password],
+.item > input[type=tel],
+.item > input[type=text],
+.item > input[type=time] ,
+.item > input[type=url] ,
+.item > input[type=week],
+.item > select,
+.item > textarea,
+.item > .options,
+.item > .textLength {
     @apply block w-full sm:inline-block sm:w-2/3 sm:align-middle
+}
+.item > .textLength {
+    @apply px-2
+}
+label:has(input[type=checkbox]) {
+    @apply ml-2
 }
 .form-actions {
     @apply py-2 px-4 text-right
