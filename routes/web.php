@@ -48,7 +48,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::put('/templates/{template}/disable', [TemplateController::class, 'disable'])
         ->withTrashed()
         ->name('templates.disable');
-    Route::delete('/templates/{template}/destroy', [CategoryController::class, 'destroy'])
+    Route::delete('/templates/{template}/destroy', [TemplateController::class, 'destroy'])
         ->withTrashed()
         ->name('templates.destroy');
     Route::resource('templates', TemplateController::class)
@@ -62,7 +62,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::put('/articles/{article}/disable', [ArticleController::class, 'disable'])
         ->withTrashed()
         ->name('articles.disable');
-    Route::delete('/articles/{article}/destroy', [CategoryController::class, 'destroy'])
+    Route::delete('/articles/{article}/destroy', [ArticleController::class, 'destroy'])
         ->withTrashed()
         ->name('articles.destroy');
     Route::resource('articles', ArticleController::class)
