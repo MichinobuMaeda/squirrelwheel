@@ -97,7 +97,8 @@ class ArticleRepositoryTest extends TestCase
             $template,
             'Content 0',
             'https://example.com/0',
-            $ts
+            null,
+            $ts,
         );
         $article = Article::find(1);
 
@@ -110,7 +111,8 @@ class ArticleRepositoryTest extends TestCase
             $template,
             'Content 0',
             '',
-            $ts
+            null,
+            $ts,
         );
         $article = Article::find(2);
 
@@ -123,7 +125,8 @@ class ArticleRepositoryTest extends TestCase
             $template,
             '',
             'https://example.com/0',
-            $ts
+            null,
+            $ts,
         );
         $article = Article::find(3);
 

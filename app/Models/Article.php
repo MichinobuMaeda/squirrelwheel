@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,6 +12,17 @@ class Article extends Model
 {
     use HasFactory;
     use SoftDeletes;
+
+    /**
+     * Interact with the article's fpost_targets.
+     */
+    protected function postTargets(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string $value) => preg_split('/[\s,]+/', $value ?: ''),
+            set: fn (array $value) => implode(' ', $value ?: []),
+        );
+    }
 
     /**
      * The attributes that are mass assignable.
@@ -34,7 +46,6 @@ class Article extends Model
      */
     protected $casts = [
         'priority' => 'integer',
-        'post_targets' => 'array',
         'reserved_at' => 'datetime',
         'queued_at' => 'datetime',
         'posted_at' => 'datetime',

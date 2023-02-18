@@ -19,7 +19,7 @@ class SocialPostRepository
     public function post(Article $article)
     {
         Log::info(
-            'targets: ' . join(',', $article->post_targets) .
+            'targets: ' . join(' ', $article->post_targets) .
                 ' priority: ' . strval($article->priority) .
                 ' article ID: ' . strval($article->id)
         );

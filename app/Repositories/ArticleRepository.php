@@ -52,13 +52,15 @@ class ArticleRepository
      * @param Template  $template
      * @param string  $content
      * @param string  $link
+     * @param array  $post_targets
      * @param DateTime|null  $reservedAt
      * @return Article
      */
     public function generate(
         Template $template,
         string $content = '',
-        string  $link = '',
+        string $link = '',
+        array $post_targets = null,
         DateTime|null  $reservedAt = null,
     ) {
         $article = Article::create([
@@ -71,6 +73,7 @@ class ArticleRepository
                 )
             ),
             'link' => $link,
+            'post_targets' => $post_targets ?: config('sqwh.post_targets'),
             'reserved_at' => $reservedAt ?: new DateTime(),
         ]);
 
@@ -91,6 +94,7 @@ class ArticleRepository
             Template::find($formData['template_id']),
             isset($formData['content']) ? $formData['content'] : '',
             isset($formData['link']) ? $formData['link'] : '',
+            isset($formData['post_targets']) ? $formData['post_targets'] : [],
             isset($formData['reserved_at'])
                 ? new DateTime($formData['reserved_at'])
                 : new DateTime(),
